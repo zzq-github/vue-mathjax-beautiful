@@ -1,0 +1,23 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "env.d.ts",
+    "packages/**/*",
+    "examples/**/*",
+    "tests/**/*"
+  ],
+  "exclude": [
+    "packages/*/dist",
+    "examples/*/dist",
+    "examples/playground/src/Reference code",
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "vue-mathjax-beautiful": ["./packages/core/src"],
+      "vue-mathjax-beautiful/*": ["./packages/core/src/*"]
+    }
+  }
+} 

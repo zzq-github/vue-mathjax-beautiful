@@ -1,0 +1,930 @@
+// 导入变量
+@use './variables.scss';
+
+// 变量定义
+:root {
+  --math-editor-primary: #3b82f6;
+  --math-editor-primary-hover: #2563eb;
+  --math-editor-border: #e5e7eb;
+  --math-editor-bg: #ffffff;
+  --math-editor-text: #374151;
+  --math-editor-text-muted: #6b7280;
+  --math-editor-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+// Vue数学编辑器基础样式
+.vue-mathjax-editor {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #111827;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  // 工具栏样式
+  .toolbar {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  // 工具栏按钮
+  .toolbar-btn {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    min-height: 36px;
+    white-space: nowrap;
+
+    &:hover {
+      background: #e9ecef;
+      border-color: #adb5bd;
+    }
+
+    &.active {
+      background: #007bff;
+      border-color: #007bff;
+      color: white;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    // 公式按钮特殊样式
+    &.formula-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: transparent;
+
+      &:hover {
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+      }
+    }
+
+    // 分数按钮样式
+    .btn-fraction {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      font-size: 12px;
+      
+      .btn-numerator {
+        border-bottom: 1px solid currentColor;
+        padding-bottom: 1px;
+      }
+      
+      .btn-denominator {
+        padding-top: 1px;
+      }
+    }
+
+    // 根号按钮样式
+    .btn-sqrt {
+      display: flex;
+      align-items: center;
+      
+      .btn-sqrt-radical {
+        font-size: 16px;
+        margin-right: 1px;
+      }
+    }
+
+    // 图标样式
+    .fx-icon {
+      font-style: italic;
+      font-weight: bold;
+    }
+
+    .loading-icon {
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  // 分隔线
+  .divider {
+    width: 1px;
+    height: 24px;
+    background: #dee2e6;
+    margin: 0 8px;
+  }
+
+  // 编辑器容器
+  .editor-container {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // 编辑器内容
+  .editor-content {
+    flex: 1;
+    padding: 20px;
+    outline: none;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    overflow-y: auto;
+    min-height: 300px;
+
+    &:empty:before {
+      content: attr(placeholder);
+      color: #adb5bd;
+      font-style: italic;
+    }
+
+    // SVG公式样式
+    svg[data-latex] {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 4px;
+      padding: 2px 4px;
+      margin: 0 2px;
+      background: transparent;
+      border: 1px solid transparent;
+      font-size: 18px !important;
+      min-height: 24px;
+      vertical-align: middle;
+
+      &:hover {
+        background: #f0f9ff;
+        border-color: #3b82f6;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  // 字符计数器
+  .char-counter {
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    font-size: 12px;
+    color: #6c757d;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 8px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+
+    .char-count {
+      font-weight: 500;
+    }
+
+    .char-label {
+      margin-left: 4px;
+    }
+  }
+}
+
+// 数学编辑器基础样式（兼容旧版本）
+.math-editor {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #111827;
+  
+  &__container {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+  }
+  
+  &__input {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    resize: none;
+    border: 0;
+    outline: none;
+    min-height: 120px;
+    
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    }
+  }
+  
+  &__preview {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &--empty {
+      color: #9ca3af;
+      font-style: italic;
+    }
+  }
+  
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    
+    &--primary {
+      background: #2563eb;
+      color: white;
+      
+      &:hover {
+        background: #1d4ed8;
+      }
+    }
+    
+    &--secondary {
+      background: #e5e7eb;
+      color: #374151;
+      
+      &:hover {
+        background: #d1d5db;
+      }
+    }
+    
+    &--icon {
+      padding: 8px;
+      border-radius: 6px;
+      
+      &:hover {
+        background: #f3f4f6;
+      }
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// 符号面板样式
+.symbol-panel {
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  
+  &__header {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+  }
+  
+  &__search {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+      border-color: #3b82f6;
+    }
+  }
+  
+  &__categories {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  &__category {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &--active {
+      background: #2563eb;
+      color: white;
+    }
+    
+    &:not(&--active) {
+      color: #4b5563;
+      
+      &:hover {
+        color: #111827;
+        background: #f3f4f6;
+      }
+    }
+  }
+  
+  &__symbols {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    padding: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  &__symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
+    
+    &:active {
+      background: #bfdbfe;
+    }
+  }
+}
+
+// 公式预览样式
+.formula-preview {
+  position: relative;
+  
+  &__container {
+    padding: 16px;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+  }
+  
+  &__content {
+    text-align: center;
+    
+    .MathJax {
+      display: inline-block;
+    }
+  }
+  
+  &__placeholder {
+    color: #9ca3af;
+    font-style: italic;
+    text-align: center;
+    padding: 32px 0;
+  }
+  
+  &__error {
+    color: #dc2626;
+    font-size: 14px;
+    text-align: center;
+    padding: 16px 0;
+  }
+}
+
+// 动画效果
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-enter-from {
+  transform: translateY(-10px);
+}
+
+.slide-leave-to {
+  transform: translateY(-10px);
+}
+
+// 旋转动画
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .math-editor {
+    &__container {
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+    
+    &__toolbar {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+  
+  .symbol-panel {
+    &__symbols {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+// 深色主题支持
+@media (prefers-color-scheme: dark) {
+  :root {
+    --math-editor-bg: #1f2937;
+    --math-editor-text: #f9fafb;
+    --math-editor-text-muted: #9ca3af;
+    --math-editor-border: #374151;
+  }
+  
+  .math-editor {
+    &__container {
+      background: #1f2937;
+      border-color: #4b5563;
+    }
+    
+    &__toolbar {
+      background: #374151;
+      border-color: #4b5563;
+    }
+    
+    &__input {
+      background: #1f2937;
+      color: white;
+    }
+    
+    &__preview {
+      background: #374151;
+      border-color: #4b5563;
+    }
+  }
+  
+  .symbol-panel {
+    background: #1f2937;
+    border-color: #4b5563;
+    
+    &__header {
+      background: #374151;
+      border-color: #4b5563;
+    }
+    
+    &__search {
+      background: #374151;
+      border-color: #4b5563;
+      color: white;
+    }
+    
+    &__symbol {
+      border-color: #4b5563;
+      
+      &:hover {
+        background: #374151;
+      }
+    }
+  }
+}
+
+// 公式编辑器弹窗样式
+.vue-mathjax-beautiful-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.vue-mathjax-beautiful-dialog {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 900px;
+  width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  // 头部
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+
+      .header-icon {
+        font-size: 24px;
+      }
+
+      .header-text {
+        .header-title {
+          margin: 0;
+          font-size: 18px;
+          font-weight: 600;
+        }
+
+        .header-subtitle {
+          margin: 4px 0 0 0;
+          font-size: 14px;
+          opacity: 0.9;
+        }
+      }
+
+      .header-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  // 编辑器容器
+  .editor-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  // 输入区域
+  .input-section {
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .input-actions {
+        display: flex;
+        gap: 8px;
+
+        .action-btn {
+          background: none;
+          border: 1px solid #d1d5db;
+          padding: 6px 8px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: all 0.2s;
+
+          &:hover {
+            background: #f3f4f6;
+          }
+        }
+      }
+    }
+
+    .input-wrapper {
+      .latex-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        resize: vertical;
+        min-height: 80px;
+        transition: border-color 0.2s;
+
+        &:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        &::placeholder {
+          color: #9ca3af;
+        }
+      }
+    }
+  }
+
+  // 预览区域
+  .preview-section {
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .preview-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #6b7280;
+
+        &.active {
+          color: #059669;
+        }
+
+        .status-dot {
+          width: 6px;
+          height: 6px;
+          background: #10b981;
+          border-radius: 50%;
+          animation: pulse 2s infinite;
+        }
+      }
+    }
+
+    .preview-container {
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+
+      .formula-preview {
+        text-align: center;
+        font-size: 18px;
+      }
+
+      .no-formula {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #9ca3af;
+        font-style: italic;
+      }
+    }
+  }
+
+  // 符号面板
+  .symbols-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .category-tabs {
+      display: flex;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f9fafb;
+
+      .tab-button {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 12px 16px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 14px;
+        color: #6b7280;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #f3f4f6;
+          color: #374151;
+        }
+
+        &.active {
+          background: white;
+          color: #3b82f6;
+          border-bottom: 2px solid #3b82f6;
+        }
+
+        .tab-icon {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .symbols-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+
+      .symbols-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        gap: 8px;
+        margin-bottom: 20px;
+
+        .symbol-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 50px;
+          border: 1px solid #e5e7eb;
+          border-radius: 6px;
+          background: white;
+          cursor: pointer;
+          font-size: 18px;
+          transition: all 0.2s;
+
+          &:hover {
+            background: #f0f9ff;
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+      }
+
+      .formula-examples {
+        .examples-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+          font-weight: 600;
+          color: #374151;
+        }
+
+        .examples-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 12px;
+
+          .example-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+              background: #f0f9ff;
+              border-color: #3b82f6;
+              transform: translateY(-1px);
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .example-preview {
+              margin-bottom: 8px;
+              font-size: 16px;
+            }
+
+            .example-description {
+              font-size: 12px;
+              color: #6b7280;
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 底部操作
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+
+      &.btn-secondary {
+        background: #f3f4f6;
+        color: #374151;
+
+        &:hover {
+          background: #e5e7eb;
+        }
+      }
+
+      &.btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+
+        &:hover:not(:disabled) {
+          background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+// 脉冲动画
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+} 
