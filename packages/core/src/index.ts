@@ -12,8 +12,7 @@ export {
 export * from './types'
 
 // 导出工具函数
-export { initMathJax } from './utils/mathjax'
-export { convertLatexToSvg, extractLatexFromSvg } from './utils/latex'
+export { initMathJax, convertLatexToSvg, extractLatexFromSvg } from './utils/latex'
 
 // 样式
 import './styles/index.scss'

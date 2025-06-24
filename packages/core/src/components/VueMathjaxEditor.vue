@@ -8,7 +8,7 @@
           class="toolbar-btn"
           :class="{ active: isFormatActive('bold') }"
           @click="toggleFormat('bold')"
-          title="粗体 (Ctrl+B)"
+          title="粗体 (Ctrl+B) - 点击激活后，输入的文本将自动应用此格式"
         >
           <strong>B</strong>
         </button>
@@ -16,7 +16,7 @@
           class="toolbar-btn"
           :class="{ active: isFormatActive('italic') }"
           @click="toggleFormat('italic')"
-          title="斜体 (Ctrl+I)"
+          title="斜体 (Ctrl+I) - 点击激活后，输入的文本将自动应用此格式"
         >
           <em>I</em>
         </button>
@@ -24,7 +24,7 @@
           class="toolbar-btn"
           :class="{ active: isFormatActive('underline') }"
           @click="toggleFormat('underline')"
-          title="下划线 (Ctrl+U)"
+          title="下划线 (Ctrl+U) - 点击激活后，输入的文本将自动应用此格式"
         >
           <u>U</u>
         </button>
@@ -32,7 +32,7 @@
           class="toolbar-btn"
           :class="{ active: isFormatActive('strikethrough') }"
           @click="toggleFormat('strikethrough')"
-          title="删除线"
+          title="删除线 - 点击激活后，输入的文本将自动应用此格式"
         >
           <s>S</s>
         </button>
@@ -46,19 +46,6 @@
           <span class="fx-icon">fx</span>
           <span>公式</span>
         </button>
-        <button class="toolbar-btn" @click="insertQuickFormula('\\frac{a}{b}')" title="分数">
-          <span class="btn-fraction">
-            <span class="btn-numerator">a</span>
-            <span class="btn-denominator">b</span>
-          </span>
-        </button>
-        <button class="toolbar-btn" @click="insertQuickFormula('\\sqrt{x}')" title="根号">
-          <span class="btn-sqrt">
-            <span class="btn-sqrt-radical">√</span>
-            <span class="btn-sqrt-content">x</span>
-          </span>
-        </button>
-        <button class="toolbar-btn" @click="insertQuickFormula('x^{2}')" title="上标">x²</button>
       </div>
 
       <div class="divider"></div>
@@ -96,7 +83,7 @@
         class="editor-content"
         contenteditable="true"
         @input="handleInput"
-        @beforeinput="handleBeforeInput"
+        @beforeinput="onBeforeInput"
         @keydown="handleKeydown"
         @paste="handlePaste"
         @focus="handleFocus"
@@ -162,6 +149,12 @@ const content = ref('')
 const charCount = ref(0)
 const uploadLoading = ref(false)
 const activeFormats = ref(new Set<string>())
+const currentFormatState = ref({
+  bold: false,
+  italic: false,
+  underline: false,
+  strikethrough: false
+})
 
 // 监听外部值变化
 watch(
@@ -239,8 +232,13 @@ const convertToStandardSyntax = (editorElement: HTMLElement) => {
   return clonedElement.innerHTML
 }
 
-// 格式检查
+// 格式检查 - 检查当前选区或光标位置的格式状态
 const isFormatActive = (format: string): boolean => {
+  // 首先检查当前格式状态
+  if (currentFormatState.value[format as keyof typeof currentFormatState.value]) {
+    return true
+  }
+
   if (!editorRef.value) return false
 
   const selection = window.getSelection()
@@ -248,47 +246,66 @@ const isFormatActive = (format: string): boolean => {
 
   try {
     const range = selection.getRangeAt(0)
-    const container = range.commonAncestorContainer
-    const element = container.nodeType === Node.TEXT_NODE ? container.parentElement : container as Element
     
-    if (!element) return false
-
-    // 检查元素及其父元素是否包含对应的格式标签
-    let currentElement: Element | null = element
-    while (currentElement && currentElement !== editorRef.value) {
-      const tagName = currentElement.tagName?.toLowerCase()
-      const computedStyle = window.getComputedStyle(currentElement)
-      
-      switch (format) {
-        case 'bold':
-          if (tagName === 'strong' || tagName === 'b' || computedStyle.fontWeight === 'bold' || parseInt(computedStyle.fontWeight) >= 700) {
-            return true
-          }
-          break
-        case 'italic':
-          if (tagName === 'em' || tagName === 'i' || computedStyle.fontStyle === 'italic') {
-            return true
-          }
-          break
-        case 'underline':
-          if (tagName === 'u' || computedStyle.textDecoration.includes('underline')) {
-            return true
-          }
-          break
-        case 'strikethrough':
-          if (tagName === 's' || tagName === 'strike' || computedStyle.textDecoration.includes('line-through')) {
-            return true
-          }
-          break
-      }
-      currentElement = currentElement.parentElement
+    // 如果有选中的文本，检查选中内容的格式
+    if (!range.collapsed) {
+      return checkSelectionFormat(range, format)
     }
     
-    return false
+    // 如果没有选中文本，检查光标位置的格式
+    return checkCursorFormat(range, format)
   } catch (error) {
     console.warn('查询格式状态失败:', error)
     return false
   }
+}
+
+// 检查选中文本的格式
+const checkSelectionFormat = (range: Range, format: string): boolean => {
+  const container = range.commonAncestorContainer
+  const element = container.nodeType === Node.TEXT_NODE ? container.parentElement : container as Element
+  
+  if (!element) return false
+
+  // 检查选中内容是否完全在格式标签内
+  return checkElementFormat(element, format)
+}
+
+// 检查光标位置的格式
+const checkCursorFormat = (range: Range, format: string): boolean => {
+  const container = range.startContainer
+  const element = container.nodeType === Node.TEXT_NODE ? container.parentElement : container as Element
+  
+  if (!element) return false
+
+  return checkElementFormat(element, format)
+}
+
+// 检查元素及其父元素的格式
+const checkElementFormat = (element: Element, format: string): boolean => {
+  let currentElement: Element | null = element
+  
+  while (currentElement && currentElement !== editorRef.value) {
+    const tagName = currentElement.tagName?.toLowerCase()
+    
+    switch (format) {
+      case 'bold':
+        if (tagName === 'strong' || tagName === 'b') return true
+        break
+      case 'italic':
+        if (tagName === 'em' || tagName === 'i') return true
+        break
+      case 'underline':
+        if (tagName === 'u') return true
+        break
+      case 'strikethrough':
+        if (tagName === 's' || tagName === 'strike') return true
+        break
+    }
+    currentElement = currentElement.parentElement
+  }
+  
+  return false
 }
 
 // 切换格式
@@ -296,12 +313,77 @@ const toggleFormat = (format: string) => {
   if (!editorRef.value) return
 
   try {
-    document.execCommand(format, false, undefined)
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0) return
+
+    const range = selection.getRangeAt(0)
+    
+    // 如果有选中的文本，应用格式到选中的文本
+    if (!range.collapsed) {
+      applyFormatToSelection(range, format)
+    } else {
+      // 如果没有选中文本，切换格式状态
+      toggleFormatState(format)
+    }
+    
     editorRef.value.focus()
     updateSelection()
+    handleInput()
   } catch (error) {
     console.warn('切换格式失败:', error)
   }
+}
+
+// 应用格式到选中的文本
+const applyFormatToSelection = (range: Range, format: string) => {
+  const isActive = isFormatActive(format)
+  const selectedText = range.toString()
+  
+  if (!selectedText) return
+  
+  let formattedHtml: string
+  
+  if (isActive) {
+    // 如果已经有格式，移除格式
+    formattedHtml = selectedText
+  } else {
+    // 如果没有格式，添加格式
+    formattedHtml = wrapTextWithFormat(selectedText, format)
+  }
+  
+  // 删除选中的内容并插入格式化的内容
+  range.deleteContents()
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = formattedHtml
+  
+  // 插入格式化的内容
+  while (tempDiv.firstChild) {
+    range.insertNode(tempDiv.firstChild)
+  }
+}
+
+// 用格式标签包装文本
+const wrapTextWithFormat = (text: string, format: string): string => {
+  switch (format) {
+    case 'bold':
+      return `<strong>${text}</strong>`
+    case 'italic':
+      return `<em>${text}</em>`
+    case 'underline':
+      return `<u>${text}</u>`
+    case 'strikethrough':
+      return `<s>${text}</s>`
+    default:
+      return text
+  }
+}
+
+// 切换格式状态（用于无选中文本时）
+const toggleFormatState = (format: string) => {
+  const key = format as keyof typeof currentFormatState.value
+  currentFormatState.value[key] = !currentFormatState.value[key]
+  
+  console.log(`格式状态切换: ${format} = ${currentFormatState.value[key]}`)
 }
 
 // 更新选区状态
@@ -309,9 +391,24 @@ const updateSelection = () => {
   if (!editorRef.value) return
 
   const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0) return
+  if (!selection || selection.rangeCount === 0) {
+    // 如果没有选区，保持当前格式状态
+    return
+  }
 
-  // 更新格式状态
+  const range = selection.getRangeAt(0)
+  
+  // 如果有选中的文本，检查选中文本的格式状态
+  if (!range.collapsed) {
+    updateFormatStateFromSelection(range)
+    // 清除格式状态，因为用户选中了文本
+    resetFormatState()
+  } else {
+    // 如果光标在某个格式标签内，更新格式状态
+    updateFormatStateFromCursor(range)
+  }
+
+  // 更新active格式集合用于UI显示
   const formats = ['bold', 'italic', 'underline', 'strikethrough']
   activeFormats.value.clear()
 
@@ -322,12 +419,59 @@ const updateSelection = () => {
   })
 }
 
+// 从选中内容更新格式状态
+const updateFormatStateFromSelection = (range: Range) => {
+  const formats = ['bold', 'italic', 'underline', 'strikethrough']
+  formats.forEach((format) => {
+    const key = format as keyof typeof currentFormatState.value
+    currentFormatState.value[key] = checkSelectionFormat(range, format)
+  })
+}
+
+// 从光标位置更新格式状态
+const updateFormatStateFromCursor = (range: Range) => {
+  const formats = ['bold', 'italic', 'underline', 'strikethrough']
+  formats.forEach((format) => {
+    const key = format as keyof typeof currentFormatState.value
+    // 只有当前没有激活格式状态时，才从光标位置更新
+    if (!currentFormatState.value[key]) {
+      currentFormatState.value[key] = checkCursorFormat(range, format)
+    }
+  })
+}
+
+// 重置格式状态
+const resetFormatState = () => {
+  currentFormatState.value = {
+    bold: false,
+    italic: false,
+    underline: false,
+    strikethrough: false
+  }
+}
+
 // 插入公式
 const insertFormula = async (latex: string) => {
   if (!editorRef.value) return
 
+  console.log('开始插入公式:', latex)
+
   try {
-    const svgHtml = await convertLatexToSvg(latex)
+    // 确保MathJax已经初始化
+    if (!window.MathJax?.tex2svgPromise) {
+      console.warn('MathJax未初始化，正在尝试初始化...')
+      await initMathJax()
+    }
+
+    // 再次检查MathJax是否可用
+    if (!window.MathJax?.tex2svgPromise) {
+      throw new Error('MathJax初始化失败，无法渲染公式')
+    }
+
+    // 转换LaTeX为SVG
+    console.log('开始转换LaTeX为SVG...')
+    const svgHtml = await convertLatexToSvg(`$$${latex}$$`)
+    console.log('转换结果:', svgHtml)
 
     // 确保编辑器获得焦点
     editorRef.value.focus()
@@ -345,28 +489,24 @@ const insertFormula = async (latex: string) => {
     handleInput()
 
     // 重新设置公式点击事件
+    await nextTick()
     setupFormulaClickEvents()
+
+    console.log('公式插入成功')
   } catch (error) {
     console.error('插入公式失败:', error)
+    // 如果SVG转换失败，作为备用方案插入LaTeX文本
+    try {
+      editorRef.value.focus()
+      document.execCommand('insertHTML', false, `$$${latex}$$`)
+      handleInput()
+    } catch (fallbackError) {
+      console.error('备用插入也失败:', fallbackError)
+    }
   }
 }
 
-// 快速插入公式
-const insertQuickFormula = async (latex: string) => {
-  if (!editorRef.value) return
 
-  try {
-    const svgHtml = await convertLatexToSvg(latex)
-
-    editorRef.value.focus()
-    document.execCommand('insertHTML', false, svgHtml)
-
-    handleInput()
-    setupFormulaClickEvents()
-  } catch (error) {
-    console.error('快速插入公式失败:', error)
-  }
-}
 
 // 显示公式编辑器
 const showFormulaEditor = () => {
@@ -462,13 +602,81 @@ const handleInput = () => {
   updateStats()
 }
 
+// 处理输入前事件的包装函数
+const onBeforeInput = (event: Event) => {
+  handleBeforeInput(event as InputEvent)
+}
+
 // 处理输入前事件
-const handleBeforeInput = (event: Event) => {
-  // 这里可以添加输入前的处理逻辑
+const handleBeforeInput = (event: InputEvent) => {
+  // 如果是输入文本且有激活的格式状态，应用格式
+  if (event.inputType === 'insertText' && event.data && hasActiveFormat()) {
+    event.preventDefault()
+    insertFormattedText(event.data)
+  }
+}
+
+// 检查是否有激活的格式状态
+const hasActiveFormat = (): boolean => {
+  return Object.values(currentFormatState.value).some(active => active)
+}
+
+// 插入带格式的文本
+const insertFormattedText = (text: string) => {
+  if (!editorRef.value) return
+
+  const selection = window.getSelection()
+  if (!selection || selection.rangeCount === 0) return
+
+  const range = selection.getRangeAt(0)
+  
+  // 创建格式化的文本元素
+  let formattedElement = document.createTextNode(text)
+  let currentElement: Node = formattedElement
+
+  // 按照激活的格式状态包装文本
+  Object.entries(currentFormatState.value).forEach(([format, isActive]) => {
+    if (isActive) {
+      const wrapper = document.createElement(getFormatTag(format))
+      wrapper.appendChild(currentElement)
+      currentElement = wrapper
+    }
+  })
+
+  // 插入格式化的文本
+  range.deleteContents()
+  range.insertNode(currentElement)
+  
+  // 将光标移动到插入内容的末尾
+  range.setStartAfter(currentElement)
+  range.collapse(true)
+  selection.removeAllRanges()
+  selection.addRange(range)
+  
+  // 触发内容更新
+  handleInput()
+}
+
+// 获取格式对应的HTML标签
+const getFormatTag = (format: string): string => {
+  switch (format) {
+    case 'bold': return 'strong'
+    case 'italic': return 'em'
+    case 'underline': return 'u'
+    case 'strikethrough': return 's'
+    default: return 'span'
+  }
 }
 
 // 处理键盘事件
 const handleKeydown = (event: KeyboardEvent) => {
+  // 按Escape键清除格式状态
+  if (event.key === 'Escape') {
+    resetFormatState()
+    updateSelection()
+    return
+  }
+
   // 处理快捷键
   if (event.ctrlKey || event.metaKey) {
     switch (event.key) {
@@ -485,6 +693,15 @@ const handleKeydown = (event: KeyboardEvent) => {
         toggleFormat('underline')
         break
     }
+  }
+
+  // 某些键会重置格式状态
+  if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
+    // 延迟重置格式状态，让光标移动完成
+    setTimeout(() => {
+      resetFormatState()
+      updateSelection()
+    }, 0)
   }
 }
 
@@ -541,17 +758,27 @@ const handleBlur = () => {
 
 // 生命周期
 onMounted(async () => {
-  // 初始化MathJax
-  await initMathJax()
+  console.log('VueMathjaxEditor组件挂载，开始初始化MathJax...')
+  
+  try {
+    // 初始化MathJax
+    await initMathJax()
+    console.log('MathJax初始化成功，可用方法:', Object.keys(window.MathJax || {}))
 
-  // 设置初始内容
-  if (props.modelValue && editorRef.value) {
-    const htmlContent = await convertFromStandardSyntax(props.modelValue)
-    editorRef.value.innerHTML = htmlContent
-    setupFormulaClickEvents()
+    // 设置初始内容
+    if (props.modelValue && editorRef.value) {
+      console.log('设置初始内容:', props.modelValue)
+      const htmlContent = await convertFromStandardSyntax(props.modelValue)
+      editorRef.value.innerHTML = htmlContent
+      await nextTick()
+      setupFormulaClickEvents()
+    }
+
+    updateStats()
+    console.log('VueMathjaxEditor初始化完成')
+  } catch (error) {
+    console.error('VueMathjaxEditor初始化失败:', error)
   }
-
-  updateStats()
 })
 
 onUnmounted(() => {
@@ -655,37 +882,7 @@ onUnmounted(() => {
   font-size: 16px;
 }
 
-.btn-fraction {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 12px;
-  line-height: 1;
-}
 
-.btn-numerator {
-  border-bottom: 1px solid currentColor;
-  padding-bottom: 1px;
-}
-
-.btn-denominator {
-  padding-top: 1px;
-}
-
-.btn-sqrt {
-  display: flex;
-  align-items: baseline;
-  font-size: 14px;
-}
-
-.btn-sqrt-radical {
-  font-size: 16px;
-  margin-right: 1px;
-}
-
-.btn-sqrt-content {
-  font-size: 12px;
-}
 
 .image-btn,
 .clear-btn {

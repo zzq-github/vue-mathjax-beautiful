@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "lucide-vue-next": "^0.522.0",
     "vue": "^3.3.11",
     "vue-mathjax-beautiful": "workspace:*"
   },
@@ -23,4 +24,4 @@
     "vite": "^5.0.10",
     "vue-tsc": "^1.8.25"
   }
-} 
+}

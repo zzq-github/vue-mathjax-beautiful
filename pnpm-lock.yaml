@@ -83,6 +83,9 @@ importers:
 
   examples/playground:
     dependencies:
+      lucide-vue-next:
+        specifier: ^0.522.0
+        version: 0.522.0(vue@3.5.17(typescript@5.3.3))
       vue:
         specifier: ^3.3.11
         version: 3.5.17(typescript@5.3.3)
@@ -2220,6 +2223,11 @@ packages:
   lru-cache@6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
+
+  lucide-vue-next@0.522.0:
+    resolution: {integrity: sha512-T1FFXc+4PDXu4zjsrfOlx4SGClavHDozE5LyKgX7N5dPtdGvG+ni+KCg1P2HPLmlWWT2LQlc6vnAicHU0KY1sw==}
+    peerDependencies:
+      vue: '>=3.0.1'
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
@@ -5810,6 +5818,10 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
+
+  lucide-vue-next@0.522.0(vue@3.5.17(typescript@5.3.3)):
+    dependencies:
+      vue: 3.5.17(typescript@5.3.3)
 
   magic-string@0.30.17:
     dependencies:

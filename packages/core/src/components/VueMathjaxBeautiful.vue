@@ -93,7 +93,8 @@
                 @click="insertSymbol(symbol.latex)"
                 :title="symbol.description"
               >
-                <span v-html="symbol.display"></span>
+                <span v-if="symbol.display" v-html="symbol.display"></span>
+                <span v-else class="symbol-fallback">{{ symbol.latex }}</span>
               </button>
             </div>
 
@@ -140,18 +141,15 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { initMathJax } from '../utils/latex'
-
-interface Symbol {
-  latex: string
-  description: string
-  display: string
-}
-
-interface Category {
-  key: string
-  name: string
-  icon: string
-}
+import { 
+  type Symbol, 
+  type Category, 
+  basicSymbols, 
+  greekSymbols, 
+  advancedSymbols, 
+  formulaExamples,
+  categories 
+} from '../data'
 
 const props = withDefaults(defineProps<{
   modelValue: boolean
@@ -173,134 +171,7 @@ const activeCategory = ref('basic')
 const renderedFormula = ref('')
 const symbolDisplayCache = new Map<string, string>()
 
-// 分类定义
-const categories: Category[] = [
-  { key: 'basic', name: '基础', icon: '📋' },
-  { key: 'greek', name: '希腊字母', icon: 'Ω' },
-  { key: 'advanced', name: '高级', icon: '🎓' }
-]
-
-// 基础符号
-const basicSymbols: Symbol[] = [
-  { latex: '+', description: '加号', display: '+' },
-  { latex: '-', description: '减号', display: '−' },
-  { latex: '\\times', description: '乘号', display: '×' },
-  { latex: '\\div', description: '除号', display: '÷' },
-  { latex: '\\pm', description: '正负号', display: '±' },
-  { latex: '\\mp', description: '负正号', display: '∓' },
-  { latex: '=', description: '等号', display: '=' },
-  { latex: '\\neq', description: '不等号', display: '≠' },
-  { latex: '<', description: '小于', display: '<' },
-  { latex: '>', description: '大于', display: '>' },
-  { latex: '\\leq', description: '小于等于', display: '≤' },
-  { latex: '\\geq', description: '大于等于', display: '≥' },
-  { latex: '\\approx', description: '约等于', display: '≈' },
-  { latex: '\\equiv', description: '恒等于', display: '≡' },
-  { latex: '\\propto', description: '正比于', display: '∝' },
-  { latex: '\\infty', description: '无穷大', display: '∞' },
-  { latex: '\\sqrt{x}', description: '根号', display: '√x' },
-  { latex: '\\frac{a}{b}', description: '分数', display: 'a/b' },
-  { latex: 'x^{n}', description: '上标', display: 'x^n' },
-  { latex: 'x_{n}', description: '下标', display: 'x_n' },
-  { latex: '\\sum', description: '求和', display: '∑' },
-  { latex: '\\prod', description: '连乘', display: '∏' },
-  { latex: '\\int', description: '积分', display: '∫' },
-  { latex: '\\oint', description: '环积分', display: '∮' },
-  { latex: '\\partial', description: '偏导数', display: '∂' },
-  { latex: '\\nabla', description: '梯度', display: '∇' },
-  { latex: '\\lim', description: '极限', display: 'lim' },
-  { latex: '\\sin', description: '正弦', display: 'sin' },
-  { latex: '\\cos', description: '余弦', display: 'cos' },
-  { latex: '\\tan', description: '正切', display: 'tan' },
-  { latex: '\\log', description: '对数', display: 'log' },
-  { latex: '\\ln', description: '自然对数', display: 'ln' }
-]
-
-// 希腊字母
-const greekSymbols: Symbol[] = [
-  { latex: '\\alpha', description: 'Alpha', display: 'α' },
-  { latex: '\\beta', description: 'Beta', display: 'β' },
-  { latex: '\\gamma', description: 'Gamma', display: 'γ' },
-  { latex: '\\delta', description: 'Delta', display: 'δ' },
-  { latex: '\\epsilon', description: 'Epsilon', display: 'ε' },
-  { latex: '\\zeta', description: 'Zeta', display: 'ζ' },
-  { latex: '\\eta', description: 'Eta', display: 'η' },
-  { latex: '\\theta', description: 'Theta', display: 'θ' },
-  { latex: '\\iota', description: 'Iota', display: 'ι' },
-  { latex: '\\kappa', description: 'Kappa', display: 'κ' },
-  { latex: '\\lambda', description: 'Lambda', display: 'λ' },
-  { latex: '\\mu', description: 'Mu', display: 'μ' },
-  { latex: '\\nu', description: 'Nu', display: 'ν' },
-  { latex: '\\xi', description: 'Xi', display: 'ξ' },
-  { latex: '\\pi', description: 'Pi', display: 'π' },
-  { latex: '\\rho', description: 'Rho', display: 'ρ' },
-  { latex: '\\sigma', description: 'Sigma', display: 'σ' },
-  { latex: '\\tau', description: 'Tau', display: 'τ' },
-  { latex: '\\upsilon', description: 'Upsilon', display: 'υ' },
-  { latex: '\\phi', description: 'Phi', display: 'φ' },
-  { latex: '\\chi', description: 'Chi', display: 'χ' },
-  { latex: '\\psi', description: 'Psi', display: 'ψ' },
-  { latex: '\\omega', description: 'Omega', display: 'ω' },
-  { latex: '\\Gamma', description: 'Gamma (大写)', display: 'Γ' },
-  { latex: '\\Delta', description: 'Delta (大写)', display: 'Δ' },
-  { latex: '\\Theta', description: 'Theta (大写)', display: 'Θ' },
-  { latex: '\\Lambda', description: 'Lambda (大写)', display: 'Λ' },
-  { latex: '\\Xi', description: 'Xi (大写)', display: 'Ξ' },
-  { latex: '\\Pi', description: 'Pi (大写)', display: 'Π' },
-  { latex: '\\Sigma', description: 'Sigma (大写)', display: 'Σ' },
-  { latex: '\\Phi', description: 'Phi (大写)', display: 'Φ' },
-  { latex: '\\Psi', description: 'Psi (大写)', display: 'Ψ' },
-  { latex: '\\Omega', description: 'Omega (大写)', display: 'Ω' }
-]
-
-// 高级符号
-const advancedSymbols: Symbol[] = [
-  { latex: '\\forall', description: '任意', display: '∀' },
-  { latex: '\\exists', description: '存在', display: '∃' },
-  { latex: '\\in', description: '属于', display: '∈' },
-  { latex: '\\notin', description: '不属于', display: '∉' },
-  { latex: '\\subset', description: '子集', display: '⊂' },
-  { latex: '\\supset', description: '超集', display: '⊃' },
-  { latex: '\\subseteq', description: '子集或相等', display: '⊆' },
-  { latex: '\\supseteq', description: '超集或相等', display: '⊇' },
-  { latex: '\\cup', description: '并集', display: '∪' },
-  { latex: '\\cap', description: '交集', display: '∩' },
-  { latex: '\\emptyset', description: '空集', display: '∅' },
-  { latex: '\\mathbb{N}', description: '自然数集', display: 'ℕ' },
-  { latex: '\\mathbb{Z}', description: '整数集', display: 'ℤ' },
-  { latex: '\\mathbb{Q}', description: '有理数集', display: 'ℚ' },
-  { latex: '\\mathbb{R}', description: '实数集', display: 'ℝ' },
-  { latex: '\\mathbb{C}', description: '复数集', display: 'ℂ' },
-  { latex: '\\rightarrow', description: '右箭头', display: '→' },
-  { latex: '\\leftarrow', description: '左箭头', display: '←' },
-  { latex: '\\leftrightarrow', description: '双向箭头', display: '↔' },
-  { latex: '\\Rightarrow', description: '右双箭头', display: '⇒' },
-  { latex: '\\Leftarrow', description: '左双箭头', display: '⇐' },
-  { latex: '\\Leftrightarrow', description: '双向双箭头', display: '⇔' },
-  { latex: '\\uparrow', description: '上箭头', display: '↑' },
-  { latex: '\\downarrow', description: '下箭头', display: '↓' },
-  { latex: '\\cdot', description: '点乘', display: '·' },
-  { latex: '\\star', description: '星号', display: '⋆' },
-  { latex: '\\circ', description: '圆圈', display: '∘' },
-  { latex: '\\diamond', description: '菱形', display: '⋄' },
-  { latex: '\\triangle', description: '三角形', display: '△' },
-  { latex: '\\square', description: '正方形', display: '□' },
-  { latex: '\\angle', description: '角', display: '∠' },
-  { latex: '\\parallel', description: '平行', display: '∥' },
-  { latex: '\\perp', description: '垂直', display: '⊥' }
-]
-
-// 常用公式示例
-const formulaExamples: Symbol[] = [
-  { latex: '\\frac{a+b}{c+d}', description: '复杂分数', display: '' },
-  { latex: '\\sqrt{a^2+b^2}', description: '勾股定理', display: '' },
-  { latex: 'x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}', description: '二次公式', display: '' },
-  { latex: '\\int_{a}^{b} f(x) dx', description: '定积分', display: '' },
-  { latex: '\\sum_{i=1}^{n} x_i', description: '求和公式', display: '' },
-  { latex: '\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1', description: '极限公式', display: '' },
-  { latex: 'e^{i\\pi} + 1 = 0', description: '欧拉公式', display: '' },
-  { latex: '\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}', description: '矩阵', display: '' }
-]
+// 数据已从 data 目录导入
 
 // 计算属性
 const currentSymbols = computed(() => {
@@ -347,6 +218,8 @@ const clearInput = () => {
   renderedFormula.value = ''
 }
 
+
+
 const insertSymbol = (symbol: string) => {
   const textarea = document.querySelector('.latex-input') as HTMLTextAreaElement
   if (textarea) {
@@ -368,28 +241,49 @@ const insertSymbol = (symbol: string) => {
 }
 
 const updatePreview = async () => {
+  console.log('开始更新预览，输入内容:', latexInput.value)
+  
   if (!latexInput.value.trim()) {
     renderedFormula.value = ''
     return
   }
   
   try {
-    if (window.MathJax?.tex2svgPromise) {
-      const result = await window.MathJax.tex2svgPromise(latexInput.value, {
-        display: false,
-        scale: 1.2
-      })
-      
-      const svg = result.getElementsByTagName('svg')[0]
-      if (svg) {
-        svg.style.fontSize = '20px'
-        svg.style.verticalAlign = 'middle'
-        renderedFormula.value = svg.outerHTML
-      }
+    // 确保MathJax已经初始化
+    if (!window.MathJax?.tex2svgPromise) {
+      console.warn('MathJax未初始化，正在尝试初始化...')
+      await initMathJax()
+    }
+    
+    // 再次检查MathJax是否可用
+    if (!window.MathJax?.tex2svgPromise) {
+      console.error('MathJax初始化失败，无法预览公式')
+      renderedFormula.value = '<span style="color: red;">MathJax未加载</span>'
+      return
+    }
+    
+    console.log('开始渲染LaTeX:', latexInput.value)
+    const result = await window.MathJax.tex2svgPromise(latexInput.value, {
+      display: false,
+      scale: 1.2
+    })
+    
+    console.log('MathJax渲染结果:', result)
+    
+    const svg = result.getElementsByTagName('svg')[0]
+    if (svg) {
+      svg.style.fontSize = '20px'
+      svg.style.verticalAlign = 'middle'
+      renderedFormula.value = svg.outerHTML
+      console.log('预览更新成功，SVG HTML:', svg.outerHTML)
+    } else {
+      console.warn('未获取到SVG元素')
+      renderedFormula.value = '<span style="color: red;">渲染失败</span>'
     }
   } catch (error) {
-    console.warn('LaTeX预览失败:', error)
-    renderedFormula.value = '<span style="color: red;">预览失败</span>'
+    console.error('LaTeX预览失败:', error)
+    const errorMessage = error instanceof Error ? error.message : '未知错误'
+    renderedFormula.value = `<span style="color: red;">预览失败: ${errorMessage}</span>`
   }
 }
 
@@ -400,6 +294,57 @@ const handleInsert = () => {
   }
 }
 
+// 渲染符号
+const renderSymbols = async (symbols: Symbol[]) => {
+  for (const symbol of symbols) {
+    if (!symbol.display) {
+      try {
+        if (window.MathJax?.tex2svgPromise) {
+          const result = await window.MathJax.tex2svgPromise(symbol.latex, {
+            display: false,
+            scale: 1.3,
+            em: 16,
+            ex: 8,
+            containerWidth: 1280
+          })
+          
+          const svg = result.getElementsByTagName('svg')[0]
+          if (svg) {
+            // 提升SVG渲染质量
+            svg.style.fontSize = '18px'
+            svg.style.verticalAlign = 'middle'
+            svg.style.maxWidth = '32px'
+            svg.style.maxHeight = '32px'
+            svg.style.width = 'auto'
+            svg.style.height = 'auto'
+            
+            // 设置SVG属性以提高渲染质量
+            svg.setAttribute('shape-rendering', 'geometricPrecision')
+            svg.setAttribute('text-rendering', 'optimizeLegibility')
+            
+            symbol.display = svg.outerHTML
+          }
+        }
+      } catch (error) {
+        console.warn(`符号 ${symbol.latex} 渲染失败:`, error)
+        // 如果渲染失败，使用空字符串，让后备文本显示
+        symbol.display = ''
+      }
+    }
+  }
+}
+
+// 渲染所有符号
+const renderAllSymbols = async () => {
+  console.log('开始渲染所有符号...')
+  await Promise.all([
+    renderSymbols(basicSymbols),
+    renderSymbols(greekSymbols),
+    renderSymbols(advancedSymbols)
+  ])
+  console.log('所有符号渲染完成')
+}
+
 // 渲染公式示例
 const renderFormulaExamples = async () => {
   for (const example of formulaExamples) {
@@ -408,19 +353,28 @@ const renderFormulaExamples = async () => {
         if (window.MathJax?.tex2svgPromise) {
           const result = await window.MathJax.tex2svgPromise(example.latex, {
             display: false,
-            scale: 0.8
+            scale: 1.0,
+            em: 16,
+            ex: 8,
+            containerWidth: 1280
           })
           
           const svg = result.getElementsByTagName('svg')[0]
           if (svg) {
-            svg.style.fontSize = '14px'
+            svg.style.fontSize = '16px'
             svg.style.maxWidth = '100%'
+            svg.style.verticalAlign = 'middle'
+            
+            // 设置SVG属性以提高渲染质量
+            svg.setAttribute('shape-rendering', 'geometricPrecision')
+            svg.setAttribute('text-rendering', 'optimizeLegibility')
+            
             example.display = svg.outerHTML
           }
         }
       } catch (error) {
         console.warn('公式示例渲染失败:', error)
-        example.display = example.latex
+        example.display = ''
       }
     }
   }
@@ -428,8 +382,21 @@ const renderFormulaExamples = async () => {
 
 // 生命周期
 onMounted(async () => {
-  await initMathJax()
-  await renderFormulaExamples()
+  console.log('VueMathjaxBeautiful组件挂载，开始初始化...')
+  try {
+    await initMathJax()
+    console.log('MathJax初始化完成，开始渲染符号和公式示例...')
+    
+    // 并行渲染符号和公式示例
+    await Promise.all([
+      renderAllSymbols(),
+      renderFormulaExamples()
+    ])
+    
+    console.log('VueMathjaxBeautiful初始化完成')
+  } catch (error) {
+    console.error('VueMathjaxBeautiful初始化失败:', error)
+  }
 })
 </script>
 

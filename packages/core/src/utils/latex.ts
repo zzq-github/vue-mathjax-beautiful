@@ -119,14 +119,22 @@ export function clearMathTags(element: HTMLElement, tagName: string) {
 export async function convertLatexToSvg(content: string): Promise<string> {
   if (!content) return ''
   
+  console.log('开始转换LaTeX为SVG，输入内容:', content)
+  
   try {
     // 如果内容中包含SVG公式，则先转换为LaTeX代码，重新转换为SVG
     if (content.includes('<svg') && content.includes('data-latex')) {
+      console.log('检测到已有SVG，先提取LaTeX代码')
       content = extractLatexFromSvg(content)
     }
 
     const matches = matchLatex(content)
-    if (!matches.length) return content
+    console.log('匹配到的LaTeX公式:', matches)
+    
+    if (!matches.length) {
+      console.log('未匹配到LaTeX公式，返回原内容')
+      return content
+    }
 
     // 创建一个副本以进行替换
     let result = content
@@ -141,6 +149,8 @@ export async function convertLatexToSvg(content: string): Promise<string> {
           continue
         }
 
+        console.log('正在转换LaTeX公式:', match.content, '类型:', match.isInline ? 'inline' : 'display')
+
         const svg = await window.MathJax.tex2svgPromise(match.content, {
           display: !match.isInline,
           scale: 1.2, // 增加缩放比例
@@ -148,6 +158,8 @@ export async function convertLatexToSvg(content: string): Promise<string> {
           ex: 8, // 设置ex单位大小
           containerWidth: 1200 // 设置容器宽度
         })
+        
+        console.log('MathJax转换结果:', svg)
         
         // 检查返回的SVG对象
         if (!svg || typeof svg.getElementsByTagName !== 'function') {
@@ -163,6 +175,7 @@ export async function convertLatexToSvg(content: string): Promise<string> {
         }
         
         const svgElement = svgElements[0]
+        console.log('获取到SVG元素:', svgElement)
 
         // 添加原始LaTeX公式作为属性
         svgElement.setAttribute('data-latex', match.content)
@@ -178,6 +191,7 @@ export async function convertLatexToSvg(content: string): Promise<string> {
 
         // 获取处理后的SVG HTML，前后添加零宽度空格
         const svgHtml = '\u200B' + svgElement.outerHTML + '\u200B'
+        console.log('最终SVG HTML:', svgHtml)
         
         // 计算新的位置（考虑之前替换造成的偏移）
         const start = match.start + offset
@@ -195,6 +209,7 @@ export async function convertLatexToSvg(content: string): Promise<string> {
       }
     }
     
+    console.log('LaTeX转SVG完成，最终结果:', result)
     return result
   } catch (error) {
     console.error('convert latex error:', error)
@@ -316,39 +331,12 @@ export async function initMathJax(config?: any): Promise<void> {
   if (!window.MathJax) {
     window.MathJax = {
       tex: {
-        inlineMath: [
-          ['$', '$'],
-          ['\\(', '\\)'],
-        ],
-        displayMath: [
-          ['$$', '$$'],
-          ['\\[', '\\]'],
-        ],
-        processEscapes: true,
-        processEnvironments: true,
-        packages: ['base', 'ams', 'noerrors', 'noundefined']
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
       },
       svg: {
-        fontCache: 'global',
-        displayAlign: 'center',
-        scale: 1.0,
-        minScale: 0.5,
-        mtextInheritFont: false,
-        merrorInheritFont: false,
-        mathmlSpacing: false,
-        displayIndent: '0'
-      },
-      startup: {
-        ready: () => {
-          console.log('MathJax is ready')
-          if (window.MathJax?.startup?.defaultReady) {
-            window.MathJax.startup.defaultReady()
-          }
-        }
-      },
-      options: {
-        ignoreHtmlClass: 'tex2jax_ignore',
-        processHtmlClass: 'tex2jax_process'
+        fontCache: 'global'
       }
     }
     
@@ -364,14 +352,30 @@ export async function initMathJax(config?: any): Promise<void> {
     
     // 等待MathJax完全初始化
     let retries = 0
-    const maxRetries = 50 // 最多等待5秒
+    const maxRetries = 100 // 最多等待10秒
     
     while (!window.MathJax?.tex2svgPromise && retries < maxRetries) {
       await new Promise(resolve => setTimeout(resolve, 100))
       retries++
+      
+      // 每20次重试打印一次日志
+      if (retries % 20 === 0) {
+        console.log(`Waiting for MathJax initialization... (${retries}/${maxRetries})`)
+        console.log('Current MathJax state:', {
+          exists: !!window.MathJax,
+          tex2svgPromise: !!window.MathJax?.tex2svgPromise,
+          startup: !!window.MathJax?.startup
+        })
+      }
     }
     
     if (!window.MathJax?.tex2svgPromise) {
+      console.error('MathJax initialization failed. Final state:', {
+        exists: !!window.MathJax,
+        tex2svgPromise: !!window.MathJax?.tex2svgPromise,
+        startup: !!window.MathJax?.startup,
+        keys: window.MathJax ? Object.keys(window.MathJax) : []
+      })
       throw new Error('MathJax tex2svgPromise not available after initialization')
     }
     
@@ -383,42 +387,98 @@ export async function initMathJax(config?: any): Promise<void> {
 }
 
 /**
- * 加载MathJax脚本
- * @param url - MathJax脚本URL
- * @returns Promise
+ * 可用的MathJax CDN列表
  */
-export function loadMathJax(url: string = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'): Promise<void> {
+const MATHJAX_CDNS = [
+  'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js',
+  'https://unpkg.com/mathjax@3/es5/tex-svg.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js'
+]
+
+/**
+ * 尝试从单个URL加载MathJax
+ */
+function loadMathJaxFromUrl(url: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    if (typeof window === 'undefined') {
-      reject(new Error('MathJax can only be loaded in browser environment'))
-      return
-    }
-    
-    // 检查是否已经有MathJax脚本
-    const existingScript = document.querySelector(`script[src*="mathjax"]`)
-    if (existingScript) {
-      console.log('MathJax script already exists')
-      resolve()
-      return
-    }
-    
-    console.log('Loading MathJax from:', url)
+    console.log('Trying to load MathJax from:', url)
     
     const script = document.createElement('script')
     script.src = url
     script.async = true
     script.id = 'mathjax-script'
     
+    const timeout = setTimeout(() => {
+      console.warn('MathJax loading timeout for:', url)
+      reject(new Error(`Timeout loading MathJax from ${url}`))
+    }, 10000) // 10秒超时
+    
     script.onload = () => {
-      console.log('MathJax script loaded')
+      clearTimeout(timeout)
+      console.log('MathJax script loaded from:', url)
       resolve()
     }
     
     script.onerror = (error) => {
-      console.error('Failed to load MathJax script:', error)
-      reject(new Error('Failed to load MathJax'))
+      clearTimeout(timeout)
+      console.warn('Failed to load MathJax from:', url, error)
+      reject(new Error(`Failed to load MathJax from ${url}`))
     }
     
     document.head.appendChild(script)
   })
+}
+
+/**
+ * 加载MathJax脚本（带备用CDN）
+ * @param urls - MathJax脚本URL数组
+ * @returns Promise
+ */
+export async function loadMathJax(urls: string[] = ['https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js']): Promise<void> {
+  if (typeof window === 'undefined') {
+    throw new Error('MathJax can only be loaded in browser environment')
+  }
+  
+  // 检查是否已经有MathJax脚本
+  const existingScript = document.querySelector(`script[src*="mathjax"]`)
+  if (existingScript) {
+    console.log('MathJax script already exists')
+    return
+  }
+  
+  // 跳过polyfill加载，现代浏览器通常不需要
+  
+  // 如果只传入了一个字符串，转换为数组
+  const urlList = Array.isArray(urls) ? urls : [urls]
+  
+  // 添加默认的备用CDN
+  const allUrls = [
+    ...urlList,
+    'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js',
+    'https://unpkg.com/mathjax@3/es5/tex-svg.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js'
+  ]
+  
+  // 去重
+  const uniqueUrls = [...new Set(allUrls)]
+  
+  console.log('Attempting to load MathJax from CDNs:', uniqueUrls)
+  
+  // 依次尝试每个CDN
+  for (const url of uniqueUrls) {
+    try {
+      await loadMathJaxFromUrl(url)
+      console.log('Successfully loaded MathJax from:', url)
+      return
+    } catch (error) {
+      console.warn('Failed to load from:', url, error)
+      // 移除失败的脚本标签
+      const failedScript = document.getElementById('mathjax-script')
+      if (failedScript) {
+        failedScript.remove()
+      }
+      continue
+    }
+  }
+  
+  throw new Error('Failed to load MathJax from all available CDNs')
 } 

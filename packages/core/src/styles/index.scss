@@ -78,33 +78,7 @@
       }
     }
 
-    // 分数按钮样式
-    .btn-fraction {
-      display: flex;
-      flex-direction: column;
-      line-height: 1;
-      font-size: 12px;
-      
-      .btn-numerator {
-        border-bottom: 1px solid currentColor;
-        padding-bottom: 1px;
-      }
-      
-      .btn-denominator {
-        padding-top: 1px;
-      }
-    }
 
-    // 根号按钮样式
-    .btn-sqrt {
-      display: flex;
-      align-items: center;
-      
-      .btn-sqrt-radical {
-        font-size: 16px;
-        margin-right: 1px;
-      }
-    }
 
     // 图标样式
     .fx-icon {
@@ -542,8 +516,8 @@
   border-radius: 12px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-width: 900px;
-  width: 90vw;
-  max-height: 80vh;
+  width: 95vw;
+  max-height: 95vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -670,7 +644,7 @@
           outline: none;
           border-color: #3b82f6;
           box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
+    }
 
         &::placeholder {
           color: #9ca3af;
@@ -798,6 +772,9 @@
         grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
         gap: 8px;
         margin-bottom: 20px;
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 4px;
 
         .symbol-button {
           display: flex;
@@ -805,21 +782,69 @@
           justify-content: center;
           height: 50px;
           border: 1px solid #e5e7eb;
-          border-radius: 6px;
+          border-radius: 8px;
           background: white;
           cursor: pointer;
           font-size: 18px;
           transition: all 0.2s;
+          position: relative;
+          overflow: hidden;
 
           &:hover {
             background: #f0f9ff;
             border-color: #3b82f6;
             transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
           }
 
           &:active {
             transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+
+          // SVG符号样式优化
+          svg {
+            max-width: 32px;
+            max-height: 32px;
+            width: auto;
+            height: auto;
+            // 提升SVG渲染质量
+            shape-rendering: geometricPrecision;
+            text-rendering: optimizeLegibility;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            // 确保SVG居中
+            display: block;
+            margin: auto;
+          }
+
+          // 后备文本样式优化
+          .symbol-fallback {
+            font-family: 'Times New Roman', 'KaTeX_Main', serif;
+            font-size: 14px;
+            color: #374151;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+            font-weight: 500;
+          }
+
+          // 针对特定符号的字体优化
+          &[title*="希腊"] .symbol-fallback,
+          &[title*="Greek"] .symbol-fallback {
+            font-family: 'Times New Roman', 'Symbol', serif;
+            font-size: 16px;
+          }
+
+          // 针对数学符号的字体优化
+          &[title*="积分"] .symbol-fallback,
+          &[title*="求和"] .symbol-fallback,
+          &[title*="极限"] .symbol-fallback {
+            font-size: 18px;
+            font-weight: bold;
           }
         }
       }
@@ -836,8 +861,10 @@
 
         .examples-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
           gap: 12px;
+          max-height: 300px;
+          overflow-y: auto;
 
           .example-button {
             display: flex;
