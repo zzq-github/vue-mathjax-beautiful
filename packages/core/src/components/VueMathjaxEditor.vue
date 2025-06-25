@@ -69,6 +69,9 @@
           <span v-else class="icon">🖼️</span>
           <span>图片</span>
         </button>
+
+        <div class="divider"></div>
+
         <button class="toolbar-btn clear-btn" @click="clearFormat" title="清除格式">
           <span class="icon">🧹</span>
           <span>清除</span>
@@ -83,7 +86,7 @@
         class="editor-content"
         contenteditable="true"
         @input="handleInput"
-        @beforeinput="onBeforeInput"
+        @beforeinput="handleBeforeInput"
         @keydown="handleKeydown"
         @paste="handlePaste"
         @focus="handleFocus"
@@ -149,12 +152,6 @@ const content = ref('')
 const charCount = ref(0)
 const uploadLoading = ref(false)
 const activeFormats = ref(new Set<string>())
-const currentFormatState = ref({
-  bold: false,
-  italic: false,
-  underline: false,
-  strikethrough: false
-})
 
 // 监听外部值变化
 watch(
@@ -234,78 +231,8 @@ const convertToStandardSyntax = (editorElement: HTMLElement) => {
 
 // 格式检查 - 检查当前选区或光标位置的格式状态
 const isFormatActive = (format: string): boolean => {
-  // 首先检查当前格式状态
-  if (currentFormatState.value[format as keyof typeof currentFormatState.value]) {
-    return true
-  }
-
-  if (!editorRef.value) return false
-
-  const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0) return false
-
-  try {
-    const range = selection.getRangeAt(0)
-    
-    // 如果有选中的文本，检查选中内容的格式
-    if (!range.collapsed) {
-      return checkSelectionFormat(range, format)
-    }
-    
-    // 如果没有选中文本，检查光标位置的格式
-    return checkCursorFormat(range, format)
-  } catch (error) {
-    console.warn('查询格式状态失败:', error)
-    return false
-  }
-}
-
-// 检查选中文本的格式
-const checkSelectionFormat = (range: Range, format: string): boolean => {
-  const container = range.commonAncestorContainer
-  const element = container.nodeType === Node.TEXT_NODE ? container.parentElement : container as Element
-  
-  if (!element) return false
-
-  // 检查选中内容是否完全在格式标签内
-  return checkElementFormat(element, format)
-}
-
-// 检查光标位置的格式
-const checkCursorFormat = (range: Range, format: string): boolean => {
-  const container = range.startContainer
-  const element = container.nodeType === Node.TEXT_NODE ? container.parentElement : container as Element
-  
-  if (!element) return false
-
-  return checkElementFormat(element, format)
-}
-
-// 检查元素及其父元素的格式
-const checkElementFormat = (element: Element, format: string): boolean => {
-  let currentElement: Element | null = element
-  
-  while (currentElement && currentElement !== editorRef.value) {
-    const tagName = currentElement.tagName?.toLowerCase()
-    
-    switch (format) {
-      case 'bold':
-        if (tagName === 'strong' || tagName === 'b') return true
-        break
-      case 'italic':
-        if (tagName === 'em' || tagName === 'i') return true
-        break
-      case 'underline':
-        if (tagName === 'u') return true
-        break
-      case 'strikethrough':
-        if (tagName === 's' || tagName === 'strike') return true
-        break
-    }
-    currentElement = currentElement.parentElement
-  }
-  
-  return false
+  // 只检查用户主动激活的格式，不检查光标位置的格式
+  return activeFormats.value.has(format)
 }
 
 // 切换格式
@@ -318,72 +245,102 @@ const toggleFormat = (format: string) => {
 
     const range = selection.getRangeAt(0)
     
-    // 如果有选中的文本，应用格式到选中的文本
     if (!range.collapsed) {
-      applyFormatToSelection(range, format)
+      // 有选中文字，直接应用格式
+      document.execCommand(format, false)
+      // 清除激活格式状态
+      activeFormats.value.clear()
     } else {
-      // 如果没有选中文本，切换格式状态
-      toggleFormatState(format)
+      // 没有选中文字，切换激活状态（完全互斥模式）
+      if (activeFormats.value.has(format)) {
+        // 如果已经激活，则取消激活
+        activeFormats.value.clear()
+      } else {
+        // 清除所有格式，只激活当前格式
+        activeFormats.value.clear()
+        activeFormats.value.add(format)
+      }
     }
     
     editorRef.value.focus()
-    updateSelection()
     handleInput()
   } catch (error) {
     console.warn('切换格式失败:', error)
   }
 }
 
-// 应用格式到选中的文本
-const applyFormatToSelection = (range: Range, format: string) => {
-  const isActive = isFormatActive(format)
-  const selectedText = range.toString()
+// 更新格式状态
+const updateFormatState = () => {
+  // 这个函数现在主要用于兼容性，实际格式状态由activeFormats管理
+  // 但我们可以用它来检查光标位置的实际格式状态
+  const formats = ['bold', 'italic', 'underline', 'strikethrough']
   
-  if (!selectedText) return
-  
-  let formattedHtml: string
-  
-  if (isActive) {
-    // 如果已经有格式，移除格式
-    formattedHtml = selectedText
-  } else {
-    // 如果没有格式，添加格式
-    formattedHtml = wrapTextWithFormat(selectedText, format)
-  }
-  
-  // 删除选中的内容并插入格式化的内容
-  range.deleteContents()
-  const tempDiv = document.createElement('div')
-  tempDiv.innerHTML = formattedHtml
-  
-  // 插入格式化的内容
-  while (tempDiv.firstChild) {
-    range.insertNode(tempDiv.firstChild)
+  // 如果没有激活的格式，检查光标位置的格式状态来更新UI显示
+  if (activeFormats.value.size === 0) {
+    const selection = window.getSelection()
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0)
+      if (range.collapsed) {
+        // 光标位置，检查当前位置的格式状态
+        formats.forEach(format => {
+          if (document.queryCommandState(format)) {
+            // 注意：这里不添加到activeFormats，只是为了UI显示
+            // 实际的激活状态仍由用户操作控制
+          }
+        })
+      }
+    }
   }
 }
 
-// 用格式标签包装文本
-const wrapTextWithFormat = (text: string, format: string): string => {
-  switch (format) {
-    case 'bold':
-      return `<strong>${text}</strong>`
-    case 'italic':
-      return `<em>${text}</em>`
-    case 'underline':
-      return `<u>${text}</u>`
-    case 'strikethrough':
-      return `<s>${text}</s>`
-    default:
-      return text
+// 处理输入前事件
+const handleBeforeInput = (event: Event) => {
+  const inputEvent = event as InputEvent
+  // 如果有激活的格式状态，应用格式
+  if (activeFormats.value.size > 0 && inputEvent.inputType === 'insertText' && inputEvent.data) {
+    event.preventDefault()
+    
+    let wrappedText = inputEvent.data
+    
+    // 应用唯一的激活格式
+    const activeFormat = Array.from(activeFormats.value)[0]
+    switch (activeFormat) {
+      case 'bold':
+        wrappedText = `<strong>${wrappedText}</strong>`
+        break
+      case 'italic':
+        wrappedText = `<em>${wrappedText}</em>`
+        break
+      case 'underline':
+        wrappedText = `<u>${wrappedText}</u>`
+        break
+      case 'strikethrough':
+        wrappedText = `<s>${wrappedText}</s>`
+        break
+    }
+    
+    // 插入格式化的文字
+    const selection = window.getSelection()
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0)
+      range.deleteContents()
+      
+      const tempDiv = document.createElement('div')
+      tempDiv.innerHTML = wrappedText
+      const fragment = document.createDocumentFragment()
+      
+      while (tempDiv.firstChild) {
+        fragment.appendChild(tempDiv.firstChild)
+      }
+      
+      range.insertNode(fragment)
+      range.collapse(false)
+      selection.removeAllRanges()
+      selection.addRange(range)
+    }
+    
+    handleInput()
   }
-}
-
-// 切换格式状态（用于无选中文本时）
-const toggleFormatState = (format: string) => {
-  const key = format as keyof typeof currentFormatState.value
-  currentFormatState.value[key] = !currentFormatState.value[key]
-  
-  console.log(`格式状态切换: ${format} = ${currentFormatState.value[key]}`)
 }
 
 // 更新选区状态
@@ -398,56 +355,13 @@ const updateSelection = () => {
 
   const range = selection.getRangeAt(0)
   
-  // 如果有选中的文本，检查选中文本的格式状态
+  // 如果有选中的文字，清除激活格式状态（因为要对选中文字应用格式）
   if (!range.collapsed) {
-    updateFormatStateFromSelection(range)
-    // 清除格式状态，因为用户选中了文本
-    resetFormatState()
-  } else {
-    // 如果光标在某个格式标签内，更新格式状态
-    updateFormatStateFromCursor(range)
+    activeFormats.value.clear()
   }
-
-  // 更新active格式集合用于UI显示
-  const formats = ['bold', 'italic', 'underline', 'strikethrough']
-  activeFormats.value.clear()
-
-  formats.forEach((format) => {
-    if (isFormatActive(format)) {
-      activeFormats.value.add(format)
-    }
-  })
-}
-
-// 从选中内容更新格式状态
-const updateFormatStateFromSelection = (range: Range) => {
-  const formats = ['bold', 'italic', 'underline', 'strikethrough']
-  formats.forEach((format) => {
-    const key = format as keyof typeof currentFormatState.value
-    currentFormatState.value[key] = checkSelectionFormat(range, format)
-  })
-}
-
-// 从光标位置更新格式状态
-const updateFormatStateFromCursor = (range: Range) => {
-  const formats = ['bold', 'italic', 'underline', 'strikethrough']
-  formats.forEach((format) => {
-    const key = format as keyof typeof currentFormatState.value
-    // 只有当前没有激活格式状态时，才从光标位置更新
-    if (!currentFormatState.value[key]) {
-      currentFormatState.value[key] = checkCursorFormat(range, format)
-    }
-  })
-}
-
-// 重置格式状态
-const resetFormatState = () => {
-  currentFormatState.value = {
-    bold: false,
-    italic: false,
-    underline: false,
-    strikethrough: false
-  }
+  
+  // 更新格式状态
+  updateFormatState()
 }
 
 // 插入公式
@@ -505,8 +419,6 @@ const insertFormula = async (latex: string) => {
     }
   }
 }
-
-
 
 // 显示公式编辑器
 const showFormulaEditor = () => {
@@ -569,17 +481,136 @@ const handleImageUpload = async (event: Event) => {
 }
 
 // 清除格式
-const clearFormat = () => {
+const clearFormat = async () => {
   if (!editorRef.value) return
 
   try {
-    document.execCommand('removeFormat', false, undefined)
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0) {
+      // 没有选区，清除所有激活的格式状态
+      activeFormats.value.clear()
+      editorRef.value.focus()
+      return
+    }
+
+    const range = selection.getRangeAt(0)
+    
+    if (range.collapsed) {
+      // 光标位置，清除激活的格式状态
+      activeFormats.value.clear()
+      editorRef.value.focus()
+      return
+    }
+
+    // 有选中文本，清除选中文本的格式
+    await clearSelectionFormat(range)
+    
+    // 清除激活的格式状态
+    activeFormats.value.clear()
     editorRef.value.focus()
-    updateSelection()
     handleInput()
   } catch (error) {
     console.warn('清除格式失败:', error)
   }
+}
+
+// 清除选中文本的格式
+const clearSelectionFormat = async (range: Range) => {
+  if (!editorRef.value) return
+
+  // 获取选中的内容
+  const selectedContent = range.extractContents()
+  
+  // 创建一个临时容器来处理内容
+  const tempContainer = document.createElement('div')
+  tempContainer.appendChild(selectedContent)
+  
+  // 保存数学公式和图片
+  const formulas: Array<{element: Element, placeholder: Text}> = []
+  const images: Array<{element: Element, placeholder: Text}> = []
+  
+  // 保存SVG公式
+  const svgFormulas = tempContainer.querySelectorAll('svg[data-latex]')
+  svgFormulas.forEach((svg, index) => {
+    const placeholder = document.createTextNode(`__FORMULA_${index}__`)
+    formulas.push({element: svg.cloneNode(true) as Element, placeholder})
+    svg.parentNode?.replaceChild(placeholder, svg)
+  })
+  
+  // 保存传统公式
+  const spanFormulas = tempContainer.querySelectorAll('.math-formula')
+  spanFormulas.forEach((formula, index) => {
+    const placeholder = document.createTextNode(`__SPAN_FORMULA_${index}__`)
+    formulas.push({element: formula.cloneNode(true) as Element, placeholder})
+    formula.parentNode?.replaceChild(placeholder, formula)
+  })
+  
+  // 保存图片
+  const imgElements = tempContainer.querySelectorAll('img')
+  imgElements.forEach((img, index) => {
+    const placeholder = document.createTextNode(`__IMAGE_${index}__`)
+    images.push({element: img.cloneNode(true) as Element, placeholder})
+    img.parentNode?.replaceChild(placeholder, img)
+  })
+  
+  // 获取纯文本内容（移除所有HTML格式）
+  let cleanText = tempContainer.textContent || ''
+  
+  // 恢复公式和图片的占位符
+  formulas.forEach(({placeholder}, index) => {
+    cleanText = cleanText.replace(`__FORMULA_${index}__`, `__FORMULA_${index}__`)
+    cleanText = cleanText.replace(`__SPAN_FORMULA_${index}__`, `__SPAN_FORMULA_${index}__`)
+  })
+  
+  images.forEach(({placeholder}, index) => {
+    cleanText = cleanText.replace(`__IMAGE_${index}__`, `__IMAGE_${index}__`)
+  })
+  
+  // 创建新的内容容器
+  const newContainer = document.createElement('div')
+  newContainer.textContent = cleanText
+  
+  // 恢复公式
+  formulas.forEach(({element}, index) => {
+    const formulaPlaceholder = `__FORMULA_${index}__`
+    const spanFormulaPlaceholder = `__SPAN_FORMULA_${index}__`
+    
+    if (newContainer.textContent?.includes(formulaPlaceholder)) {
+      newContainer.innerHTML = newContainer.innerHTML.replace(formulaPlaceholder, element.outerHTML)
+    }
+    if (newContainer.textContent?.includes(spanFormulaPlaceholder)) {
+      newContainer.innerHTML = newContainer.innerHTML.replace(spanFormulaPlaceholder, element.outerHTML)
+    }
+  })
+  
+  // 恢复图片
+  images.forEach(({element}, index) => {
+    const imagePlaceholder = `__IMAGE_${index}__`
+    if (newContainer.textContent?.includes(imagePlaceholder)) {
+      newContainer.innerHTML = newContainer.innerHTML.replace(imagePlaceholder, element.outerHTML)
+    }
+  })
+  
+  // 创建文档片段
+  const fragment = document.createDocumentFragment()
+  while (newContainer.firstChild) {
+    fragment.appendChild(newContainer.firstChild)
+  }
+  
+  // 插入清理后的内容
+  range.insertNode(fragment)
+  
+  // 重新设置选区
+  range.collapse(false)
+  const selection = window.getSelection()
+  if (selection) {
+    selection.removeAllRanges()
+    selection.addRange(range)
+  }
+  
+  // 重新设置公式点击事件
+  await nextTick()
+  setupFormulaClickEvents()
 }
 
 // 更新统计信息
@@ -602,77 +633,11 @@ const handleInput = () => {
   updateStats()
 }
 
-// 处理输入前事件的包装函数
-const onBeforeInput = (event: Event) => {
-  handleBeforeInput(event as InputEvent)
-}
-
-// 处理输入前事件
-const handleBeforeInput = (event: InputEvent) => {
-  // 如果是输入文本且有激活的格式状态，应用格式
-  if (event.inputType === 'insertText' && event.data && hasActiveFormat()) {
-    event.preventDefault()
-    insertFormattedText(event.data)
-  }
-}
-
-// 检查是否有激活的格式状态
-const hasActiveFormat = (): boolean => {
-  return Object.values(currentFormatState.value).some(active => active)
-}
-
-// 插入带格式的文本
-const insertFormattedText = (text: string) => {
-  if (!editorRef.value) return
-
-  const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0) return
-
-  const range = selection.getRangeAt(0)
-  
-  // 创建格式化的文本元素
-  let formattedElement = document.createTextNode(text)
-  let currentElement: Node = formattedElement
-
-  // 按照激活的格式状态包装文本
-  Object.entries(currentFormatState.value).forEach(([format, isActive]) => {
-    if (isActive) {
-      const wrapper = document.createElement(getFormatTag(format))
-      wrapper.appendChild(currentElement)
-      currentElement = wrapper
-    }
-  })
-
-  // 插入格式化的文本
-  range.deleteContents()
-  range.insertNode(currentElement)
-  
-  // 将光标移动到插入内容的末尾
-  range.setStartAfter(currentElement)
-  range.collapse(true)
-  selection.removeAllRanges()
-  selection.addRange(range)
-  
-  // 触发内容更新
-  handleInput()
-}
-
-// 获取格式对应的HTML标签
-const getFormatTag = (format: string): string => {
-  switch (format) {
-    case 'bold': return 'strong'
-    case 'italic': return 'em'
-    case 'underline': return 'u'
-    case 'strikethrough': return 's'
-    default: return 'span'
-  }
-}
-
 // 处理键盘事件
 const handleKeydown = (event: KeyboardEvent) => {
   // 按Escape键清除格式状态
   if (event.key === 'Escape') {
-    resetFormatState()
+    activeFormats.value.clear()
     updateSelection()
     return
   }
@@ -699,7 +664,7 @@ const handleKeydown = (event: KeyboardEvent) => {
   if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
     // 延迟重置格式状态，让光标移动完成
     setTimeout(() => {
-      resetFormatState()
+      activeFormats.value.clear()
       updateSelection()
     }, 0)
   }
@@ -791,13 +756,19 @@ onUnmounted(() => {
 * {
   box-sizing: border-box;
 }
+
 .vue-mathjax-editor {
   display: flex;
   flex-direction: column;
+  /* border-radius: 8px; */
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
   overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vue-mathjax-editor:hover {
+  /* box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); */
 }
 
 .vue-mathjax-editor.full-screen {
@@ -814,90 +785,166 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
-  gap: 8px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid #e2e8f0;
+  gap: 12px;
   flex-wrap: wrap;
+  backdrop-filter: blur(10px);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  position: relative;
 }
 
-.toolbar-btn {
-  padding: 8px 12px;
-  border: 1px solid #dee2e6;
-  background: white;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #495057;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.2s ease;
-  min-height: 36px;
-  white-space: nowrap;
-}
-
-.toolbar-btn:hover {
-  background: #e9ecef;
-  border-color: #adb5bd;
-}
-
-.toolbar-btn.active {
-  background: #007bff;
-  border-color: #007bff;
-  color: white;
-}
-
-.toolbar-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.toolbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
 }
 
 .format-group,
 .math-group,
 .insert-group {
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
+}
+
+.toolbar-btn {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* font-weight: 600; */
+  color: #475569;
+  position: relative;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  gap: 6px;
+}
+
+.toolbar-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+.toolbar-btn:hover::before {
+  left: 100%;
+}
+
+.toolbar-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: #334155;
+}
+
+.toolbar-btn.active {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.toolbar-btn:disabled:hover {
+  transform: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .divider {
   width: 1px;
   height: 24px;
-  background: #dee2e6;
-  margin: 0 8px;
+  background: linear-gradient(to bottom, transparent 0%, #cbd5e1 20%, #cbd5e1 80%, transparent 100%);
+  margin: 0 12px;
+  opacity: 0.6;
 }
 
 .formula-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-color: transparent;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%) !important;
+  color: #6366f1 !important;
+  border: 1px solid rgba(99, 102, 241, 0.2) !important;
+  min-width: auto !important;
+  padding: 10px 18px !important;
+  font-weight: 700 !important;
 }
 
 .formula-btn:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%) !important;
+  color: #4f46e5 !important;
+  border-color: rgba(99, 102, 241, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
 }
 
 .fx-icon {
-  font-style: italic;
   font-weight: bold;
-  font-size: 16px;
+  font-style: italic;
+  color: #6366f1;
+  font-size: 18px;
+  text-shadow: 0 1px 2px rgba(99, 102, 241, 0.2);
+  margin-right: 4px;
 }
 
+.image-btn {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%) !important;
+  color: #059669 !important;
+  border: 1px solid rgba(34, 197, 94, 0.2) !important;
+  min-width: auto !important;
+  padding: 10px 18px !important;
+  font-weight: 700 !important;
+}
 
+.image-btn:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%) !important;
+  color: #047857 !important;
+  border-color: rgba(34, 197, 94, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
 
-.image-btn,
 .clear-btn {
-  background: #28a745;
-  color: white;
-  border-color: transparent;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(245, 101, 101, 0.1) 100%) !important;
+  color: #dc2626 !important;
+  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+  min-width: auto !important;
+  padding: 10px 18px !important;
+  font-weight: 700 !important;
 }
 
-.image-btn:hover,
 .clear-btn:hover {
-  background: #218838;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(245, 101, 101, 0.2) 100%) !important;
+  color: #b91c1c !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
 }
 
 .loading-icon {
   animation: spin 1s linear infinite;
+  font-size: 16px;
 }
 
 @keyframes spin {
@@ -914,83 +961,121 @@ onUnmounted(() => {
   position: relative;
   display: flex;
   flex-direction: column;
+  background: white;
 }
 
 .editor-content {
   flex: 1;
-  padding: 20px;
+  padding: 24px;
   outline: none;
   font-size: 16px;
-  line-height: 1.6;
-  color: #333;
+  line-height: 1.7;
+  color: #334155;
   overflow-y: auto;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.editor-content:focus {
+  background: linear-gradient(135deg, #fefefe 0%, #f8fafc 100%);
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.1);
 }
 
 .editor-content:empty:before {
   content: attr(placeholder);
-  color: #adb5bd;
+  color: #94a3b8;
   font-style: italic;
+  pointer-events: none;
 }
 
 .char-counter {
   position: absolute;
-  bottom: 12px;
-  right: 16px;
+  bottom: 16px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
-  color: #6c757d;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 4px 8px;
-  border-radius: 4px;
-  backdrop-filter: blur(4px);
+  color: #6b7280;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 12px;
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+  pointer-events: none;
+  user-select: none;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.char-counter:hover {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(156, 163, 175, 0.8);
+  transform: translateY(-1px);
 }
 
 .char-count {
-  font-weight: 600;
+  font-weight: 700;
+  color: #374151;
+  font-variant-numeric: tabular-nums;
 }
 
 .char-label {
-  margin-left: 4px;
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 500;
 }
 
 /* 编辑器内容样式 */
 .editor-content :deep(strong) {
-  font-weight: bold;
+  font-weight: 700;
+  color: #1f2937;
 }
 
 .editor-content :deep(em) {
   font-style: italic;
+  color: #374151;
 }
 
 .editor-content :deep(u) {
   text-decoration: underline;
+  text-decoration-color: #6366f1;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
 }
 
 .editor-content :deep(s) {
   text-decoration: line-through;
+  text-decoration-color: #ef4444;
+  text-decoration-thickness: 2px;
+  opacity: 0.7;
 }
 
 .editor-content :deep(img) {
   max-width: 100%;
   height: auto;
-  border-radius: 4px;
-  margin: 8px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin: 12px 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(226, 232, 240, 0.6);
 }
 
 .editor-content :deep(img:hover) {
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02) translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: #6366f1;
 }
 
 /* SVG公式样式 */
 .editor-content :deep(svg[data-latex]) {
   cursor: pointer;
-  transition: all 0.2s ease;
-  border-radius: 4px;
-  padding: 2px 4px;
-  margin: 0 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 6px;
+  padding: 4px 8px;
+  margin: 0 4px;
   background: transparent;
   border: 1px solid transparent;
   font-size: 18px !important;
@@ -999,47 +1084,149 @@ onUnmounted(() => {
 }
 
 .editor-content :deep(svg[data-latex]:hover) {
-  background: #f0f9ff;
-  border-color: #3b82f6;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-color: #6366f1;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1), 0 2px 4px -1px rgba(99, 102, 241, 0.06);
 }
 
 .editor-content :deep(svg[data-latex-type='inline']) {
   font-size: 20px !important;
   min-height: 20px;
   vertical-align: baseline;
+  padding: 2px 6px;
 }
 
 .editor-content :deep(svg[data-latex-type='display']) {
   font-size: 24px !important;
   min-height: 28px;
   display: inline-block;
-  margin: 4px 8px;
+  margin: 8px 12px;
+  padding: 6px 12px;
+}
+
+/* 添加微妙的动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vue-mathjax-editor {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* 格式按钮特殊样式 */
+.format-group .toolbar-btn {
+  font-size: 16px !important;
+  min-width: 44px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+
+.format-group .toolbar-btn:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: #6366f1 !important;
+  color: #6366f1 !important;
+}
+
+.format-group .toolbar-btn.active {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+  border-color: transparent !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
+  .vue-mathjax-editor {
+    border-radius: 8px;
+  }
+
+  .toolbar {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+  
+  .toolbar-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+    height: 36px;
+    min-width: 36px;
+  }
+  
+  .formula-btn,
+  .image-btn,
+  .clear-btn {
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+  }
+  
+  .format-group .toolbar-btn {
+    font-size: 14px !important;
+    min-width: 36px !important;
+  }
+  
+  .divider {
+    height: 20px;
+    margin: 0 8px;
+  }
+  
+  .editor-content {
+    padding: 18px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  
+  .char-counter {
+    bottom: 12px;
+    right: 16px;
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .fx-icon {
+    font-size: 16px;
+    margin-right: 2px;
+  }
+}
+
+@media (max-width: 480px) {
   .toolbar {
     padding: 10px 12px;
     gap: 6px;
   }
-
+  
   .toolbar-btn {
     padding: 6px 10px;
-    font-size: 13px;
-    min-height: 32px;
+    font-size: 12px;
+    height: 32px;
+    min-width: 32px;
   }
-
+  
+  .formula-btn,
+  .image-btn,
+  .clear-btn {
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+  }
+  
   .editor-content {
     padding: 16px;
-    font-size: 15px;
+    font-size: 14px;
   }
-
+  
   .char-counter {
-    bottom: 8px;
+    bottom: 10px;
     right: 12px;
-    font-size: 11px;
+    font-size: 10px;
+    padding: 3px 6px;
   }
 }
 </style>

@@ -1,5 +1,124 @@
 <template>
-  <div v-if="visible" class="vue-mathjax-beautiful-overlay" @click="handleOverlayClick">
+  <!-- 内联模式 -->
+  <div v-if="inlineMode" class="vue-mathjax-beautiful-inline">
+    <!-- 编辑器内容 -->
+    <div class="editor-container">
+      <!-- 输入区域 -->
+      <div class="input-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="icon">📝</span>
+            <span>LaTeX 输入</span>
+          </div>
+          <div class="input-actions">
+            <button class="action-btn" @click="clearInput" title="清空">
+              <span class="icon">🗑️</span>
+            </button>
+          </div>
+        </div>
+        <div class="input-wrapper">
+          <textarea
+            v-model="latexInput"
+            class="latex-input"
+            placeholder="输入 LaTeX 公式或点击下方符号..."
+            @input="updatePreview"
+            rows="3"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- 预览区域 -->
+      <div class="preview-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="icon">👁️</span>
+            <span>实时预览</span>
+          </div>
+          <div class="preview-status" :class="{ active: latexInput }">
+            <span v-if="latexInput" class="status-dot"></span>
+            {{ latexInput ? '渲染中' : '无公式' }}
+          </div>
+        </div>
+        <div class="preview-container">
+          <div v-if="latexInput" class="formula-preview" v-html="renderedFormula"></div>
+          <div v-else class="no-formula">
+            <span class="icon">💡</span>
+            <span>输入 LaTeX 公式以查看预览</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 符号面板 -->
+      <div class="symbols-section">
+        <!-- 分类标签 -->
+        <div class="category-tabs">
+          <button
+            v-for="category in categories"
+            :key="category.key"
+            :class="['tab-button', { active: activeCategory === category.key }]"
+            @click="activeCategory = category.key"
+          >
+            <span class="tab-icon">{{ category.icon }}</span>
+            <span class="tab-name">{{ category.name }}</span>
+          </button>
+        </div>
+
+        <!-- 符号内容 -->
+        <div class="symbols-content">
+          <!-- 符号网格 -->
+          <div class="symbols-grid">
+            <button
+              v-for="symbol in currentSymbols"
+              :key="symbol.latex"
+              class="symbol-button"
+              @click="insertSymbol(symbol.latex)"
+              :title="symbol.description"
+            >
+              <span v-if="symbol.display" v-html="symbol.display"></span>
+              <span v-else class="symbol-fallback">{{ symbol.latex }}</span>
+            </button>
+          </div>
+
+          <!-- 常用公式示例 -->
+          <div v-if="activeCategory === 'basic'" class="formula-examples">
+            <div class="examples-header">
+              <span class="icon">⭐</span>
+              <span>常用公式</span>
+            </div>
+            <div class="examples-grid">
+              <button
+                v-for="example in reactiveFormulaExamples"
+                :key="example.latex"
+                class="example-button"
+                @click="insertSymbol(example.latex)"
+                :title="example.description"
+              >
+                <div class="example-preview" v-html="example.display"></div>
+                <div class="example-description">{{ example.description }}</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部操作（内联模式） -->
+      <div class="inline-footer">
+        <button class="btn btn-secondary" @click="clearInput">
+          清空
+        </button>
+        <button 
+          class="btn btn-primary" 
+          @click="handleInsert" 
+          :disabled="!latexInput"
+        >
+          应用公式
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗模式 -->
+  <div v-else-if="visible" class="vue-mathjax-beautiful-overlay" @click="handleOverlayClick">
     <div class="vue-mathjax-beautiful-dialog" @click.stop>
       <!-- 头部 -->
       <div class="dialog-header">
@@ -106,7 +225,7 @@
               </div>
               <div class="examples-grid">
                 <button
-                  v-for="example in formulaExamples"
+                  v-for="example in reactiveFormulaExamples"
                   :key="example.latex"
                   class="example-button"
                   @click="insertSymbol(example.latex)"
@@ -121,7 +240,7 @@
         </div>
       </div>
 
-      <!-- 底部操作 -->
+      <!-- 底部操作（弹窗模式） -->
       <div class="dialog-footer">
         <button class="btn btn-secondary" @click="handleClose">
           取消
@@ -152,11 +271,13 @@ import {
 } from '../data'
 
 const props = withDefaults(defineProps<{
-  modelValue: boolean
+  modelValue?: boolean
   existingLatex?: string
+  inlineMode?: boolean
 }>(), {
   modelValue: false,
-  existingLatex: ''
+  existingLatex: '',
+  inlineMode: false
 })
 
 const emit = defineEmits<{
@@ -171,17 +292,21 @@ const activeCategory = ref('basic')
 const renderedFormula = ref('')
 const symbolDisplayCache = new Map<string, string>()
 
-// 数据已从 data 目录导入
+// 创建响应式的符号数据副本
+const reactiveBasicSymbols = ref([...basicSymbols])
+const reactiveGreekSymbols = ref([...greekSymbols])
+const reactiveAdvancedSymbols = ref([...advancedSymbols])
+const reactiveFormulaExamples = ref([...formulaExamples])
 
 // 计算属性
 const currentSymbols = computed(() => {
   switch (activeCategory.value) {
     case 'greek':
-      return greekSymbols
+      return reactiveGreekSymbols.value
     case 'advanced':
-      return advancedSymbols
+      return reactiveAdvancedSymbols.value
     default:
-      return basicSymbols
+      return reactiveBasicSymbols.value
   }
 })
 
@@ -195,11 +320,37 @@ watch(() => props.modelValue, (newVal) => {
 })
 
 watch(() => props.existingLatex, (newVal) => {
-  if (visible.value && newVal) {
+  if ((visible.value || props.inlineMode) && newVal) {
     latexInput.value = newVal
     updatePreview()
   }
 })
+
+// 监听内联模式变化
+watch(() => props.inlineMode, (newVal) => {
+  if (newVal) {
+    // 内联模式激活时，确保符号已渲染
+    nextTick(async () => {
+      try {
+        // 检查是否需要重新渲染符号
+        const needsRender = reactiveBasicSymbols.value.some(symbol => !symbol.display) || 
+                           reactiveGreekSymbols.value.some(symbol => !symbol.display) || 
+                           reactiveAdvancedSymbols.value.some(symbol => !symbol.display) ||
+                           reactiveFormulaExamples.value.some(example => !example.display)
+        
+        if (needsRender && window.MathJax?.tex2svgPromise) {
+          console.log('内联模式激活，开始渲染符号...')
+          await Promise.all([
+            renderAllSymbols(),
+            renderFormulaExamples()
+          ])
+        }
+      } catch (error) {
+        console.error('内联模式符号渲染失败:', error)
+      }
+    })
+  }
+}, { immediate: true })
 
 // 方法
 const handleOverlayClick = () => {
@@ -217,8 +368,6 @@ const clearInput = () => {
   latexInput.value = ''
   renderedFormula.value = ''
 }
-
-
 
 const insertSymbol = (symbol: string) => {
   const textarea = document.querySelector('.latex-input') as HTMLTextAreaElement
@@ -296,10 +445,13 @@ const handleInsert = () => {
 
 // 渲染符号
 const renderSymbols = async (symbols: Symbol[]) => {
-  for (const symbol of symbols) {
+  for (let i = 0; i < symbols.length; i++) {
+    const symbol = symbols[i]
     if (!symbol.display) {
       try {
         if (window.MathJax?.tex2svgPromise) {
+          console.log(`渲染符号 ${i + 1}/${symbols.length}: ${symbol.latex}`)
+          
           const result = await window.MathJax.tex2svgPromise(symbol.latex, {
             display: false,
             scale: 1.3,
@@ -323,6 +475,10 @@ const renderSymbols = async (symbols: Symbol[]) => {
             svg.setAttribute('text-rendering', 'optimizeLegibility')
             
             symbol.display = svg.outerHTML
+            console.log(`符号 ${symbol.latex} 渲染成功`)
+          } else {
+            console.warn(`符号 ${symbol.latex} 未获取到SVG元素`)
+            symbol.display = ''
           }
         }
       } catch (error) {
@@ -330,6 +486,9 @@ const renderSymbols = async (symbols: Symbol[]) => {
         // 如果渲染失败，使用空字符串，让后备文本显示
         symbol.display = ''
       }
+      
+      // 添加小延迟避免过快渲染导致的问题
+      await new Promise(resolve => setTimeout(resolve, 50))
     }
   }
 }
@@ -337,47 +496,80 @@ const renderSymbols = async (symbols: Symbol[]) => {
 // 渲染所有符号
 const renderAllSymbols = async () => {
   console.log('开始渲染所有符号...')
-  await Promise.all([
-    renderSymbols(basicSymbols),
-    renderSymbols(greekSymbols),
-    renderSymbols(advancedSymbols)
-  ])
-  console.log('所有符号渲染完成')
+  
+  // 检查MathJax是否可用
+  if (!window.MathJax?.tex2svgPromise) {
+    console.warn('MathJax不可用，跳过符号渲染')
+    return
+  }
+  
+  try {
+    // 串行渲染避免并发问题
+    console.log('渲染基础符号...')
+    await renderSymbols(reactiveBasicSymbols.value)
+    
+    console.log('渲染希腊字母...')
+    await renderSymbols(reactiveGreekSymbols.value)
+    
+    console.log('渲染高级符号...')
+    await renderSymbols(reactiveAdvancedSymbols.value)
+    
+    console.log('所有符号渲染完成')
+  } catch (error) {
+    console.error('符号渲染过程中出错:', error)
+  }
 }
 
 // 渲染公式示例
 const renderFormulaExamples = async () => {
-  for (const example of formulaExamples) {
+  console.log('开始渲染公式示例...')
+  
+  if (!window.MathJax?.tex2svgPromise) {
+    console.warn('MathJax不可用，跳过公式示例渲染')
+    return
+  }
+  
+  for (let i = 0; i < reactiveFormulaExamples.value.length; i++) {
+    const example = reactiveFormulaExamples.value[i]
     if (!example.display) {
       try {
-        if (window.MathJax?.tex2svgPromise) {
-          const result = await window.MathJax.tex2svgPromise(example.latex, {
-            display: false,
-            scale: 1.0,
-            em: 16,
-            ex: 8,
-            containerWidth: 1280
-          })
+        console.log(`渲染公式示例 ${i + 1}/${formulaExamples.length}: ${example.latex}`)
+        
+        const result = await window.MathJax.tex2svgPromise(example.latex, {
+          display: false,
+          scale: 1.0,
+          em: 16,
+          ex: 8,
+          containerWidth: 1280
+        })
+        
+        const svg = result.getElementsByTagName('svg')[0]
+        if (svg) {
+          svg.style.fontSize = '16px'
+          svg.style.maxWidth = '100%'
+          svg.style.verticalAlign = 'middle'
           
-          const svg = result.getElementsByTagName('svg')[0]
-          if (svg) {
-            svg.style.fontSize = '16px'
-            svg.style.maxWidth = '100%'
-            svg.style.verticalAlign = 'middle'
-            
-            // 设置SVG属性以提高渲染质量
-            svg.setAttribute('shape-rendering', 'geometricPrecision')
-            svg.setAttribute('text-rendering', 'optimizeLegibility')
-            
-            example.display = svg.outerHTML
-          }
+          // 设置SVG属性以提高渲染质量
+          svg.setAttribute('shape-rendering', 'geometricPrecision')
+          svg.setAttribute('text-rendering', 'optimizeLegibility')
+          
+          example.display = svg.outerHTML
+          console.log(`公式示例 ${example.description} 渲染成功`)
+        } else {
+          console.warn(`公式示例 ${example.latex} 未获取到SVG元素`)
+          example.display = ''
         }
       } catch (error) {
-        console.warn('公式示例渲染失败:', error)
+        console.warn(`公式示例 ${example.latex} 渲染失败:`, error)
         example.display = ''
       }
+      
+      // 添加小延迟
+      await new Promise(resolve => setTimeout(resolve, 100))
     }
   }
+  
+  console.log('公式示例渲染完成')
 }
 
 // 生命周期
@@ -386,6 +578,9 @@ onMounted(async () => {
   try {
     await initMathJax()
     console.log('MathJax初始化完成，开始渲染符号和公式示例...')
+    
+    // 等待一段时间确保MathJax完全就绪
+    await new Promise(resolve => setTimeout(resolve, 300))
     
     // 并行渲染符号和公式示例
     await Promise.all([

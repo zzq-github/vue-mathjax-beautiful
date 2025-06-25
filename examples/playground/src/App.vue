@@ -1,24 +1,151 @@
 <template>
-  <div id="app" class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+  <div id="app" class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
     <!-- 头部导航 -->
-    <header class="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
+    <header class="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md transition-colors duration-300">
       <div class="container mx-auto flex h-16 items-center justify-between px-4">
         <div class="flex items-center space-x-3">
           <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white">
             <CalculatorIcon class="h-5 w-5" />
           </div>
           <div>
-            <h1 class="text-xl font-bold text-gray-900">Vue MathJax</h1>
-            <p class="text-xs text-gray-500">Beautiful Editor</p>
+            <h1 class="text-xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Vue MathJax</h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-300">Beautiful Editor</p>
           </div>
         </div>
+        <!-- 桌面端导航 -->
         <nav class="hidden md:flex items-center space-x-8">
-          <a href="#editor" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">编辑器</a>
-          <a href="#features" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">功能特性</a>
-          <a href="#examples" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">示例</a>
-          <a href="#docs" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">文档</a>
+          <a href="#editor" class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">编辑器</a>
+          <a href="#features" class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">功能特性</a>
+          <a href="#examples" class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">示例</a>
+          <a href="#docs" class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">文档</a>
+          
+          <!-- 主题切换按钮 -->
+          <button
+            @click="toggleTheme"
+            class="relative p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 group"
+            aria-label="切换主题"
+          >
+            <div class="relative w-5 h-5">
+              <!-- 太阳图标 -->
+              <svg 
+                v-show="!isDark"
+                class="absolute inset-0 w-5 h-5 text-yellow-500 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110"
+                fill="currentColor" 
+                viewBox="0 0 20 20"
+              >
+                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+              </svg>
+              
+              <!-- 月亮图标 -->
+              <svg 
+                v-show="isDark"
+                class="absolute inset-0 w-5 h-5 text-blue-400 transition-all duration-300 group-hover:-rotate-12 group-hover:scale-110"
+                fill="currentColor" 
+                viewBox="0 0 20 20"
+              >
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            </div>
+          </button>
         </nav>
+
+        <!-- 移动端导航 -->
+        <div class="flex md:hidden items-center space-x-2">
+          <!-- 主题切换按钮 -->
+          <button
+            @click="toggleTheme"
+            class="relative p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 group"
+            aria-label="切换主题"
+          >
+            <div class="relative w-4 h-4">
+              <!-- 太阳图标 -->
+              <svg 
+                v-show="!isDark"
+                class="absolute inset-0 w-4 h-4 text-yellow-500 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110"
+                fill="currentColor" 
+                viewBox="0 0 20 20"
+              >
+                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+              </svg>
+              
+              <!-- 月亮图标 -->
+              <svg 
+                v-show="isDark"
+                class="absolute inset-0 w-4 h-4 text-blue-400 transition-all duration-300 group-hover:-rotate-12 group-hover:scale-110"
+                fill="currentColor" 
+                viewBox="0 0 20 20"
+              >
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            </div>
+          </button>
+
+          <!-- 汉堡菜单按钮 -->
+          <button
+            @click="toggleMobileMenu"
+            class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
+            aria-label="打开菜单"
+          >
+            <svg 
+              v-show="!showMobileMenu"
+              class="w-5 h-5 text-gray-600 dark:text-gray-300" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg 
+              v-show="showMobileMenu"
+              class="w-5 h-5 text-gray-600 dark:text-gray-300" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
+
+      <!-- 移动端菜单面板 -->
+      <Transition name="mobile-menu">
+        <div 
+          v-if="showMobileMenu" 
+          class="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transition-colors duration-300"
+        >
+          <div class="container mx-auto px-4 py-4 space-y-3">
+            <a 
+              href="#editor" 
+              @click="closeMobileMenu"
+              class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              编辑器
+            </a>
+            <a 
+              href="#features" 
+              @click="closeMobileMenu"
+              class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              功能特性
+            </a>
+            <a 
+              href="#examples" 
+              @click="closeMobileMenu"
+              class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              示例
+            </a>
+            <a 
+              href="#docs" 
+              @click="closeMobileMenu"
+              class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              文档
+            </a>
+          </div>
+        </div>
+      </Transition>
     </header>
 
     <!-- 主要内容 -->
@@ -31,12 +158,12 @@
           <div class="mx-auto max-w-4xl">
             <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
               Vue 数学公式
-              <span class="block bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+              <span class="mt-2 block bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
                 编辑器
               </span>
             </h1>
             <p class="mt-6 text-lg leading-8 text-blue-100 sm:text-xl">
-              基于 MathJax 的强大数学公式编辑器组件，支持富文本编辑、LaTeX 语法、实时预览
+              专业的数学公式编辑器组件库，提供 240+ 符号面板、38 个公式模板，支持富文本编辑和 LaTeX 语法
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-3">
               <span v-for="tech in ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX']" 
@@ -59,133 +186,196 @@
         </div>
       </section>
 
-      <!-- 编辑器演示区域 -->
-      <section id="editor" class="py-20">
-        <div class="container mx-auto px-4">
-          <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">在线演示</h2>
-            <p class="mt-4 text-lg text-gray-600">体验强大的数学公式编辑功能</p>
-          </div>
+             <!-- 编辑器演示区域 -->
+       <section id="editor" class="py-20">
+         <div class="container mx-auto px-4">
+           <div class="text-center mb-16">
+             <h2 class="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl transition-colors duration-300">在线演示</h2>
+             <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 transition-colors duration-300">体验专业的数学公式编辑器和富文本编辑功能</p>
+             <div class="mt-6 flex flex-wrap justify-center gap-4">
+               <div class="flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full">
+                 <CalculatorIcon class="h-4 w-4 text-purple-600" />
+                 <span class="text-sm font-medium text-purple-800">专业公式编辑器</span>
+               </div>
+               <div class="flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full">
+                 <Edit3Icon class="h-4 w-4 text-blue-600" />
+                 <span class="text-sm font-medium text-blue-800">富文本编辑器</span>
+               </div>
+             </div>
+           </div>
 
-          <!-- 富文本编辑器 -->
-          <div class="mb-8 overflow-hidden rounded-xl bg-white shadow-xl border border-gray-100">
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-100">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500 text-white">
-                    <Edit3Icon class="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-semibold text-gray-900">富文本编辑器</h3>
-                    <p class="text-sm text-gray-600">支持文本格式和数学公式的混合编辑</p>
-                  </div>
-                </div>
-                <div class="flex gap-2">
-                  <button @click="clearContent" 
-                          class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                    清空内容
-                  </button>
-                  <button @click="loadSample" 
-                          class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                    加载示例
-                  </button>
-                  <button @click="testMathJax" 
-                          class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                    测试MathJax
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="min-h-[400px] rounded-lg border border-gray-200 bg-white">
-                <VueMathjaxEditor 
-                  v-model="richTextContent"
-                  placeholder="开始编写您的内容，支持富文本编辑和数学公式..."
-                  min-height="400px"
-                  @change="handleRichTextChange"
-                  @focus="handleFocus"
-                  @blur="handleBlur"
-                />
-              </div>
-            </div>
-          </div>
+           <!-- 公式编辑器 - 优先展示 -->
+           <div class="mb-8 sm:mb-12 overflow-hidden rounded-xl bg-white dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+             <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 px-4 sm:px-6 py-4 border-b border-gray-100 dark:border-gray-700 transition-colors duration-300">
+               <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                 <div class="flex items-center gap-3">
+                   <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500 text-white flex-shrink-0">
+                     <CalculatorIcon class="h-4 w-4" />
+                   </div>
+                   <div class="min-w-0 flex-1">
+                     <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300">VueMathjaxBeautiful - 专业公式编辑器</h3>
+                     <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300 mt-0.5">提供 240+ 数学符号和 38 个公式模板，支持实时预览和LaTeX语法</p>
+                   </div>
+                 </div>
+                 <div class="flex items-center gap-2 flex-shrink-0">
+                   <span class="inline-flex items-center rounded-full bg-purple-100 dark:bg-purple-900/30 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:text-purple-300 transition-colors duration-300">
+                     内联模式
+                   </span>
+                   <span class="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-300 transition-colors duration-300">
+                     实时预览
+                   </span>
+                 </div>
+               </div>
+             </div>
+             <div class="p-4 sm:p-6">
+               <!-- 使用 VueMathjaxBeautiful 组件 -->
+               <VueMathjaxBeautiful 
+                 :inline-mode="true"
+                 @insert="handleFormulaInsert"
+               />
+               <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg transition-colors duration-300">
+                 <div class="flex items-start gap-3">
+                   <div class="flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
+                     <span class="text-white text-xs font-bold">💡</span>
+                   </div>
+                   <div class="text-sm text-blue-800 dark:text-blue-200 transition-colors duration-300">
+                     <p class="font-medium mb-1">使用提示：</p>
+                     <ul class="space-y-1 text-blue-700 dark:text-blue-300 transition-colors duration-300">
+                       <li>• 点击符号面板中的符号快速插入</li>
+                       <li>• 支持直接输入 LaTeX 语法</li>
+                       <li>• 实时预览让您所见即所得</li>
+                       <li>• 支持弹窗模式和内联模式两种使用方式</li>
+                     </ul>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
 
-          <!-- 公式编辑器 -->
-          <div class="overflow-hidden rounded-xl bg-white shadow-xl border border-gray-100">
-            <div class="bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-4 border-b border-gray-100">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500 text-white">
-                    <CalculatorIcon class="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-semibold text-gray-900">公式编辑器</h3>
-                    <p class="text-sm text-gray-600">专业的数学公式编辑和预览</p>
-                  </div>
-                </div>
-                <button @click="showFormulaDialog = true" 
-                        class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 transition-colors">
-                  <CalculatorIcon class="mr-2 h-4 w-4 inline" />
-                  打开公式编辑器
-                </button>
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="text-center space-y-4">
-                <div class="text-sm text-gray-500">当前公式：</div>
-                <div class="text-3xl font-mono bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg border" 
-                     v-html="renderedFormula"></div>
-                <div class="text-xs text-gray-400 font-mono bg-gray-100 p-3 rounded-lg inline-block">
-                  {{ formula }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+           <!-- 富文本编辑器 -->
+           <div class="overflow-hidden rounded-xl bg-white dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+             <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 px-4 sm:px-6 py-4 border-b border-gray-100 dark:border-gray-700 transition-colors duration-300">
+               <div class="flex flex-col gap-3">
+                 <div class="flex items-center gap-3">
+                   <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500 text-white flex-shrink-0">
+                     <Edit3Icon class="h-4 w-4" />
+                   </div>
+                   <div class="min-w-0 flex-1">
+                     <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300">VueMathjaxEditor - 富文本编辑器</h3>
+                     <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300 mt-0.5">支持文本格式和数学公式的混合编辑，适合编写包含数学内容的文档</p>
+                   </div>
+                 </div>
+                 <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                   <div class="flex items-center gap-2">
+                     <span class="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/30 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:text-blue-300 transition-colors duration-300">
+                       富文本
+                     </span>
+                     <span class="inline-flex items-center rounded-full bg-orange-100 dark:bg-orange-900/30 px-2.5 py-0.5 text-xs font-medium text-orange-800 dark:text-orange-300 transition-colors duration-300">
+                       LaTeX支持
+                     </span>
+                   </div>
+                   <div class="flex gap-2">
+                     <button @click="clearContent" 
+                             class="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-300 flex-shrink-0">
+                       清空内容
+                     </button>
+                     <button @click="loadSample" 
+                             class="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-300 flex-shrink-0">
+                       加载示例
+                     </button>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div class="p-4 sm:p-6">
+               <div class="min-h-[300px] sm:min-h-[400px]">
+                 <VueMathjaxEditor 
+                   v-model="richTextContent"
+                   placeholder="开始编写您的内容，支持富文本编辑和数学公式..."
+                   @change="handleRichTextChange"
+                   @focus="handleFocus"
+                   @blur="handleBlur"
+                 />
+               </div>
+               <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg transition-colors duration-300">
+                   <div class="flex items-start gap-3">
+                     <div class="flex-shrink-0 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mt-0.5">
+                       <span class="text-white text-xs font-bold">✓</span>
+                     </div>
+                     <div class="text-sm text-green-800 dark:text-green-200 transition-colors duration-300">
+                       <p class="font-medium mb-1">LaTeX 语法示例：</p>
+                       <ul class="space-y-1 text-green-700 dark:text-green-300 font-mono text-xs transition-colors duration-300">
+                         <li>• 行内公式：<code class="bg-green-100 dark:bg-green-800 px-1 rounded">$E=mc^2$</code></li>
+                         <li>• 独立公式：<code class="bg-green-100 dark:bg-green-800 px-1 rounded">$$\int_0^1 x^2 dx$$</code></li>
+                         <li>• 分数：<code class="bg-green-100 dark:bg-green-800 px-1 rounded">\frac{a}{b}</code></li>
+                       </ul>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg transition-colors duration-300">
+                   <div class="flex items-start gap-3">
+                     <div class="flex-shrink-0 w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center mt-0.5">
+                       <span class="text-white text-xs font-bold">⚡</span>
+                     </div>
+                     <div class="text-sm text-amber-800 dark:text-amber-200 transition-colors duration-300">
+                       <p class="font-medium mb-1">快捷键：</p>
+                       <ul class="space-y-1 text-amber-700 dark:text-amber-300 text-xs transition-colors duration-300">
+                         <li>• <kbd class="px-1 bg-amber-100 dark:bg-amber-800 rounded">Ctrl+B</kbd> 粗体</li>
+                         <li>• <kbd class="px-1 bg-amber-100 dark:bg-amber-800 rounded">Ctrl+I</kbd> 斜体</li>
+                         <li>• <kbd class="px-1 bg-amber-100 dark:bg-amber-800 rounded">Ctrl+U</kbd> 下划线</li>
+                       </ul>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </section>
 
       <!-- 功能特性 -->
-      <section id="features" class="py-20 bg-white">
+      <section id="features" class="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
         <div class="container mx-auto px-4">
           <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">功能特性</h2>
-            <p class="mt-4 text-lg text-gray-600">为数学内容创作提供完整解决方案</p>
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl transition-colors duration-300">功能特性</h2>
+            <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 transition-colors duration-300">为数学内容创作提供完整解决方案</p>
           </div>
           <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <div v-for="(feature, index) in features" 
                  :key="index" 
-                 class="group rounded-xl bg-white p-6 shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                 class="group rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
               <div :class="`inline-flex h-12 w-12 items-center justify-center rounded-lg ${feature.color} mb-4`">
                 <component :is="feature.icon" class="h-6 w-6 text-white" />
               </div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ feature.title }}</h3>
-              <p class="text-gray-600 leading-relaxed">{{ feature.description }}</p>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 transition-colors duration-300">{{ feature.title }}</h3>
+              <p class="text-gray-600 dark:text-gray-300 leading-relaxed transition-colors duration-300">{{ feature.description }}</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 示例展示 -->
-      <section id="examples" class="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div class="container mx-auto px-4">
-          <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">公式示例</h2>
-            <p class="mt-4 text-lg text-gray-600">点击示例快速体验不同类型的数学公式</p>
-          </div>
+             <!-- 示例展示 -->
+       <section id="examples" class="py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 transition-colors duration-300">
+         <div class="container mx-auto px-4">
+           <div class="text-center mb-16">
+             <h2 class="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl transition-colors duration-300">公式示例库</h2>
+             <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 transition-colors duration-300">点击示例快速加载到公式编辑器，体验不同类型的数学公式</p>
+           </div>
           <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div v-for="(example, index) in examples" 
                  :key="example.name"
-                 :class="`cursor-pointer rounded-xl bg-white p-6 shadow-lg border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
-                   activeExample === index ? 'ring-2 ring-blue-500 border-blue-200' : 'border-gray-100'
+                 :class="`cursor-pointer rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+                   activeExample === index ? 'ring-2 ring-blue-500 border-blue-200 dark:border-blue-600' : 'border-gray-100 dark:border-gray-700'
                  }`"
                  @click="loadExample(example.latex, index)">
               <div class="text-center space-y-3">
-                <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                <span class="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/30 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:text-blue-300 transition-colors duration-300">
                   {{ example.category }}
                 </span>
-                <div class="text-lg font-mono min-h-[40px] flex items-center justify-center" 
+                <div class="text-lg font-mono min-h-[40px] flex items-center justify-center dark:text-white transition-colors duration-300" 
                      v-html="example.rendered"></div>
-                <h4 class="font-semibold text-gray-900">{{ example.name }}</h4>
+                <h4 class="font-semibold text-gray-900 dark:text-white transition-colors duration-300">{{ example.name }}</h4>
               </div>
             </div>
           </div>
@@ -193,243 +383,251 @@
       </section>
 
       <!-- 使用文档 -->
-      <section id="docs" class="py-20 bg-white">
+      <section id="docs" class="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
         <div class="container mx-auto px-4">
           <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">使用文档</h2>
-            <p class="mt-4 text-lg text-gray-600">完整的使用指南和API文档</p>
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl transition-colors duration-300">使用文档</h2>
+            <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 transition-colors duration-300">完整的使用指南和API文档</p>
           </div>
           <div class="grid gap-8 lg:grid-cols-2">
             <!-- 安装说明 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <CodeIcon class="h-5 w-5 text-blue-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <CodeIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 安装
               </h3>
               <div class="space-y-3">
-                <div class="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm">
+                <div class="bg-gray-900 dark:bg-gray-950 text-gray-100 dark:text-gray-200 p-4 rounded-lg font-mono text-sm transition-colors duration-300">
                   npm install vue-mathjax-beautiful
                 </div>
-                <p class="text-sm text-gray-600">或者使用 yarn：</p>
-                <div class="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm">
+                <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">或者使用 yarn：</p>
+                <div class="bg-gray-900 dark:bg-gray-950 text-gray-100 dark:text-gray-200 p-4 rounded-lg font-mono text-sm transition-colors duration-300">
                   yarn add vue-mathjax-beautiful
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">或者使用 pnpm（推荐）：</p>
+                <div class="bg-gray-900 dark:bg-gray-950 text-gray-100 dark:text-gray-200 p-4 rounded-lg font-mono text-sm transition-colors duration-300">
+                  pnpm add vue-mathjax-beautiful
                 </div>
               </div>
             </div>
 
             <!-- 基本使用 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <ZapIcon class="h-5 w-5 text-green-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <ZapIcon class="h-5 w-5 text-green-600 dark:text-green-400" />
                 基本使用
               </h3>
-              <div class="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm">
-                <div class="text-blue-400">&lt;template&gt;</div>
-                <div class="ml-2 text-green-400">&lt;VueMathjaxEditor v-model="content" /&gt;</div>
-                <div class="text-blue-400">&lt;/template&gt;</div>
+              <div class="bg-gray-900 dark:bg-gray-950 text-gray-100 dark:text-gray-200 p-4 rounded-lg font-mono text-sm transition-colors duration-300">
+                <div class="text-blue-400 dark:text-blue-300">&lt;template&gt;</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">&lt;VueMathjaxEditor v-model="content" /&gt;</div>
+                <div class="text-blue-400 dark:text-blue-300">&lt;/template&gt;</div>
                 <br>
-                <div class="text-blue-400">&lt;script setup&gt;</div>
-                <div class="ml-2 text-yellow-400">import { VueMathjaxEditor } from 'vue-mathjax-beautiful'</div>
-                <div class="text-blue-400">&lt;/script&gt;</div>
+                <div class="text-blue-400 dark:text-blue-300">&lt;script setup&gt;</div>
+                <div class="ml-2 text-yellow-400 dark:text-yellow-300">import { VueMathjaxEditor } from 'vue-mathjax-beautiful'</div>
+                <div class="text-blue-400 dark:text-blue-300">&lt;/script&gt;</div>
               </div>
             </div>
 
             <!-- 组件介绍 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <Edit3Icon class="h-5 w-5 text-purple-600" />
-                组件介绍
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <CalculatorIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                核心组件
               </h3>
-              <div class="space-y-3 text-sm">
-                <div class="flex items-start gap-3">
-                  <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <div>
-                    <strong class="text-gray-900">VueMathjaxEditor</strong>
-                    <p class="text-gray-600">富文本编辑器，支持文本格式和数学公式混合编辑</p>
+              <div class="space-y-4 text-sm">
+                <div class="p-3 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg transition-colors duration-300">
+                  <div class="flex items-start gap-3">
+                    <div class="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <strong class="text-purple-900 dark:text-purple-200 transition-colors duration-300">VueMathjaxBeautiful</strong>
+                      <p class="text-purple-700 dark:text-purple-300 mt-1 transition-colors duration-300">专业公式编辑器，提供 240+ 符号面板和 38 个公式模板，支持内联和弹窗两种模式</p>
+                    </div>
                   </div>
                 </div>
-                <div class="flex items-start gap-3">
-                  <div class="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <div>
-                    <strong class="text-gray-900">VueMathjaxBeautiful</strong>
-                    <p class="text-gray-600">公式编辑器弹窗，专业的数学公式编辑界面</p>
+                <div class="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg transition-colors duration-300">
+                  <div class="flex items-start gap-3">
+                    <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <strong class="text-blue-900 dark:text-blue-200 transition-colors duration-300">VueMathjaxEditor</strong>
+                      <p class="text-blue-700 dark:text-blue-300 mt-1 transition-colors duration-300">富文本编辑器，支持文本格式和数学公式混合编辑，适合编写学术文档</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- API 属性 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <SettingsIcon class="h-5 w-5 text-orange-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <SettingsIcon class="h-5 w-5 text-orange-600 dark:text-orange-400" />
                 API 属性
               </h3>
               <div class="space-y-3 text-sm">
                 <div class="border-l-4 border-blue-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900">v-model</div>
-                  <div class="text-gray-600">绑定的内容值 (string)</div>
+                  <div class="font-mono font-semibold text-gray-900 dark:text-white transition-colors duration-300">v-model</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">绑定的内容值 (string)</div>
                 </div>
                 <div class="border-l-4 border-green-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900">placeholder</div>
-                  <div class="text-gray-600">占位符文本 (string)</div>
+                  <div class="font-mono font-semibold text-gray-900 dark:text-white transition-colors duration-300">placeholder</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">占位符文本 (string)</div>
                 </div>
                 <div class="border-l-4 border-purple-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900">min-height</div>
-                  <div class="text-gray-600">最小高度 (string, 默认: "200px")</div>
+                  <div class="font-mono font-semibold text-gray-900 dark:text-white transition-colors duration-300">min-height</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">最小高度 (string, 默认: "200px")</div>
                 </div>
                 <div class="border-l-4 border-orange-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900">readonly</div>
-                  <div class="text-gray-600">只读模式 (boolean, 默认: false)</div>
+                  <div class="font-mono font-semibold text-gray-900 dark:text-white transition-colors duration-300">readonly</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">只读模式 (boolean, 默认: false)</div>
                 </div>
               </div>
             </div>
 
             <!-- 事件说明 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <ZapIcon class="h-5 w-5 text-red-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <ZapIcon class="h-5 w-5 text-red-600 dark:text-red-400" />
                 事件说明
               </h3>
               <div class="space-y-3 text-sm">
                 <div class="border-l-4 border-blue-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900">@change</div>
-                  <div class="text-gray-600">内容变化时触发 (value: string)</div>
+                  <div class="font-mono font-semibold text-gray-900 dark:text-white transition-colors duration-300">@change</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">内容变化时触发 (value: string)</div>
                 </div>
                 <div class="border-l-4 border-green-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900">@focus</div>
-                  <div class="text-gray-600">编辑器获得焦点时触发</div>
+                  <div class="font-mono font-semibold text-gray-900 dark:text-white transition-colors duration-300">@focus</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">编辑器获得焦点时触发</div>
                 </div>
                 <div class="border-l-4 border-purple-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900">@blur</div>
-                  <div class="text-gray-600">编辑器失去焦点时触发</div>
+                  <div class="font-mono font-semibold text-gray-900 dark:text-white transition-colors duration-300">@blur</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">编辑器失去焦点时触发</div>
                 </div>
               </div>
             </div>
 
             <!-- 快捷键说明 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <KeyboardIcon class="h-5 w-5 text-purple-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <KeyboardIcon class="h-5 w-5 text-purple-600 dark:text-purple-400" />
                 快捷键
               </h3>
               <div class="space-y-3">
                 <div v-for="shortcut in shortcuts" :key="shortcut.key" class="flex items-center justify-between">
-                  <kbd class="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">
+                  <kbd class="px-2 py-1 text-xs font-semibold text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors duration-300">
                     {{ shortcut.key }}
                   </kbd>
-                  <span class="text-sm text-gray-600">{{ shortcut.action }}</span>
+                  <span class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">{{ shortcut.action }}</span>
                 </div>
               </div>
             </div>
 
             <!-- LaTeX 语法 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <FileTextIcon class="h-5 w-5 text-orange-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <FileTextIcon class="h-5 w-5 text-orange-600 dark:text-orange-400" />
                 LaTeX 语法示例
               </h3>
               <div class="space-y-3">
                 <div v-for="example in latexExamples" :key="example.code" class="flex items-center justify-between">
-                  <code class="px-2 py-1 text-xs bg-gray-100 rounded font-mono">{{ example.code }}</code>
-                  <span class="text-sm text-gray-600">{{ example.description }}</span>
+                  <code class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded font-mono transition-colors duration-300">{{ example.code }}</code>
+                  <span class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">{{ example.description }}</span>
                 </div>
               </div>
             </div>
 
             <!-- 高级用法 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <SettingsIcon class="h-5 w-5 text-indigo-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <SettingsIcon class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                 高级用法
               </h3>
-              <div class="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm">
-                <div class="text-gray-400">// 自定义配置</div>
-                <div class="text-blue-400">&lt;VueMathjaxEditor</div>
-                <div class="ml-2 text-green-400">v-model="content"</div>
-                <div class="ml-2 text-green-400">:min-height="'500px'"</div>
-                <div class="ml-2 text-green-400">:readonly="false"</div>
-                <div class="ml-2 text-green-400">placeholder="请输入内容..."</div>
-                <div class="ml-2 text-green-400">@change="handleChange"</div>
-                <div class="ml-2 text-green-400">@focus="handleFocus"</div>
-                <div class="ml-2 text-green-400">@blur="handleBlur"</div>
-                <div class="text-blue-400">/&gt;</div>
+              <div class="bg-gray-900 dark:bg-gray-950 text-gray-100 dark:text-gray-200 p-4 rounded-lg font-mono text-sm transition-colors duration-300">
+                <div class="text-gray-400 dark:text-gray-500">// 自定义配置</div>
+                <div class="text-blue-400 dark:text-blue-300">&lt;VueMathjaxEditor</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">v-model="content"</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">:min-height="'500px'"</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">:readonly="false"</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">placeholder="请输入内容..."</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">@change="handleChange"</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">@focus="handleFocus"</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">@blur="handleBlur"</div>
+                <div class="text-blue-400 dark:text-blue-300">/&gt;</div>
               </div>
             </div>
 
             <!-- 公式编辑器用法 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <CalculatorIcon class="h-5 w-5 text-pink-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <CalculatorIcon class="h-5 w-5 text-pink-600 dark:text-pink-400" />
                 公式编辑器用法
               </h3>
-              <div class="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm">
-                <div class="text-gray-400">// 公式编辑器弹窗</div>
-                <div class="text-blue-400">&lt;VueMathjaxBeautiful</div>
-                <div class="ml-2 text-green-400">v-model="showDialog"</div>
-                <div class="ml-2 text-green-400">:existing-latex="formula"</div>
-                <div class="ml-2 text-green-400">@insert="handleInsert"</div>
-                <div class="text-blue-400">/&gt;</div>
+              <div class="bg-gray-900 dark:bg-gray-950 text-gray-100 dark:text-gray-200 p-4 rounded-lg font-mono text-sm transition-colors duration-300">
+                <div class="text-gray-400 dark:text-gray-500">// 公式编辑器弹窗</div>
+                <div class="text-blue-400 dark:text-blue-300">&lt;VueMathjaxBeautiful</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">v-model="showDialog"</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">:existing-latex="formula"</div>
+                <div class="ml-2 text-green-400 dark:text-green-300">@insert="handleInsert"</div>
+                <div class="text-blue-400 dark:text-blue-300">/&gt;</div>
                 <br>
-                <div class="text-gray-400">// 处理公式插入</div>
-                <div class="text-yellow-400">const handleInsert = (latex) => {</div>
-                <div class="ml-2 text-white">formula.value = latex</div>
-                <div class="text-yellow-400">}</div>
+                <div class="text-gray-400 dark:text-gray-500">// 处理公式插入</div>
+                <div class="text-yellow-400 dark:text-yellow-300">const handleInsert = (latex) => {</div>
+                <div class="ml-2 text-white dark:text-gray-100">formula.value = latex</div>
+                <div class="text-yellow-400 dark:text-yellow-300">}</div>
               </div>
             </div>
 
             <!-- 常见问题 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <FileTextIcon class="h-5 w-5 text-red-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
+                <FileTextIcon class="h-5 w-5 text-red-600 dark:text-red-400" />
                 常见问题
               </h3>
               <div class="space-y-4 text-sm">
                 <div>
-                  <div class="font-semibold text-gray-900 mb-1">Q: 如何插入复杂的数学公式？</div>
-                  <div class="text-gray-600">A: 点击编辑器工具栏的"fx"按钮打开公式编辑器，或直接使用LaTeX语法编写。</div>
+                  <div class="font-semibold text-gray-900 dark:text-white mb-1 transition-colors duration-300">Q: 如何插入复杂的数学公式？</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">A: 点击编辑器工具栏的"fx"按钮打开公式编辑器，或直接使用LaTeX语法编写。</div>
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-900 mb-1">Q: 支持哪些LaTeX语法？</div>
-                  <div class="text-gray-600">A: 支持完整的MathJax LaTeX语法，包括分数、根式、积分、矩阵等。</div>
+                  <div class="font-semibold text-gray-900 dark:text-white mb-1 transition-colors duration-300">Q: 支持哪些LaTeX语法？</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">A: 支持完整的MathJax LaTeX语法，包括分数、根式、积分、矩阵等。</div>
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-900 mb-1">Q: 如何自定义编辑器样式？</div>
-                  <div class="text-gray-600">A: 可以通过CSS自定义样式，或使用min-height等属性调整编辑器外观。</div>
+                  <div class="font-semibold text-gray-900 dark:text-white mb-1 transition-colors duration-300">Q: 如何自定义编辑器样式？</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">A: 可以通过CSS自定义样式，或使用min-height等属性调整编辑器外观。</div>
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-900 mb-1">Q: 是否支持移动端？</div>
-                  <div class="text-gray-600">A: 完全支持移动端，采用响应式设计，在各种设备上都有良好体验。</div>
+                  <div class="font-semibold text-gray-900 dark:text-white mb-1 transition-colors duration-300">Q: 是否支持移动端？</div>
+                  <div class="text-gray-600 dark:text-gray-400 transition-colors duration-300">A: 完全支持移动端，采用响应式设计，在各种设备上都有良好体验。</div>
                 </div>
               </div>
             </div>
 
             <!-- 更多资源 -->
-            <div class="rounded-xl bg-white p-6 shadow-lg border border-gray-100">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-                <GithubIcon class="h-5 w-5 text-gray-600" />
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-lg border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="flex items-center gap-2 text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 transition-colors duration-300">
+                <GithubIcon class="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-400" />
                 更多资源
               </h3>
-              <div class="space-y-3 text-sm">
-                <div class="flex items-center gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                <a href="#" class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
                   <div class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
-                  <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors">GitHub 仓库</a>
-                </div>
-                <div class="flex items-center gap-3">
+                  <span class="text-xs sm:text-sm text-blue-600 dark:text-blue-400 group-hover:text-blue-800 dark:group-hover:text-blue-300 transition-colors">GitHub 仓库</span>
+                </a>
+                <a href="#examples" class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
                   <div class="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-                  <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors">在线示例</a>
-                </div>
-                <div class="flex items-center gap-3">
+                  <span class="text-xs sm:text-sm text-blue-600 dark:text-blue-400 group-hover:text-blue-800 dark:group-hover:text-blue-300 transition-colors">在线示例</span>
+                </a>
+                <a href="#" class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
                   <div class="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0"></div>
-                  <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors">API 文档</a>
-                </div>
-                <div class="flex items-center gap-3">
+                  <span class="text-xs sm:text-sm text-blue-600 dark:text-blue-400 group-hover:text-blue-800 dark:group-hover:text-blue-300 transition-colors">API 文档</span>
+                </a>
+                <a href="#" class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
                   <div class="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0"></div>
-                  <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors">问题反馈</a>
-                </div>
-                <div class="flex items-center gap-3">
+                  <span class="text-xs sm:text-sm text-blue-600 dark:text-blue-400 group-hover:text-blue-800 dark:group-hover:text-blue-300 transition-colors">问题反馈</span>
+                </a>
+                <a href="#" class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group sm:col-span-2">
                   <div class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
-                  <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors">更新日志</a>
-                </div>
+                  <span class="text-xs sm:text-sm text-blue-600 dark:text-blue-400 group-hover:text-blue-800 dark:group-hover:text-blue-300 transition-colors">更新日志</span>
+                </a>
               </div>
             </div>
           </div>
@@ -437,67 +635,163 @@
       </section>
     </main>
 
+    <!-- 返回顶部按钮 -->
+    <Transition name="back-to-top">
+      <button
+        v-if="showBackToTop"
+        @click="scrollToTop"
+        class="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 group"
+        aria-label="返回顶部"
+      >
+        <svg 
+          class="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+        
+        <!-- 进度环 -->
+        <svg 
+          class="absolute inset-0 h-12 w-12 -rotate-90 transform"
+          viewBox="0 0 48 48"
+        >
+          <circle
+            cx="24"
+            cy="24"
+            r="20"
+            fill="none"
+            stroke="rgba(255,255,255,0.2)"
+            stroke-width="2"
+          />
+          <circle
+            cx="24"
+            cy="24"
+            r="20"
+            fill="none"
+            stroke="rgba(255,255,255,0.8)"
+            stroke-width="2"
+            stroke-linecap="round"
+            :stroke-dasharray="scrollProgress"
+            stroke-dashoffset="0"
+            class="transition-all duration-150"
+          />
+        </svg>
+      </button>
+    </Transition>
+
     <!-- 页脚 -->
-    <footer class="bg-gray-900 text-white py-12">
+    <footer class="bg-gray-900 text-white py-8 sm:py-12">
       <div class="container mx-auto px-4">
-        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          <div class="lg:col-span-2">
+        <!-- 移动端优化的网格布局 -->
+        <div class="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <!-- 主要信息区域 -->
+          <div class="sm:col-span-2 lg:col-span-2">
             <div class="flex items-center space-x-3 mb-4">
-              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
-                <CalculatorIcon class="h-5 w-5" />
+              <div class="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex-shrink-0">
+                <CalculatorIcon class="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
-              <div>
-                <h3 class="text-lg font-bold">Vue MathJax Editor</h3>
-                <p class="text-sm text-gray-400">专业的数学公式编辑器</p>
+              <div class="min-w-0 flex-1">
+                <h3 class="text-base sm:text-lg font-bold">Vue MathJax Editor</h3>
+                <p class="text-xs sm:text-sm text-gray-400">专业的数学公式编辑器</p>
               </div>
             </div>
-            <p class="text-gray-400 max-w-md">
+            <p class="text-sm sm:text-base text-gray-400 max-w-md leading-relaxed">
               为 Vue 3 应用提供强大的数学公式编辑功能，支持 LaTeX 语法和实时预览。
             </p>
           </div>
 
-          <div>
-            <h4 class="font-semibold mb-4">资源</h4>
-            <ul class="space-y-2 text-sm text-gray-400">
-              <li><a href="#" class="hover:text-white transition-colors">文档</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">示例</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">API 参考</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">更新日志</a></li>
+          <!-- 资源链接 -->
+          <div class="order-1 sm:order-none">
+            <h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base flex items-center">
+              <div class="w-1 h-4 bg-blue-500 rounded mr-2"></div>
+              资源
+            </h4>
+            <ul class="space-y-2 text-xs sm:text-sm text-gray-400">
+              <li>
+                <a href="#docs" class="hover:text-white transition-colors flex items-center py-1">
+                  <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
+                  文档
+                </a>
+              </li>
+              <li>
+                <a href="#examples" class="hover:text-white transition-colors flex items-center py-1">
+                  <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
+                  示例
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors flex items-center py-1">
+                  <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
+                  API 参考
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors flex items-center py-1">
+                  <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
+                  更新日志
+                </a>
+              </li>
             </ul>
           </div>
 
-          <div>
-            <h4 class="font-semibold mb-4">社区</h4>
-            <ul class="space-y-2 text-sm text-gray-400">
-              <li><a href="#" class="hover:text-white transition-colors">GitHub</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">问题反馈</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">讨论区</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">贡献指南</a></li>
+          <!-- 社区链接 -->
+          <div class="order-2 sm:order-none">
+            <h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base flex items-center">
+              <div class="w-1 h-4 bg-purple-500 rounded mr-2"></div>
+              社区
+            </h4>
+            <ul class="space-y-2 text-xs sm:text-sm text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition-colors flex items-center py-1">
+                  <GithubIcon class="w-3 h-3 mr-2 flex-shrink-0" />
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors flex items-center py-1">
+                  <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
+                  问题反馈
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors flex items-center py-1">
+                  <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
+                  讨论区
+                </a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition-colors flex items-center py-1">
+                  <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
+                  贡献指南
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-          <p>&copy; 2024 Vue MathJax Editor. All rights reserved.</p>
-          <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="hover:text-white transition-colors">隐私政策</a>
-            <a href="#" class="hover:text-white transition-colors">使用条款</a>
+        <!-- 底部版权信息 -->
+        <div class="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8">
+          <div class="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
+            <p class="text-xs sm:text-sm text-gray-400 text-center sm:text-left">
+              &copy; 2024 Vue MathJax Beautiful. All rights reserved.
+            </p>
+            <div class="flex justify-center sm:justify-end space-x-4 sm:space-x-6">
+              <a href="#" class="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors">隐私政策</a>
+              <a href="#" class="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors">使用条款</a>
+            </div>
           </div>
         </div>
       </div>
     </footer>
 
-    <!-- 公式编辑器弹窗 -->
-    <VueMathjaxBeautiful
-      v-model="showFormulaDialog"
-      :existing-latex="formula"
-      @insert="handleFormulaInsert"
-    />
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { 
   Calculator as CalculatorIcon,
   Edit3 as Edit3Icon,
@@ -517,11 +811,21 @@ import {
 import { VueMathjaxEditor, VueMathjaxBeautiful, initMathJax, convertLatexToSvg } from 'vue-mathjax-beautiful'
 
 // 响应式数据
-const formula = ref('E = mc^2')
-const showFormulaDialog = ref(false)
-const renderedFormula = ref('<span class="text-gray-400 italic">正在加载...</span>')
-const activeExample = ref(0)
-const richTextContent = ref(`**欢迎使用 Vue MathJax Editor！**
+const activeExample = ref(3)
+const showBackToTop = ref(false)
+const scrollY = ref(0)
+const isDark = ref(false)
+const showMobileMenu = ref(false)
+
+// 计算滚动进度
+const scrollProgress = computed(() => {
+  const windowHeight = window.innerHeight
+  const documentHeight = document.documentElement.scrollHeight - windowHeight
+  const progress = documentHeight > 0 ? (scrollY.value / documentHeight) * 125.6 : 0 // 125.6 是圆周长 (2 * π * 20)
+  return `${progress} 125.6`
+})
+
+const richTextContent = ref(`**欢迎使用 Vue MathJax Beautiful！**
 
 这是一个功能强大的数学公式编辑器，专为 Vue 3 设计。
 
@@ -553,28 +857,28 @@ const formulaCount = computed(() => {
 // 功能特性数据
 const features = ref([
   {
-    icon: Edit3Icon,
-    title: "富文本编辑",
-    description: "支持粗体、斜体、下划线等基本文本格式，提供完整的富文本编辑体验",
-    color: "bg-blue-500",
+    icon: CalculatorIcon,
+    title: "专业公式编辑",
+    description: "基于 MathJax 引擎，提供 240+ 数学符号和 38 个公式模板，支持完整的 LaTeX 语法",
+    color: "bg-purple-500",
   },
   {
-    icon: CalculatorIcon,
-    title: "数学公式",
-    description: "基于 MathJax 引擎，支持完整的 LaTeX 数学语法，渲染高质量的数学公式",
-    color: "bg-purple-500",
+    icon: PaletteIcon,
+    title: "丰富符号面板",
+    description: "内置基础符号、希腊字母、高级符号三大分类，涵盖代数、几何、微积分等各个领域",
+    color: "bg-pink-500",
   },
   {
     icon: EyeIcon,
     title: "实时预览",
-    description: "输入公式时实时预览渲染效果，所见即所得的编辑体验",
+    description: "输入公式时实时预览渲染效果，所见即所得的编辑体验，支持内联和弹窗两种模式",
     color: "bg-green-500",
   },
   {
-    icon: PaletteIcon,
-    title: "符号面板",
-    description: "提供丰富的数学符号面板，包括希腊字母、运算符、函数等",
-    color: "bg-orange-500",
+    icon: Edit3Icon,
+    title: "富文本编辑",
+    description: "支持粗体、斜体、下划线等文本格式，与数学公式完美结合，适合编写学术文档",
+    color: "bg-blue-500",
   },
   {
     icon: SmartphoneIcon,
@@ -671,34 +975,7 @@ const latexExamples = ref([
   { code: "\\infty \\pm \\neq", description: "特殊符号" },
 ])
 
-// 渲染公式的函数
-const renderFormula = async () => {
-  if (!formula.value) {
-    renderedFormula.value = '<span class="text-gray-400 italic">暂无公式</span>'
-    return
-  }
-  
-  try {
-    console.log('开始渲染当前公式:', formula.value)
-    
-    // 检查MathJax是否已经初始化
-    if (!window.MathJax?.tex2svgPromise) {
-      console.warn('MathJax未初始化，等待初始化...')
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      if (!window.MathJax?.tex2svgPromise) {
-        throw new Error('MathJax初始化超时')
-      }
-    }
-    
-    const svgHtml = await convertLatexToSvg(`$${formula.value}$`)
-    renderedFormula.value = svgHtml
-    console.log('当前公式渲染成功')
-  } catch (error) {
-    console.error('公式渲染失败:', error)
-    renderedFormula.value = `<span class="text-2xl font-mono text-red-500">${formula.value}</span>`
-  }
-}
+
 
 // 渲染示例公式
 const renderExamples = async () => {
@@ -740,9 +1017,8 @@ function handleRichTextChange(value: string) {
 }
 
 function handleFormulaInsert(latex: string) {
-  formula.value = latex
   console.log('插入公式:', latex)
-  renderFormula()
+  // 这里可以添加处理插入公式的逻辑，比如显示通知等
 }
 
 function handleFocus() {
@@ -754,9 +1030,9 @@ function handleBlur() {
 }
 
 function loadExample(latex: string, index: number) {
-  formula.value = latex
   activeExample.value = index
-  renderFormula()
+  console.log('加载示例:', latex)
+  // 可以在这里添加将公式加载到编辑器的逻辑
 }
 
 function clearContent() {
@@ -791,43 +1067,74 @@ $\\pi, \\sigma, \\omega, \\Omega$
 点击任意公式即可编辑！`
 }
 
-async function testMathJax() {
-  console.log('手动测试MathJax...')
-  console.log('window.MathJax:', window.MathJax)
-  console.log('tex2svgPromise:', window.MathJax?.tex2svgPromise)
-  
-  try {
-    if (window.MathJax?.tex2svgPromise) {
-      console.log('MathJax可用，测试渲染...')
-      const testLatex = 'E = mc^2'
-      const result = await convertLatexToSvg(`$${testLatex}$`)
-      console.log('测试渲染结果:', result)
-      
-      // 更新当前公式
-      formula.value = testLatex
-      await renderFormula()
-      
-      // 重新渲染示例
-      await renderExamples()
-    } else {
-      console.log('MathJax不可用，尝试重新初始化...')
-      await initMathJax()
-      console.log('重新初始化完成')
-      
-      // 再次测试
-      if (window.MathJax?.tex2svgPromise) {
-        await renderFormula()
-        await renderExamples()
-      }
-    }
-  } catch (error) {
-    console.error('MathJax测试失败:', error)
+// 返回顶部功能
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
+// 滚动事件处理
+function handleScroll() {
+  scrollY.value = window.scrollY
+  showBackToTop.value = window.scrollY > 300
+}
+
+// 主题切换功能
+function toggleTheme() {
+  isDark.value = !isDark.value
+  updateTheme()
+}
+
+function updateTheme() {
+  if (isDark.value) {
+    document.documentElement.classList.add('dark')
+    localStorage.setItem('theme', 'dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+    localStorage.setItem('theme', 'light')
   }
 }
+
+// 初始化主题
+function initTheme() {
+  // 检查本地存储的主题设置
+  const savedTheme = localStorage.getItem('theme')
+  
+  if (savedTheme) {
+    isDark.value = savedTheme === 'dark'
+  } else {
+    // 如果没有保存的主题，使用系统偏好
+    isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+  }
+  
+  updateTheme()
+}
+
+// 移动端菜单功能
+function toggleMobileMenu() {
+  showMobileMenu.value = !showMobileMenu.value
+}
+
+function closeMobileMenu() {
+  showMobileMenu.value = false
+}
+
+
+
+// 注意：快捷符号渲染已移至 VueMathjaxBeautiful 组件内部
 
 // 生命周期
 onMounted(async () => {
   console.log('示例页面初始化，开始加载MathJax...')
+  
+  // 初始化主题
+  initTheme()
+  
+  // 添加滚动事件监听器
+  window.addEventListener('scroll', handleScroll)
+  
   try {
     // 初始化MathJax
     await initMathJax()
@@ -838,10 +1145,7 @@ onMounted(async () => {
     
     // 检查MathJax是否真正可用
     if (window.MathJax?.tex2svgPromise) {
-      console.log('MathJax tex2svgPromise 可用，开始渲染公式...')
-      
-      // 渲染当前公式
-      await renderFormula()
+      console.log('MathJax tex2svgPromise 可用，开始渲染...')
       
       // 渲染示例公式
       await renderExamples()
@@ -850,7 +1154,6 @@ onMounted(async () => {
     } else {
       console.error('MathJax初始化失败：tex2svgPromise不可用')
       // 设置错误状态
-      renderedFormula.value = '<span class="text-red-500">MathJax加载失败</span>'
       examples.value.forEach(example => {
         example.rendered = `<span class="text-sm font-mono text-red-500">加载失败</span>`
       })
@@ -858,11 +1161,15 @@ onMounted(async () => {
   } catch (error) {
     console.error('示例页面初始化失败:', error)
     // 设置错误状态
-    renderedFormula.value = '<span class="text-red-500">初始化失败</span>'
     examples.value.forEach(example => {
       example.rendered = `<span class="text-sm font-mono text-red-500">初始化失败</span>`
     })
   }
+})
+
+// 清理事件监听器
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
@@ -889,6 +1196,116 @@ onMounted(async () => {
   .hidden.md\\:flex {
     display: none;
   }
+  
+  /* 移动端卡片头部优化 */
+  .card-header-mobile {
+    padding: 1rem;
+  }
+  
+  .card-header-mobile h3 {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  
+  .card-header-mobile p {
+    font-size: 0.75rem;
+    line-height: 1.3;
+    margin-top: 0.25rem;
+  }
+  
+  /* 移动端按钮优化 */
+  .mobile-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    min-width: auto;
+  }
+  
+  /* 移动端标签优化 */
+  .mobile-badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
+  }
+  
+  /* 移动端卡片间距优化 */
+  .demo-card {
+    margin-bottom: 2rem;
+  }
+  
+  /* 移动端文字换行优化 */
+  .text-wrap-mobile {
+    word-break: break-word;
+    hyphens: auto;
+  }
+  
+  /* 移动端编辑器高度调整 */
+  .editor-mobile {
+    min-height: 250px !important;
+  }
+  
+  /* 移动端Footer优化 */
+  footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  footer .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  /* 移动端链接点击区域优化 */
+  footer a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* 移动端标题间距优化 */
+  footer h4 {
+    margin-bottom: 0.75rem;
+  }
+  
+  /* 移动端版权信息优化 */
+  footer .border-t {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+  }
+  
+  /* 移动端触摸优化 */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* 移动端资源链接优化 */
+  .resource-link {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+  
+  .resource-link:active {
+    transform: scale(0.98);
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+  
+  /* 移动端网格间距优化 */
+  @media (max-width: 640px) {
+    .docs-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .resource-grid {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  }
 }
 
 /* 平滑滚动 */
@@ -914,12 +1331,46 @@ html {
   background: #94a3b8;
 }
 
+/* 暗黑模式滚动条 */
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+}
+
+/* 手动暗黑模式滚动条 */
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
 /* 代码块样式优化 */
 .prose code {
   background-color: #f1f5f9;
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
   font-size: 0.875em;
+}
+
+/* 暗黑模式代码块 */
+.dark .prose code {
+  background-color: #374151;
+  color: #e5e7eb;
 }
 
 /* 数学公式样式 */
@@ -940,5 +1391,51 @@ html {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 返回顶部按钮动画 */
+.back-to-top-enter-active,
+.back-to-top-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-to-top-enter-from {
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+}
+
+.back-to-top-leave-to {
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+}
+
+/* 返回顶部按钮悬停效果 */
+.back-to-top-button {
+  backdrop-filter: blur(8px);
+}
+
+.back-to-top-button:hover {
+  backdrop-filter: blur(12px);
+}
+
+/* 进度环动画 */
+.back-to-top-button circle:last-child {
+  transition: stroke-dasharray 0.2s ease-out;
+}
+
+/* 移动端菜单动画 */
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.mobile-menu-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

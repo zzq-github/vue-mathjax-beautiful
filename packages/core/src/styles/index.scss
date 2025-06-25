@@ -12,161 +12,363 @@
   --math-editor-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
-// Vue数学编辑器基础样式
-.vue-mathjax-editor {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #111827;
-  display: flex;
-  flex-direction: column;
+// VueMathjaxBeautiful 内联模式样式
+.vue-mathjax-beautiful-inline {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   background: white;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  // 工具栏样式
-  .toolbar {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    gap: 8px;
-    flex-wrap: wrap;
+  .editor-container {
+    padding: 0;
   }
 
-  // 工具栏按钮
-  .toolbar-btn {
-    padding: 8px 12px;
-    border: 1px solid #dee2e6;
-    background: white;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #495057;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: all 0.2s ease;
-    min-height: 36px;
-    white-space: nowrap;
+  .input-section {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid #f3f4f6;
 
-    &:hover {
-      background: #e9ecef;
-      border-color: #adb5bd;
-    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
 
-    &.active {
-      background: #007bff;
-      border-color: #007bff;
-      color: white;
-    }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #374151;
+        font-size: 14px;
 
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+        .icon {
+          font-size: 16px;
+        }
+      }
 
-    // 公式按钮特殊样式
-    &.formula-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border-color: transparent;
+      .input-actions {
+        .action-btn {
+          padding: 6px 8px;
+          border: 1px solid #d1d5db;
+          background: white;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          color: #6b7280;
 
-      &:hover {
-        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+          &:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+          }
+
+          .icon {
+            font-size: 14px;
+          }
+        }
       }
     }
 
+    .input-wrapper {
+      .latex-input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        resize: vertical;
+        min-height: 80px;
+        background: #fafafa;
+        transition: all 0.2s ease;
 
+        &:focus {
+          outline: none;
+          border-color: #3b82f6;
+          background: white;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-    // 图标样式
-    .fx-icon {
-      font-style: italic;
-      font-weight: bold;
-    }
-
-    .loading-icon {
-      animation: spin 1s linear infinite;
+        &::placeholder {
+          color: #9ca3af;
+        }
+      }
     }
   }
 
-  // 分隔线
-  .divider {
-    width: 1px;
-    height: 24px;
-    background: #dee2e6;
-    margin: 0 8px;
+  .preview-section {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f3f4f6;
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #374151;
+        font-size: 14px;
+
+        .icon {
+          font-size: 16px;
+        }
+      }
+
+      .preview-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #6b7280;
+
+        .status-dot {
+          width: 6px;
+          height: 6px;
+          background: #10b981;
+          border-radius: 50%;
+          animation: pulse 2s infinite;
+        }
+
+        &.active {
+          color: #10b981;
+        }
+      }
+    }
+
+    .preview-container {
+      min-height: 60px;
+      padding: 16px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .formula-preview {
+        text-align: center;
+        
+        svg {
+          max-width: 100%;
+          height: auto;
+        }
+      }
+
+      .no-formula {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #9ca3af;
+        font-size: 14px;
+
+        .icon {
+          font-size: 16px;
+        }
+      }
+    }
   }
 
-  // 编辑器容器
-  .editor-container {
-    position: relative;
-    flex: 1;
+  .symbols-section {
+    padding: 16px 20px 20px;
+
+    .category-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+      background: #f3f4f6;
+      padding: 4px;
+      border-radius: 8px;
+
+      .tab-button {
+        flex: 1;
+        padding: 8px 12px;
+        border: none;
+        background: transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #6b7280;
+
+        &:hover {
+          background: white;
+          color: #374151;
+        }
+
+        &.active {
+          background: white;
+          color: #3b82f6;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-icon {
+          font-size: 14px;
+        }
+
+        .tab-name {
+          font-weight: 500;
+        }
+      }
+    }
+
+    .symbols-content {
+      .symbols-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+        gap: 8px;
+        margin-bottom: 20px;
+
+        .symbol-button {
+          aspect-ratio: 1;
+          border: 1px solid #e5e7eb;
+          background: white;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 18px;
+          padding: 4px;
+
+          &:hover {
+            border-color: #3b82f6;
+            background: #f0f9ff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+
+          .symbol-fallback {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            color: #6b7280;
+          }
+        }
+      }
+
+      .formula-examples {
+        .examples-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+          font-weight: 600;
+          color: #374151;
+          font-size: 14px;
+
+          .icon {
+            font-size: 16px;
+          }
+        }
+
+        .examples-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 12px;
+
+          .example-button {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+
+            &:hover {
+              border-color: #3b82f6;
+              background: #f0f9ff;
+              transform: translateY(-1px);
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .example-preview {
+              margin-bottom: 8px;
+              min-height: 30px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .example-description {
+              font-size: 12px;
+              color: #6b7280;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .inline-footer {
+    padding: 16px 20px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
     display: flex;
-    flex-direction: column;
-  }
+    justify-content: flex-end;
+    gap: 12px;
 
-  // 编辑器内容
-  .editor-content {
-    flex: 1;
-    padding: 20px;
-    outline: none;
-    font-size: 16px;
-    line-height: 1.6;
-    color: #333;
-    overflow-y: auto;
-    min-height: 300px;
-
-    &:empty:before {
-      content: attr(placeholder);
-      color: #adb5bd;
-      font-style: italic;
-    }
-
-    // SVG公式样式
-    svg[data-latex] {
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
-      border-radius: 4px;
-      padding: 2px 4px;
-      margin: 0 2px;
-      background: transparent;
       border: 1px solid transparent;
-      font-size: 18px !important;
-      min-height: 24px;
-      vertical-align: middle;
 
-      &:hover {
-        background: #f0f9ff;
-        border-color: #3b82f6;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      &.btn-secondary {
+        background: white;
+        color: #6b7280;
+        border-color: #d1d5db;
+
+        &:hover {
+          background: #f9fafb;
+          border-color: #9ca3af;
+        }
       }
-    }
-  }
 
-  // 字符计数器
-  .char-counter {
-    position: absolute;
-    bottom: 12px;
-    right: 16px;
-    font-size: 12px;
-    color: #6c757d;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 4px 8px;
-    border-radius: 4px;
-    backdrop-filter: blur(4px);
+      &.btn-primary {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
 
-    .char-count {
-      font-weight: 500;
-    }
+        &:hover:not(:disabled) {
+          background: #2563eb;
+          border-color: #2563eb;
+        }
 
-    .char-label {
-      margin-left: 4px;
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
     }
   }
 }
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// VueMathjaxEditor 样式已移至组件内部，避免重复定义
 
 // 数学编辑器基础样式（兼容旧版本）
 .math-editor {
@@ -515,19 +717,22 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  max-width: 900px;
-  width: 95vw;
+  // max-width: 900px;
+  width: 80vw;
   max-height: 95vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px; 
+  -ms-border-radius: 12px; 
+  -o-border-radius: 12px; 
   // 头部
   .dialog-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px;
+    padding: 16px;
     border-bottom: 1px solid #e5e7eb;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
