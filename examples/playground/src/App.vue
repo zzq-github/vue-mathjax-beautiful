@@ -23,7 +23,8 @@
           <button
             @click="toggleTheme"
             class="relative p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 group"
-            aria-label="切换主题"
+            :aria-label="isDark ? '暗色主题' : '亮色主题'"
+            :title="isDark ? '切换到亮色主题' : '切换到暗色主题'"
           >
             <div class="relative w-5 h-5">
               <!-- 太阳图标 -->
@@ -55,7 +56,8 @@
           <button
             @click="toggleTheme"
             class="relative p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 group"
-            aria-label="切换主题"
+            :aria-label="isDark ? '暗色主题' : '亮色主题'"
+            :title="isDark ? '切换到亮色主题' : '切换到暗色主题'"
           >
             <div class="relative w-4 h-4">
               <!-- 太阳图标 -->
@@ -229,8 +231,9 @@
              </div>
              <div class="p-4 sm:p-6">
                <!-- 使用 VueMathjaxBeautiful 组件 -->
-               <VueMathjaxBeautiful 
+               <VueMathjaxBeautiful
                  :inline-mode="true"
+                 :theme="isDark ? 'dark' : 'light'"
                  @insert="handleFormulaInsert"
                />
                <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg transition-colors duration-300">
@@ -291,6 +294,7 @@
                <div class="min-h-[300px] sm:min-h-[400px]">
                  <VueMathjaxEditor 
                    v-model="richTextContent"
+                   :theme="isDark ? 'dark' : 'light'"
                    placeholder="开始编写您的内容，支持富文本编辑和数学公式..."
                    @change="handleRichTextChange"
                    @focus="handleFocus"
@@ -1081,19 +1085,20 @@ function handleScroll() {
   showBackToTop.value = window.scrollY > 300
 }
 
-// 主题切换功能
+// 主题切换功能 - 在亮色和暗色主题之间切换
 function toggleTheme() {
   isDark.value = !isDark.value
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
   updateTheme()
 }
 
 function updateTheme() {
   if (isDark.value) {
-    document.documentElement.classList.add('dark')
-    localStorage.setItem('theme', 'dark')
+    document.documentElement.classList.add('dark', 'theme-dark')
+    document.documentElement.classList.remove('theme-light')
   } else {
-    document.documentElement.classList.remove('dark')
-    localStorage.setItem('theme', 'light')
+    document.documentElement.classList.remove('dark', 'theme-dark')
+    document.documentElement.classList.add('theme-light')
   }
 }
 
@@ -1102,10 +1107,12 @@ function initTheme() {
   // 检查本地存储的主题设置
   const savedTheme = localStorage.getItem('theme')
   
-  if (savedTheme) {
-    isDark.value = savedTheme === 'dark'
+  if (savedTheme === 'light') {
+    isDark.value = false
+  } else if (savedTheme === 'dark') {
+    isDark.value = true
   } else {
-    // 如果没有保存的主题，使用系统偏好
+    // 没有保存的主题，使用系统默认
     isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
   }
   

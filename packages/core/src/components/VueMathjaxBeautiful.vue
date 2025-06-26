@@ -1,6 +1,6 @@
 <template>
   <!-- 内联模式 -->
-  <div v-if="inlineMode" class="vue-mathjax-beautiful-inline">
+  <div v-if="inlineMode" class="vue-mathjax-beautiful-inline" :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light' }">
     <!-- 编辑器内容 -->
     <div class="editor-container">
       <!-- 输入区域 -->
@@ -11,6 +11,9 @@
             <span>LaTeX 输入</span>
           </div>
           <div class="input-actions">
+            <button class="action-btn" @click="toggleTheme" :title="themeButtonTitle">
+              <span class="icon">{{ themeIcon }}</span>
+            </button>
             <button class="action-btn" @click="clearInput" title="清空">
               <span class="icon">🗑️</span>
             </button>
@@ -118,8 +121,8 @@
   </div>
 
   <!-- 弹窗模式 -->
-  <div v-else-if="visible" class="vue-mathjax-beautiful-overlay" @click="handleOverlayClick">
-    <div class="vue-mathjax-beautiful-dialog" @click.stop>
+  <div v-else-if="visible" class="vue-mathjax-beautiful-overlay" :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light' }" @click="handleOverlayClick">
+    <div class="vue-mathjax-beautiful-dialog" :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light' }" @click.stop>
       <!-- 头部 -->
       <div class="dialog-header">
         <div class="header-content">
@@ -148,11 +151,14 @@
               <span class="icon">📝</span>
               <span>LaTeX 输入</span>
             </div>
-            <div class="input-actions">
-              <button class="action-btn" @click="clearInput" title="清空">
-                <span class="icon">🗑️</span>
-              </button>
-            </div>
+                  <div class="input-actions">
+        <button class="action-btn" @click="toggleTheme" :title="themeButtonTitle">
+          <span class="icon">{{ themeIcon }}</span>
+        </button>
+        <button class="action-btn" @click="clearInput" title="清空">
+          <span class="icon">🗑️</span>
+        </button>
+      </div>
           </div>
           <div class="input-wrapper">
             <textarea
@@ -274,10 +280,12 @@ const props = withDefaults(defineProps<{
   modelValue?: boolean
   existingLatex?: string
   inlineMode?: boolean
+  theme?: string
 }>(), {
   modelValue: false,
   existingLatex: '',
-  inlineMode: false
+  inlineMode: false,
+  theme: 'light'
 })
 
 const emit = defineEmits<{
@@ -291,6 +299,9 @@ const latexInput = ref('')
 const activeCategory = ref('basic')
 const renderedFormula = ref('')
 const symbolDisplayCache = new Map<string, string>()
+
+// 组件内部主题状态（独立于外部传入的theme）
+const internalTheme = ref(props.theme)
 
 // 创建响应式的符号数据副本
 const reactiveBasicSymbols = ref([...basicSymbols])
@@ -308,6 +319,15 @@ const currentSymbols = computed(() => {
     default:
       return reactiveBasicSymbols.value
   }
+})
+
+// 主题相关计算属性
+const themeIcon = computed(() => {
+  return internalTheme.value === 'dark' ? '☀️' : '🌙'
+})
+
+const themeButtonTitle = computed(() => {
+  return internalTheme.value === 'dark' ? '切换到亮色主题' : '切换到暗色主题'
 })
 
 // 监听器
@@ -351,6 +371,25 @@ watch(() => props.inlineMode, (newVal) => {
     })
   }
 }, { immediate: true })
+
+// 标记用户是否手动修改过主题
+const hasUserChangedTheme = ref(false)
+
+// 监听外部主题变化（仅在初始化时同步，之后组件内部独立控制）
+watch(() => props.theme, (newTheme) => {
+  // 只有在组件内部主题还没有被用户手动修改时才同步外部主题
+  if (!hasUserChangedTheme.value) {
+    internalTheme.value = newTheme
+  }
+}, { immediate: true })
+
+// 监听内部主题变化
+watch(internalTheme, (newTheme, oldTheme) => {
+  if (oldTheme !== undefined) {
+    hasUserChangedTheme.value = true
+  }
+  console.log('组件内部主题变化:', newTheme)
+})
 
 // 方法
 const handleOverlayClick = () => {
@@ -441,6 +480,11 @@ const handleInsert = () => {
     emit('insert', latexInput.value.trim())
     handleClose()
   }
+}
+
+// 主题切换方法（仅影响当前组件）
+const toggleTheme = () => {
+  internalTheme.value = internalTheme.value === 'dark' ? 'light' : 'dark'
 }
 
 // 渲染符号

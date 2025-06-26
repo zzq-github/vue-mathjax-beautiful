@@ -1,8 +1,9 @@
 // 导入变量
 @use './variables.scss';
 
-// 变量定义
-:root {
+// 默认变量定义（亮色主题）
+:root,
+.theme-light {
   --math-editor-primary: #3b82f6;
   --math-editor-primary-hover: #2563eb;
   --math-editor-border: #e5e7eb;
@@ -10,16 +11,319 @@
   --math-editor-text: #374151;
   --math-editor-text-muted: #6b7280;
   --math-editor-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  
+  // 亮色主题下的工具栏背景
+  --math-editor-toolbar-bg: #ffffff;
+  --math-editor-toolbar-border: #e5e7eb;
+  
+  // 亮色主题下的按钮样式
+  --math-editor-btn-bg: #ffffff;
+  --math-editor-btn-border: #e5e7eb;
+  --math-editor-btn-hover-bg: #3b82f6;
+}
+
+// 暗色主题变量
+.theme-dark {
+  --math-editor-primary: #60a5fa;
+  --math-editor-primary-hover: #3b82f6;
+  --math-editor-border: #374151;
+  --math-editor-bg: #1f2937;
+  --math-editor-text: #f9fafb;
+  --math-editor-text-muted: #d1d5db;
+  --math-editor-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  
+  // 暗色主题下的工具栏背景
+  --math-editor-toolbar-bg: rgba(31, 41, 55, 0.95);
+  --math-editor-toolbar-border: rgba(55, 65, 81, 0.8);
+  
+  // 暗色主题下的按钮样式
+  --math-editor-btn-bg: rgba(55, 65, 81, 0.6);
+  --math-editor-btn-border: rgba(156, 163, 175, 0.3);
+  --math-editor-btn-hover-bg: rgba(96, 165, 250, 0.9);
+}
+
+// VueMathjaxEditor 主编辑器样式
+.vue-mathjax-editor {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border: 1px solid var(--math-editor-border);
+  border-radius: 12px;
+  background: var(--math-editor-bg);
+  color: var(--math-editor-text);
+  box-shadow: var(--math-editor-shadow);
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &.full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    border-radius: 0;
+    border: none;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--math-editor-border);
+    background: var(--math-editor-bg);
+    flex-wrap: wrap;
+    
+    // 暗色主题下的工具栏特殊样式
+    &.theme-dark,
+    .theme-dark & {
+      background: var(--math-editor-toolbar-bg, var(--math-editor-bg));
+      border-bottom-color: var(--math-editor-toolbar-border, var(--math-editor-border));
+      backdrop-filter: blur(10px);
+    }
+
+    .format-group,
+    .math-group,
+    .insert-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .divider {
+      width: 1px;
+      height: 24px;
+      background: var(--math-editor-border);
+      margin: 0 4px;
+    }
+
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border: 1px solid var(--math-editor-border);
+      background: var(--math-editor-bg);
+      color: var(--math-editor-text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      min-height: 36px;
+      min-width: 36px;
+      position: relative;
+      overflow: hidden;
+
+      // 基础格式按钮特殊样式
+      strong, em, u, s {
+        font-size: 16px;
+        font-weight: 600;
+        display: inline-block;
+        line-height: 1;
+      }
+
+
+
+      &:hover {
+        background: var(--math-editor-primary);
+        color: white;
+        border-color: var(--math-editor-primary);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+        strong, em, u, s {
+          color: white;
+          text-shadow: none;
+        }
+      }
+
+      &.active {
+        background: var(--math-editor-primary);
+        color: white;
+        border-color: var(--math-editor-primary);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        strong, em, u, s {
+          color: white;
+          text-shadow: none;
+        }
+
+        // 激活状态的指示器
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 2px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 12px;
+          height: 2px;
+          background: rgba(255, 255, 255, 0.8);
+          border-radius: 1px;
+        }
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        
+        &:hover {
+          background: var(--math-editor-bg);
+          color: var(--math-editor-text);
+          border-color: var(--math-editor-border);
+          transform: none;
+          box-shadow: none;
+        }
+      }
+
+      // 公式按钮特殊样式
+      &.formula-btn {
+        .fx-icon {
+          font-weight: bold;
+          font-style: italic;
+          font-size: 16px;
+          color: var(--math-editor-primary);
+          
+          .theme-dark & {
+            color: #60a5fa;
+          }
+        }
+
+        &:hover .fx-icon,
+        &.active .fx-icon {
+          color: white;
+        }
+      }
+
+      // 图片按钮加载动画
+      .loading-icon {
+        animation: spin 1s linear infinite;
+        font-size: 16px;
+      }
+
+      // 图标按钮样式
+      .icon {
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      // 主题切换按钮特殊样式
+      &.theme-btn {
+        .icon {
+          font-size: 16px;
+          filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        }
+
+        &:hover .icon {
+          transform: rotate(15deg);
+          transition: transform 0.2s ease;
+        }
+      }
+    }
+  }
+
+  .editor-container {
+    position: relative;
+
+    .editor-content {
+      min-height: 300px;
+      padding: 16px;
+      background: var(--math-editor-bg);
+      color: var(--math-editor-text);
+      border: none;
+      outline: none;
+      font-size: 16px;
+      line-height: 1.6;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+
+      &:empty::before {
+        content: attr(placeholder);
+        color: var(--math-editor-text-muted);
+        pointer-events: none;
+      }
+
+      &:focus {
+        background: var(--math-editor-bg);
+      }
+
+      // 公式样式
+      .math-formula {
+        display: inline-block;
+        margin: 0 2px;
+        padding: 2px 4px;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba(59, 130, 246, 0.2);
+          border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        svg {
+          vertical-align: middle;
+          max-width: 100%;
+          height: auto;
+        }
+      }
+
+      // 暗色主题下的公式样式
+      .theme-dark & .math-formula {
+        background: rgba(96, 165, 250, 0.15);
+        border-color: rgba(96, 165, 250, 0.3);
+
+        &:hover {
+          background: rgba(96, 165, 250, 0.25);
+          border-color: rgba(96, 165, 250, 0.5);
+        }
+      }
+
+      // 图片样式
+      img {
+        max-width: 100%;
+        height: auto;
+        margin: 8px 0;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .char-counter {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--math-editor-text-muted);
+      background: var(--math-editor-bg);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--math-editor-border);
+
+      .char-count {
+        font-weight: 600;
+        color: var(--math-editor-primary);
+      }
+    }
+  }
 }
 
 // VueMathjaxBeautiful 内联模式样式
 .vue-mathjax-beautiful-inline {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--math-editor-border);
   border-radius: 12px;
-  background: white;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: var(--math-editor-bg);
+  color: var(--math-editor-text);
+  box-shadow: var(--math-editor-shadow);
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: all 0.3s ease;
 
   .editor-container {
     padding: 0;
@@ -27,7 +331,7 @@
 
   .input-section {
     padding: 20px 20px 16px;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--math-editor-border);
 
     .section-header {
       display: flex;
@@ -40,7 +344,7 @@
         align-items: center;
         gap: 8px;
         font-weight: 600;
-        color: #374151;
+        color: var(--math-editor-text);
         font-size: 14px;
 
         .icon {
@@ -51,16 +355,17 @@
       .input-actions {
         .action-btn {
           padding: 6px 8px;
-          border: 1px solid #d1d5db;
-          background: white;
+          border: 1px solid var(--math-editor-border);
+          background: var(--math-editor-bg);
+          color: var(--math-editor-text-muted);
           border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s ease;
-          color: #6b7280;
 
           &:hover {
-            background: #f9fafb;
-            border-color: #9ca3af;
+            background: var(--math-editor-primary);
+            color: white;
+            border-color: var(--math-editor-primary);
           }
 
           .icon {
@@ -74,25 +379,25 @@
       .latex-input {
         width: 100%;
         padding: 12px;
-        border: 1px solid #d1d5db;
+        border: 1px solid var(--math-editor-border);
+        background: var(--math-editor-bg);
+        color: var(--math-editor-text);
         border-radius: 8px;
         font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
         font-size: 14px;
         line-height: 1.5;
         resize: vertical;
         min-height: 80px;
-        background: #fafafa;
         transition: all 0.2s ease;
 
         &:focus {
           outline: none;
-          border-color: #3b82f6;
-          background: white;
+          border-color: var(--math-editor-primary);
           box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         &::placeholder {
-          color: #9ca3af;
+          color: var(--math-editor-text-muted);
         }
       }
     }
@@ -100,7 +405,7 @@
 
   .preview-section {
     padding: 16px 20px;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--math-editor-border);
 
     .section-header {
       display: flex;
@@ -113,7 +418,7 @@
         align-items: center;
         gap: 8px;
         font-weight: 600;
-        color: #374151;
+        color: var(--math-editor-text);
         font-size: 14px;
 
         .icon {
@@ -126,7 +431,7 @@
         align-items: center;
         gap: 6px;
         font-size: 12px;
-        color: #6b7280;
+        color: var(--math-editor-text-muted);
 
         .status-dot {
           width: 6px;
@@ -145,8 +450,8 @@
     .preview-container {
       min-height: 60px;
       padding: 16px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
+      background: var(--math-editor-bg);
+      border: 1px solid var(--math-editor-border);
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -165,7 +470,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #9ca3af;
+        color: var(--math-editor-text-muted);
         font-size: 14px;
 
         .icon {
@@ -182,7 +487,7 @@
       display: flex;
       gap: 4px;
       margin-bottom: 16px;
-      background: #f3f4f6;
+      background: var(--math-editor-border);
       padding: 4px;
       border-radius: 8px;
 
@@ -191,6 +496,7 @@
         padding: 8px 12px;
         border: none;
         background: transparent;
+        color: var(--math-editor-text);
         border-radius: 6px;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -199,16 +505,15 @@
         justify-content: center;
         gap: 6px;
         font-size: 13px;
-        color: #6b7280;
 
         &:hover {
-          background: white;
-          color: #374151;
+          background: var(--math-editor-bg);
+          color: var(--math-editor-text);
         }
 
         &.active {
-          background: white;
-          color: #3b82f6;
+          background: var(--math-editor-bg);
+          color: var(--math-editor-primary);
           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
@@ -231,8 +536,8 @@
 
         .symbol-button {
           aspect-ratio: 1;
-          border: 1px solid #e5e7eb;
-          background: white;
+          border: 1px solid var(--math-editor-border);
+          background: var(--math-editor-bg);
           border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s ease;
@@ -243,8 +548,9 @@
           padding: 4px;
 
           &:hover {
-            border-color: #3b82f6;
-            background: #f0f9ff;
+            border-color: var(--math-editor-primary);
+            background: var(--math-editor-primary);
+            color: white;
             transform: translateY(-1px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           }
@@ -252,7 +558,7 @@
           .symbol-fallback {
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             font-size: 12px;
-            color: #6b7280;
+            color: var(--math-editor-text-muted);
           }
         }
       }
@@ -279,16 +585,17 @@
 
           .example-button {
             padding: 12px;
-            border: 1px solid #e5e7eb;
-            background: white;
+            border: 1px solid var(--math-editor-border);
+            background: var(--math-editor-bg);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
 
             &:hover {
-              border-color: #3b82f6;
-              background: #f0f9ff;
+              border-color: var(--math-editor-primary);
+              background: var(--math-editor-primary);
+              color: white;
               transform: translateY(-1px);
               box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             }
@@ -303,7 +610,7 @@
 
             .example-description {
               font-size: 12px;
-              color: #6b7280;
+              color: var(--math-editor-text-muted);
               font-weight: 500;
             }
           }
@@ -314,8 +621,8 @@
 
   .inline-footer {
     padding: 16px 20px;
-    background: #f9fafb;
-    border-top: 1px solid #e5e7eb;
+    background: var(--math-editor-bg);
+    border-top: 1px solid var(--math-editor-border);
     display: flex;
     justify-content: flex-end;
     gap: 12px;
@@ -330,24 +637,24 @@
       border: 1px solid transparent;
 
       &.btn-secondary {
-        background: white;
-        color: #6b7280;
-        border-color: #d1d5db;
+        background: var(--math-editor-bg);
+        color: var(--math-editor-text-muted);
+        border-color: var(--math-editor-border);
 
         &:hover {
-          background: #f9fafb;
-          border-color: #9ca3af;
+          background: var(--math-editor-border);
+          border-color: var(--math-editor-text-muted);
         }
       }
 
       &.btn-primary {
-        background: #3b82f6;
+        background: var(--math-editor-primary);
         color: white;
-        border-color: #3b82f6;
+        border-color: var(--math-editor-primary);
 
         &:hover:not(:disabled) {
-          background: #2563eb;
-          border-color: #2563eb;
+          background: var(--math-editor-primary-hover);
+          border-color: var(--math-editor-primary-hover);
         }
 
         &:disabled {
@@ -368,7 +675,82 @@
   }
 }
 
-// VueMathjaxEditor 样式已移至组件内部，避免重复定义
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes buttonPress {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+// 暗色主题下的特殊效果 - 修正选择器并提高优先级
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn,
+.vue-mathjax-editor.theme-dark .toolbar-btn {
+  border-color: rgba(156, 163, 175, 0.4) !important;
+  background: rgba(55, 65, 81, 0.8) !important;
+  color: #e5e7eb !important;
+  
+  // 基础格式按钮文字样式
+  strong, em, u, s {
+    color: #f3f4f6 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 700 !important;
+  }
+  
+  // 悬浮状态
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
+    border-color: #60a5fa !important;
+    color: white !important;
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    
+    strong, em, u, s {
+      color: white !important;
+      text-shadow: none !important;
+    }
+  }
+  
+  // 激活状态
+  &.active {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
+    border-color: #60a5fa !important;
+    color: white !important;
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    
+    strong, em, u, s {
+      color: white !important;
+      text-shadow: none !important;
+    }
+  }
+  
+  // 按下动画
+  &:active {
+    animation: buttonPress 0.1s ease-in-out;
+  }
+}
+
+// 暗色主题下的分隔符优化
+.vue-mathjax-editor.theme-dark .toolbar .divider {
+  background: linear-gradient(to bottom, transparent, rgba(156, 163, 175, 0.3), transparent) !important;
+  opacity: 0.7;
+}
 
 // 数学编辑器基础样式（兼容旧版本）
 .math-editor {
@@ -711,14 +1093,20 @@
   justify-content: center;
   z-index: 9999;
   backdrop-filter: blur(2px);
+  transition: all 0.3s ease;
+
+  &.theme-dark {
+    background: rgba(0, 0, 0, 0.7);
+  }
 }
 
 .vue-mathjax-beautiful-dialog {
-  background: white;
+  background: var(--math-editor-bg);
+  color: var(--math-editor-text);
   border-radius: 12px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   // max-width: 900px;
-  width: 80vw;
+  width: 58vw;
   max-height: 95vh;
   display: flex;
   flex-direction: column;
@@ -726,14 +1114,23 @@
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px; 
   -ms-border-radius: 12px; 
-  -o-border-radius: 12px; 
+  -o-border-radius: 12px;
+  transition: all 0.3s ease;
+
+  // 暗色主题样式
+  &.theme-dark {
+    background: var(--math-editor-bg);
+    color: var(--math-editor-text);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--math-editor-border);
+  } 
   // 头部
   .dialog-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 16px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--math-editor-border);
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
 
@@ -797,7 +1194,7 @@
   // 输入区域
   .input-section {
     padding: 20px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--math-editor-border);
 
     .section-header {
       display: flex;
@@ -810,7 +1207,7 @@
         align-items: center;
         gap: 8px;
         font-weight: 600;
-        color: #374151;
+        color: var(--math-editor-text);
       }
 
       .input-actions {
@@ -818,8 +1215,9 @@
         gap: 8px;
 
         .action-btn {
-          background: none;
-          border: 1px solid #d1d5db;
+          background: var(--math-editor-bg);
+          border: 1px solid var(--math-editor-border);
+          color: var(--math-editor-text);
           padding: 6px 8px;
           border-radius: 4px;
           cursor: pointer;
@@ -827,7 +1225,9 @@
           transition: all 0.2s;
 
           &:hover {
-            background: #f3f4f6;
+            background: var(--math-editor-primary);
+            color: white;
+            border-color: var(--math-editor-primary);
           }
         }
       }
@@ -837,7 +1237,9 @@
       .latex-input {
         width: 100%;
         padding: 12px;
-        border: 2px solid #e5e7eb;
+        border: 2px solid var(--math-editor-border);
+        background: var(--math-editor-bg);
+        color: var(--math-editor-text);
         border-radius: 8px;
         font-family: 'Courier New', monospace;
         font-size: 14px;
@@ -847,12 +1249,12 @@
 
         &:focus {
           outline: none;
-          border-color: #3b82f6;
+          border-color: var(--math-editor-primary);
           box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
         &::placeholder {
-          color: #9ca3af;
+          color: var(--math-editor-text-muted);
         }
       }
     }
@@ -861,8 +1263,8 @@
   // 预览区域
   .preview-section {
     padding: 20px;
-    border-bottom: 1px solid #e5e7eb;
-    background: #f9fafb;
+    border-bottom: 1px solid var(--math-editor-border);
+    background: var(--math-editor-bg);
 
     .section-header {
       display: flex;
@@ -875,7 +1277,7 @@
         align-items: center;
         gap: 8px;
         font-weight: 600;
-        color: #374151;
+        color: var(--math-editor-text);
       }
 
       .preview-status {
@@ -883,7 +1285,7 @@
         align-items: center;
         gap: 6px;
         font-size: 12px;
-        color: #6b7280;
+        color: var(--math-editor-text-muted);
 
         &.active {
           color: #059669;
@@ -904,10 +1306,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: white;
+      background: var(--math-editor-bg);
       border-radius: 8px;
       padding: 16px;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--math-editor-border);
 
       .formula-preview {
         text-align: center;
@@ -918,7 +1320,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #9ca3af;
+        color: var(--math-editor-text-muted);
         font-style: italic;
       }
     }
@@ -933,8 +1335,8 @@
 
     .category-tabs {
       display: flex;
-      border-bottom: 1px solid #e5e7eb;
-      background: #f9fafb;
+      border-bottom: 1px solid var(--math-editor-border);
+      background: var(--math-editor-bg);
 
       .tab-button {
         flex: 1;
@@ -947,18 +1349,18 @@
         background: none;
         cursor: pointer;
         font-size: 14px;
-        color: #6b7280;
+        color: var(--math-editor-text-muted);
         transition: all 0.2s;
 
         &:hover {
-          background: #f3f4f6;
-          color: #374151;
+          background: var(--math-editor-border);
+          color: var(--math-editor-text);
         }
 
         &.active {
-          background: white;
-          color: #3b82f6;
-          border-bottom: 2px solid #3b82f6;
+          background: var(--math-editor-bg);
+          color: var(--math-editor-primary);
+          border-bottom: 2px solid var(--math-editor-primary);
         }
 
         .tab-icon {
@@ -986,9 +1388,9 @@
           align-items: center;
           justify-content: center;
           height: 50px;
-          border: 1px solid #e5e7eb;
+          border: 1px solid var(--math-editor-border);
           border-radius: 8px;
-          background: white;
+          background: var(--math-editor-bg);
           cursor: pointer;
           font-size: 18px;
           transition: all 0.2s;
@@ -996,8 +1398,9 @@
           overflow: hidden;
 
           &:hover {
-            background: #f0f9ff;
-            border-color: #3b82f6;
+            background: var(--math-editor-primary);
+            border-color: var(--math-editor-primary);
+            color: white;
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
           }
@@ -1028,7 +1431,7 @@
           .symbol-fallback {
             font-family: 'Times New Roman', 'KaTeX_Main', serif;
             font-size: 14px;
-            color: #374151;
+            color: var(--math-editor-text);
             text-align: center;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1061,7 +1464,7 @@
           gap: 8px;
           margin-bottom: 12px;
           font-weight: 600;
-          color: #374151;
+          color: var(--math-editor-text);
         }
 
         .examples-grid {
@@ -1076,27 +1479,28 @@
             flex-direction: column;
             align-items: center;
             padding: 12px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--math-editor-border);
             border-radius: 8px;
-            background: white;
+            background: var(--math-editor-bg);
             cursor: pointer;
             transition: all 0.2s;
 
             &:hover {
-              background: #f0f9ff;
-              border-color: #3b82f6;
+              background: var(--math-editor-primary);
+              border-color: var(--math-editor-primary);
+              color: white;
               transform: translateY(-1px);
               box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             }
 
             .example-preview {
               margin-bottom: 8px;
-              font-size: 16px;
+              font-size: 18px;
             }
 
             .example-description {
               font-size: 12px;
-              color: #6b7280;
+              color: var(--math-editor-text-muted);
               text-align: center;
             }
           }
@@ -1111,8 +1515,8 @@
     justify-content: flex-end;
     gap: 12px;
     padding: 20px;
-    border-top: 1px solid #e5e7eb;
-    background: #f9fafb;
+    border-top: 1px solid var(--math-editor-border);
+    background: var(--math-editor-bg);
 
     .btn {
       padding: 10px 20px;
@@ -1124,11 +1528,12 @@
       border: none;
 
       &.btn-secondary {
-        background: #f3f4f6;
-        color: #374151;
+        background: var(--math-editor-border);
+        color: var(--math-editor-text);
 
         &:hover {
-          background: #e5e7eb;
+          background: var(--math-editor-text-muted);
+          color: var(--math-editor-bg);
         }
       }
 

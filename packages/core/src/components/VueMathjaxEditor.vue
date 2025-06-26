@@ -1,5 +1,5 @@
 <template>
-  <div class="vue-mathjax-editor" :class="{ 'full-screen': isFullScreen }">
+  <div class="vue-mathjax-editor" :class="{ 'full-screen': isFullScreen, 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light' }">
     <!-- 工具栏 -->
     <div class="toolbar" v-if="showToolbar">
       <!-- 基础格式工具 -->
@@ -76,6 +76,13 @@
           <span class="icon">🧹</span>
           <span>清除</span>
         </button>
+
+        <div class="divider"></div>
+
+        <button class="toolbar-btn theme-btn" @click="toggleTheme" :title="themeButtonTitle">
+          <span class="icon">{{ themeIcon }}</span>
+          <span>主题</span>
+        </button>
       </div>
     </div>
 
@@ -108,6 +115,7 @@
     <VueMathjaxBeautiful
       v-model="showFormula"
       :existing-latex="editingLatex"
+      :theme="internalTheme"
       @insert="insertFormula"
     />
   </div>
@@ -124,6 +132,7 @@ interface Props {
   minHeight?: string
   showToolbar?: boolean
   readonly?: boolean
+  theme?: 'light' | 'dark'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -132,6 +141,7 @@ const props = withDefaults(defineProps<Props>(), {
   minHeight: '300px',
   showToolbar: true,
   readonly: false,
+  theme: 'light',
 })
 
 const emit = defineEmits<{
@@ -153,6 +163,19 @@ const charCount = ref(0)
 const uploadLoading = ref(false)
 const activeFormats = ref(new Set<string>())
 
+// 组件内部主题状态（独立于外部传入的theme）
+const internalTheme = ref(props.theme)
+const hasUserChangedTheme = ref(false)
+
+// 主题相关计算属性
+const themeIcon = computed(() => {
+  return internalTheme.value === 'dark' ? '☀️' : '🌙'
+})
+
+const themeButtonTitle = computed(() => {
+  return internalTheme.value === 'dark' ? '切换到亮色主题' : '切换到暗色主题'
+})
+
 // 监听外部值变化
 watch(
   () => props.modelValue,
@@ -168,6 +191,22 @@ watch(
   },
   { immediate: true }
 )
+
+// 监听外部主题变化（仅在初始化时同步，之后组件内部独立控制）
+watch(() => props.theme, (newTheme) => {
+  // 只有在组件内部主题还没有被用户手动修改时才同步外部主题
+  if (!hasUserChangedTheme.value) {
+    internalTheme.value = newTheme
+  }
+}, { immediate: true })
+
+// 监听内部主题变化
+watch(internalTheme, (newTheme, oldTheme) => {
+  if (oldTheme !== undefined) {
+    hasUserChangedTheme.value = true
+  }
+  console.log('富文本编辑器内部主题变化:', newTheme)
+})
 
 // 将标准表达式语法转换为HTML显示
 const convertFromStandardSyntax = async (content: string): Promise<string> => {
@@ -613,6 +652,12 @@ const clearSelectionFormat = async (range: Range) => {
   setupFormulaClickEvents()
 }
 
+// 主题切换方法（仅影响当前组件）
+const toggleTheme = () => {
+  internalTheme.value = internalTheme.value === 'dark' ? 'light' : 'dark'
+  hasUserChangedTheme.value = true
+}
+
 // 更新统计信息
 const updateStats = () => {
   if (!editorRef.value) return
@@ -751,7 +796,7 @@ onUnmounted(() => {
 })
 </script>
 
-<style>
+<style scoped>
 /* 确保基础样式生效 */
 * {
   box-sizing: border-box;
@@ -1091,14 +1136,14 @@ onUnmounted(() => {
 }
 
 .editor-content :deep(svg[data-latex-type='inline']) {
-  font-size: 20px !important;
+  font-size: 30px !important;
   min-height: 20px;
   vertical-align: baseline;
   padding: 2px 6px;
 }
 
 .editor-content :deep(svg[data-latex-type='display']) {
-  font-size: 24px !important;
+  font-size: 30px !important;
   min-height: 28px;
   display: inline-block;
   margin: 8px 12px;
@@ -1228,5 +1273,55 @@ onUnmounted(() => {
     font-size: 10px;
     padding: 3px 6px;
   }
+}
+
+/* 暗色主题下的工具栏按钮样式 - 直接在组件中定义确保生效 */
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn {
+  border-color: rgba(156, 163, 175, 0.4) !important;
+  background: rgba(55, 65, 81, 0.8) !important;
+  color: #e5e7eb !important;
+}
+
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn strong,
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn em,
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn u,
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn s {
+  color: #f3f4f6 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+  font-weight: 700 !important;
+}
+
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
+  border-color: #60a5fa !important;
+  color: white !important;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn:hover:not(:disabled) strong,
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn:hover:not(:disabled) em,
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn:hover:not(:disabled) u,
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn:hover:not(:disabled) s {
+  color: white !important;
+  text-shadow: none !important;
+}
+
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn.active {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
+  border-color: #60a5fa !important;
+  color: white !important;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn.active strong,
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn.active em,
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn.active u,
+.vue-mathjax-editor.theme-dark .toolbar .toolbar-btn.active s {
+  color: white !important;
+  text-shadow: none !important;
 }
 </style>
