@@ -40,6 +40,126 @@
 
       <div class="divider"></div>
 
+      <!-- 字体工具 -->
+      <div class="font-group">
+        <!-- 字体大小 -->
+        <div class="font-size-container">
+          <select
+            v-model="currentFontSize"
+            @change="changeFontSize"
+            class="font-size-select"
+            title="字体大小"
+          >
+            <option value="12px">12px</option>
+            <option value="13px">13px</option>
+            <option value="14px">14px</option>
+            <option value="15px">15px</option>
+            <option value="16px">16px</option>
+            <option value="17px">17px</option>
+            <option value="18px">18px</option>
+            <option value="19px">19px</option>
+            <option value="20px">20px</option>
+            <option value="21px">21px</option>
+            <option value="22px">22px</option>
+            <option value="23px">23px</option>
+            <option value="24px">24px</option>
+            <option value="25px">25px</option>
+            <option value="26px">26px</option>
+            <option value="27px">27px</option>
+            <option value="28px">28px</option>
+            <option value="30px">30px</option>
+            <option value="33px">33px</option>
+            <option value="36px">36px</option>
+            <option value="40px">40px</option>
+            <option value="48px">48px</option>
+            <option value="56px">56px</option>
+            <option value="64px">64px</option>
+            <option value="72px">72px</option>
+            <option value="80px">80px</option>
+            <option value="96px">96px</option>
+          </select>
+        </div>
+
+        <!-- 字体颜色 -->
+        <div class="color-picker-container">
+          <input
+            ref="colorInput"
+            type="color"
+            v-model="currentTextColor"
+            @change="changeTextColor"
+            class="color-input"
+            title="字体颜色"
+          />
+          <button
+            class="toolbar-btn color-btn"
+            @click="colorInput?.click()"
+            title="字体颜色"
+          >
+            <span class="color-icon" :style="{ color: currentTextColor }">A</span>
+            <span class="color-indicator" :style="{ backgroundColor: currentTextColor }"></span>
+          </button>
+        </div>
+
+        <!-- 背景颜色 -->
+        <div class="color-picker-container">
+          <input
+            ref="bgColorInput"
+            type="color"
+            v-model="currentBgColor"
+            @change="changeBgColor"
+            class="color-input"
+            title="背景颜色"
+          />
+          <button
+            class="toolbar-btn bg-color-btn"
+            @click="bgColorInput?.click()"
+            title="背景颜色"
+          >
+            <span class="bg-icon">🎨</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 文本对齐工具 -->
+      <div class="align-group">
+        <button
+          class="toolbar-btn"
+          :class="{ active: currentAlignment === 'left' }"
+          @click="setAlignment('left')"
+          title="左对齐"
+        >
+          <span class="align-icon align-left">L</span>
+        </button>
+        <button
+          class="toolbar-btn"
+          :class="{ active: currentAlignment === 'center' }"
+          @click="setAlignment('center')"
+          title="居中对齐"
+        >
+          <span class="align-icon align-center">C</span>
+        </button>
+        <button
+          class="toolbar-btn"
+          :class="{ active: currentAlignment === 'right' }"
+          @click="setAlignment('right')"
+          title="右对齐"
+        >
+          <span class="align-icon align-right">R</span>
+        </button>
+        <button
+          class="toolbar-btn"
+          :class="{ active: currentAlignment === 'justify' }"
+          @click="setAlignment('justify')"
+          title="两端对齐"
+        >
+          <span class="align-icon align-justify">J</span>
+        </button>
+      </div>
+
+      <div class="divider"></div>
+
       <!-- 公式工具 -->
       <div class="math-group">
         <button class="toolbar-btn formula-btn" @click="showFormulaEditor" title="插入数学公式">
@@ -154,6 +274,9 @@ const emit = defineEmits<{
 // 响应式数据
 const editorRef = ref<HTMLElement>()
 const imageInput = ref<HTMLInputElement>()
+const colorInput = ref<HTMLInputElement>()
+const bgColorInput = ref<HTMLInputElement>()
+
 const showFormula = ref(false)
 const editingLatex = ref('')
 const editingFormulaElement = ref<HTMLElement | null>(null)
@@ -162,6 +285,12 @@ const content = ref('')
 const charCount = ref(0)
 const uploadLoading = ref(false)
 const activeFormats = ref(new Set<string>())
+
+// 新增的样式控制变量
+const currentFontSize = ref('16px')
+const currentTextColor = ref('#334155')
+const currentBgColor = ref('#ffffff')
+const currentAlignment = ref('left')
 
 // 组件内部主题状态（独立于外部传入的theme）
 const internalTheme = ref(props.theme)
@@ -401,6 +530,215 @@ const updateSelection = () => {
   
   // 更新格式状态
   updateFormatState()
+  
+  // 更新当前样式状态
+  updateCurrentStyles()
+}
+
+// 更新当前样式状态
+const updateCurrentStyles = () => {
+  const selection = window.getSelection()
+  if (!selection || selection.rangeCount === 0) return
+  
+  const range = selection.getRangeAt(0)
+  let element = range.commonAncestorContainer
+  
+  // 如果选中的是文本节点，获取其父元素
+  if (element.nodeType === Node.TEXT_NODE && element.parentElement) {
+    element = element.parentElement
+  }
+  
+  if (element && element instanceof HTMLElement && editorRef.value?.contains(element)) {
+    // 获取当前元素的样式
+    const computedStyle = window.getComputedStyle(element)
+    
+    // 更新字体大小
+    currentFontSize.value = computedStyle.fontSize || '16px'
+    
+    // 更新字体颜色
+    const color = computedStyle.color
+    if (color && color !== 'rgb(51, 65, 85)') {
+      currentTextColor.value = rgbToHex(color) || '#334155'
+    }
+    
+    // 更新背景颜色
+    const bgColor = computedStyle.backgroundColor
+    if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
+      currentBgColor.value = rgbToHex(bgColor) || '#ffffff'
+    }
+    
+    // 更新对齐方式
+    const textAlign = computedStyle.textAlign || 'left'
+    currentAlignment.value = textAlign as 'left' | 'center' | 'right' | 'justify'
+  }
+}
+
+// RGB颜色转换为十六进制
+const rgbToHex = (rgb: string): string | null => {
+  const result = rgb.match(/\d+/g)
+  if (!result || result.length < 3) return null
+  
+  const r = parseInt(result[0])
+  const g = parseInt(result[1]) 
+  const b = parseInt(result[2])
+  
+  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+}
+
+// 改变字体大小
+const changeFontSize = () => {
+  if (!editorRef.value) return
+  
+  try {
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0) return
+    
+    const range = selection.getRangeAt(0)
+    
+    if (range.collapsed) {
+      // 光标位置，为后续输入设置字体大小
+      editorRef.value.focus()
+      return
+    }
+    
+    // 有选中文本，应用字体大小
+    const selectedContent = range.extractContents()
+    const span = document.createElement('span')
+    span.style.fontSize = currentFontSize.value
+    span.appendChild(selectedContent)
+    
+    range.insertNode(span)
+    range.selectNode(span)
+    selection.removeAllRanges()
+    selection.addRange(range)
+    
+    editorRef.value.focus()
+    handleInput()
+  } catch (error) {
+    console.warn('改变字体大小失败:', error)
+  }
+}
+
+// 改变字体颜色
+const changeTextColor = () => {
+  if (!editorRef.value) return
+  
+  try {
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0) return
+    
+    const range = selection.getRangeAt(0)
+    
+    if (range.collapsed) {
+      // 光标位置，为后续输入设置颜色
+      editorRef.value.focus()
+      return
+    }
+    
+    // 有选中文本，应用颜色
+    const selectedContent = range.extractContents()
+    const span = document.createElement('span')
+    span.style.color = currentTextColor.value
+    span.appendChild(selectedContent)
+    
+    range.insertNode(span)
+    range.selectNode(span)
+    selection.removeAllRanges()
+    selection.addRange(range)
+    
+    editorRef.value.focus()
+    handleInput()
+  } catch (error) {
+    console.warn('改变字体颜色失败:', error)
+  }
+}
+
+// 改变背景颜色
+const changeBgColor = () => {
+  if (!editorRef.value) return
+  
+  try {
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0) return
+    
+    const range = selection.getRangeAt(0)
+    
+    if (range.collapsed) {
+      // 光标位置，为后续输入设置背景色
+      editorRef.value.focus()
+      return
+    }
+    
+    // 有选中文本，应用背景色
+    const selectedContent = range.extractContents()
+    const span = document.createElement('span')
+    span.style.backgroundColor = currentBgColor.value
+    span.appendChild(selectedContent)
+    
+    range.insertNode(span)
+    range.selectNode(span)
+    selection.removeAllRanges()
+    selection.addRange(range)
+    
+    editorRef.value.focus()
+    handleInput()
+  } catch (error) {
+    console.warn('改变背景颜色失败:', error)
+  }
+}
+
+// 设置文本对齐
+const setAlignment = (alignment: 'left' | 'center' | 'right' | 'justify') => {
+  if (!editorRef.value) return
+  
+  try {
+    currentAlignment.value = alignment
+    
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0) {
+      // 没有选区，设置整个编辑器的对齐方式
+      editorRef.value.style.textAlign = alignment
+      editorRef.value.focus()
+      handleInput()
+      return
+    }
+    
+    const range = selection.getRangeAt(0)
+    
+    // 找到包含选区的块级元素
+    let blockElement: Node | null = range.commonAncestorContainer
+    while (blockElement && blockElement !== editorRef.value) {
+      if (blockElement.nodeType === Node.ELEMENT_NODE) {
+        const element = blockElement as HTMLElement
+        const display = window.getComputedStyle(element).display
+        if (display === 'block' || display === 'list-item' || element.tagName === 'DIV' || element.tagName === 'P') {
+          break
+        }
+      }
+      blockElement = blockElement.parentNode
+    }
+    
+    if (blockElement && blockElement !== editorRef.value && blockElement instanceof HTMLElement) {
+      // 设置块级元素的对齐方式
+      blockElement.style.textAlign = alignment
+    } else {
+      // 如果没有找到合适的块级元素，创建一个div包装选中内容
+      const selectedContent = range.extractContents()
+      const div = document.createElement('div')
+      div.style.textAlign = alignment
+      div.appendChild(selectedContent)
+      
+      range.insertNode(div)
+      range.selectNodeContents(div)
+      selection.removeAllRanges()
+      selection.addRange(range)
+    }
+    
+    editorRef.value.focus()
+    handleInput()
+  } catch (error) {
+    console.warn('设置文本对齐失败:', error)
+  }
 }
 
 // 插入公式
@@ -784,12 +1122,16 @@ onMounted(async () => {
       setupFormulaClickEvents()
     }
 
+
+
     updateStats()
     console.log('VueMathjaxEditor初始化完成')
   } catch (error) {
     console.error('VueMathjaxEditor初始化失败:', error)
   }
 })
+
+
 
 onUnmounted(() => {
   // 清理资源
@@ -858,6 +1200,371 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.font-group,
+.align-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 字体大小选择器基础样式 */
+.font-size-container {
+  position: relative;
+}
+
+.font-size-select {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  height: 40px;
+  min-width: 85px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+}
+
+.font-size-select:hover {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: #6366f1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+  color: #334155;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.font-size-select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background-color: rgba(255, 255, 255, 1);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.font-size-select option {
+  background: white;
+  color: #374151;
+  padding: 8px 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  min-height: 32px;
+}
+
+.font-size-select option:hover {
+  background: #f8fafc;
+  color: #6366f1;
+}
+
+.font-size-select option:checked {
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+}
+
+/* 字体选择框滚动条美化 */
+.font-size-select::-webkit-scrollbar {
+  width: 8px;
+}
+
+.font-size-select::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.8);
+  border-radius: 4px;
+  margin: 2px;
+}
+
+.font-size-select::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.font-size-select::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+  transform: scaleX(1.2);
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+}
+
+.font-size-select::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #4f46e5 0%, #4338ca 100%);
+}
+
+/* Firefox滚动条样式 */
+.font-size-select {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 rgba(241, 245, 249, 0.8);
+}
+
+/* 通过CSS控制下拉框最大高度 */
+.font-size-select {
+  /* 大多数现代浏览器支持这个属性来限制下拉高度 */
+  /* 显示大约8-10个选项的高度 */
+  -webkit-appearance: listbox;
+  -moz-appearance: menulist;
+}
+
+/* 针对不同浏览器的高度控制 */
+@supports (-webkit-appearance: none) {
+  .font-size-select {
+    /* Webkit浏览器 */
+    max-height: 280px;
+  }
+}
+
+@-moz-document url-prefix() {
+  .font-size-select {
+    /* Firefox */
+    max-height: 280px;
+  }
+}
+
+
+
+
+
+/* 颜色选择器容器 */
+.color-picker-container {
+  position: relative;
+}
+
+.color-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+}
+
+.color-btn,
+.bg-color-btn {
+  position: relative;
+  min-width: 44px !important;
+  padding: 10px 12px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  gap: 4px !important;
+  overflow: hidden;
+}
+
+.color-btn:hover,
+.bg-color-btn:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: #6366f1 !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15) !important;
+}
+
+.color-icon {
+  font-size: 18px;
+  font-weight: 900;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.color-btn:hover .color-icon {
+  transform: scale(1.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.color-indicator {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.color-btn:hover .color-indicator {
+  height: 4px;
+  width: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.bg-icon {
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.bg-color-btn:hover .bg-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* 对齐工具按钮 */
+.align-group .toolbar-btn {
+  min-width: 44px !important;
+  padding: 10px 12px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+
+.align-group .toolbar-btn:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: #6366f1 !important;
+  color: #6366f1 !important;
+}
+
+.align-group .toolbar-btn.active {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+  border-color: transparent !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+}
+
+.align-icon {
+  font-size: 14px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-weight: 700;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
+  width: 18px;
+  height: 16px;
+  gap: 2px;
+}
+
+.align-icon.align-left::before {
+  content: '';
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.align-icon.align-left::after {
+  content: '';
+  width: 10px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.align-icon.align-center {
+  align-items: center;
+}
+
+.align-icon.align-center::before {
+  content: '';
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.align-icon.align-center::after {
+  content: '';
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.align-icon.align-right {
+  align-items: flex-end;
+}
+
+.align-icon.align-right::before {
+  content: '';
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.align-icon.align-right::after {
+  content: '';
+  width: 10px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.align-icon.align-justify::before {
+  content: '';
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.align-icon.align-justify::after {
+  content: '';
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 隐藏文字，只显示图标 */
+.align-left,
+.align-center,
+.align-right,
+.align-justify {
+  color: #64748b;
+  font-size: 0;
+}
+
+/* 亮色主题下的图标颜色优化 */
+.vue-mathjax-editor.theme-light .align-icon {
+  color: #475569;
+}
+
+.vue-mathjax-editor.theme-light .align-group .toolbar-btn:hover .align-icon {
+  color: #6366f1;
+  transform: scale(1.05);
+}
+
+.vue-mathjax-editor.theme-light .align-group .toolbar-btn.active .align-icon {
+  color: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.align-group .toolbar-btn:hover .align-icon {
+  transform: scale(1.05);
+}
+
+/* 暗色主题下的对齐图标 */
+.vue-mathjax-editor.theme-dark .align-icon {
+  color: #e5e7eb;
+}
+
+.vue-mathjax-editor.theme-dark .align-group .toolbar-btn:hover .align-icon {
+  color: #60a5fa;
+  transform: scale(1.05);
+}
+
+.vue-mathjax-editor.theme-dark .align-group .toolbar-btn.active .align-icon {
+  color: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
 .toolbar-btn {
@@ -1262,6 +1969,21 @@ onUnmounted(() => {
     font-size: 11px !important;
   }
   
+  .font-size-select {
+    height: 32px !important;
+    min-width: 70px !important;
+    font-size: 11px !important;
+    padding: 6px 8px !important;
+  }
+  
+  .color-btn,
+  .bg-color-btn,
+  .align-group .toolbar-btn {
+    height: 32px !important;
+    min-width: 32px !important;
+    padding: 6px 8px !important;
+  }
+  
   .editor-content {
     padding: 16px;
     font-size: 14px;
@@ -1324,4 +2046,123 @@ onUnmounted(() => {
   color: white !important;
   text-shadow: none !important;
 }
+
+/* 暗色主题适配 */
+.vue-mathjax-editor.theme-dark .font-size-select {
+  background-color: rgba(55, 65, 81, 0.9) !important;
+  border-color: rgba(156, 163, 175, 0.4) !important;
+  color: #e5e7eb !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e5e7eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+}
+
+.vue-mathjax-editor.theme-dark .font-size-select:hover {
+  background-color: rgba(75, 85, 99, 0.95) !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2) !important;
+  color: #f3f4f6 !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2360a5fa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+}
+
+.vue-mathjax-editor.theme-dark .font-size-select:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15) !important;
+  background-color: rgba(55, 65, 81, 1) !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2360a5fa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+}
+
+.vue-mathjax-editor.theme-dark .font-size-select option {
+  background-color: #374151 !important;
+  color: #e5e7eb !important;
+}
+
+.vue-mathjax-editor.theme-dark .font-size-select option:hover {
+  background-color: #4b5563 !important;
+  color: #60a5fa !important;
+}
+
+.vue-mathjax-editor.theme-dark .font-size-select option:checked {
+  background-color: #60a5fa !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.vue-mathjax-editor.theme-dark .color-btn,
+.vue-mathjax-editor.theme-dark .bg-color-btn {
+  background: rgba(55, 65, 81, 0.9) !important;
+  border-color: rgba(156, 163, 175, 0.4) !important;
+  color: #e5e7eb !important;
+}
+
+.vue-mathjax-editor.theme-dark .color-btn:hover,
+.vue-mathjax-editor.theme-dark .bg-color-btn:hover {
+  background: rgba(75, 85, 99, 0.95) !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2) !important;
+  color: #f3f4f6 !important;
+}
+
+.vue-mathjax-editor.theme-dark .color-btn:hover .color-icon {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.vue-mathjax-editor.theme-dark .color-indicator {
+  border-color: rgba(156, 163, 175, 0.6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.vue-mathjax-editor.theme-dark .color-btn:hover .color-indicator {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  border-color: rgba(96, 165, 250, 0.8);
+}
+
+.vue-mathjax-editor.theme-dark .align-group .toolbar-btn {
+  background: rgba(55, 65, 81, 0.9) !important;
+  border-color: rgba(156, 163, 175, 0.4) !important;
+  color: #e5e7eb !important;
+}
+
+.vue-mathjax-editor.theme-dark .align-group .toolbar-btn:hover {
+  background: rgba(75, 85, 99, 0.95) !important;
+  border-color: #60a5fa !important;
+  color: #60a5fa !important;
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.15) !important;
+}
+
+.vue-mathjax-editor.theme-dark .align-group .toolbar-btn.active {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
+  border-color: transparent !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3) !important;
+}
+
+.vue-mathjax-editor.theme-dark .font-size-select option:checked {
+  background-color: #60a5fa !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+/* 暗色主题滚动条样式 */
+.vue-mathjax-editor.theme-dark .font-size-select::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.8);
+}
+
+.vue-mathjax-editor.theme-dark .font-size-select::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%);
+  border-color: rgba(156, 163, 175, 0.3);
+}
+
+.vue-mathjax-editor.theme-dark .font-size-select::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+  box-shadow: 0 2px 4px rgba(96, 165, 250, 0.3);
+}
+
+.vue-mathjax-editor.theme-dark .font-size-select::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+}
+
+/* Firefox 暗色主题滚动条 */
+.vue-mathjax-editor.theme-dark .font-size-select {
+  scrollbar-color: #6b7280 rgba(55, 65, 81, 0.8);
+}
+
 </style>
