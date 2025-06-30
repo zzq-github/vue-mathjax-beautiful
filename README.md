@@ -746,8 +746,10 @@ vue-mathjax-beautiful/
 │   └── core/                 # 核心组件包
 │       ├── src/
 │       │   ├── components/   # Vue 组件
-│       │   │   ├── VueMathjaxEditor.vue      # 富文本编辑器
-│       │   │   └── VueMathjaxBeautiful.vue   # 公式编辑器
+│       │   │   ├── VueMathjaxEditor/         # 富文本编辑器
+│       │   │   │   └── index.vue
+│       │   │   └── VueMathjaxBeautiful/      # 公式编辑器
+│       │   │       └── index.vue
 │       │   ├── data/         # 数据文件
 │       │   │   ├── formulas.ts   # 公式模板
 │       │   │   └── symbols.ts    # 符号数据

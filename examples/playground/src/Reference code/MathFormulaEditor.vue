@@ -32,7 +32,7 @@
             <span>LaTeX Input</span>
           </div>
           <div class="input-actions" @click="clearInput" title="Clear">
-            <i class="fa fa-trash" ></i>
+            <i class="fa fa-trash"></i>
           </div>
         </div>
         <div class="input-wrapper">
@@ -131,10 +131,14 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button size="large" @click="handleClose">
-          Cancel
-        </el-button>
-        <el-button size="large" type="primary" class="ripple-effect" @click="handleInsert" :disabled="!latexInput">
+        <el-button size="large" @click="handleClose"> Cancel </el-button>
+        <el-button
+          size="large"
+          type="primary"
+          class="ripple-effect"
+          @click="handleInsert"
+          :disabled="!latexInput"
+        >
           Insert Formula
         </el-button>
       </div>
@@ -151,63 +155,69 @@ declare global {
   interface Window {
     MathJax: {
       tex2svgPromise: (latex: string, options?: any) => Promise<any>;
-    }
+    };
   }
 }
 
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    default: false
+    default: false,
   },
   existingLatex: {
     type: String,
-    default: ''
-  }
-})
+    default: '',
+  },
+});
 
 enum SymbolCategory {
   BASIC = 'basic',
   GREEK = 'greek',
-  ADVANCED = 'advanced'
+  ADVANCED = 'advanced',
 }
 
 const emit = defineEmits(['update:modelValue', 'insert']);
 
-const visible = ref(false)
-const latexInput = ref('')
-const activeCategory = ref(SymbolCategory.BASIC)
-const renderedFormula = ref('')
-const symbolDisplayCache = ref(new Map<string, string>())
+const visible = ref(false);
+const latexInput = ref('');
+const activeCategory = ref(SymbolCategory.BASIC);
+const renderedFormula = ref('');
+const symbolDisplayCache = ref(new Map<string, string>());
 
 // 监听显示状态
-watch(() => props.modelValue, (newVal) => {
-  visible.value = newVal
-  if (newVal) {
-    // 如果有现有的LaTeX内容，预填充到输入框
-    latexInput.value = props.existingLatex || ''
-    updatePreview()
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    visible.value = newVal;
+    if (newVal) {
+      // 如果有现有的LaTeX内容，预填充到输入框
+      latexInput.value = props.existingLatex || '';
+      updatePreview();
+    }
   }
-})
+);
 
 // 监听现有LaTeX内容的变化
-watch(() => props.existingLatex, (newVal) => {
-  if (visible.value && newVal) {
-    latexInput.value = newVal
-    updatePreview()
+watch(
+  () => props.existingLatex,
+  (newVal) => {
+    if (visible.value && newVal) {
+      latexInput.value = newVal;
+      updatePreview();
+    }
   }
-})
+);
 
 watch(visible, (newVal) => {
-  emit('update:modelValue', newVal)
-})
+  emit('update:modelValue', newVal);
+});
 
 // 分类定义
 const categories = [
   { key: SymbolCategory.BASIC, name: 'Basic', icon: 'fa fa-calculator' },
   { key: SymbolCategory.GREEK, name: 'Greek', icon: 'fa fa-greek-cross' },
-  { key: SymbolCategory.ADVANCED, name: 'Advanced', icon: 'fa fa-cog' }
-]
+  { key: SymbolCategory.ADVANCED, name: 'Advanced', icon: 'fa fa-cog' },
+];
 
 // 基本符号
 const basicSymbols = [
@@ -223,50 +233,50 @@ const basicSymbols = [
   { latex: '[x]', display: '[x]', description: '方括号' },
   { latex: '(x)', display: '(x)', description: '圆括号' },
   { latex: '\\{x\\}', display: '{x}', description: '花括号' },
-  
+
   // 导数和偏导数
   { latex: '\\frac{dx}{dy}', display: 'dx/dy', description: '导数' },
   { latex: '\\frac{\\partial x}{\\partial y}', display: '∂x/∂y', description: '偏导数' },
-  { latex: 'f\'(x)', display: 'f\'(x)', description: '导数符号' },
+  { latex: "f'(x)", display: "f'(x)", description: '导数符号' },
   { latex: 'f^{(n)}(x)', display: 'f⁽ⁿ⁾(x)', description: 'n阶导数' },
-  
+
   // 积分符号
   { latex: '\\int x^n dx', display: '∫xⁿdx', description: '不定积分' },
   { latex: '\\int_{a}^{b}', display: '∫ᵃᵇ', description: '定积分' },
   { latex: '\\int_{a}^{b} f(x) dx', display: '∫ᵃᵇf(x)dx', description: '定积分完整形式' },
-  
+
   // 对数和指数
   { latex: '\\log_a b', display: 'log_a b', description: '对数' },
   { latex: '\\log_{10}', display: 'log₁₀', description: '常用对数' },
   { latex: '\\ln x', display: 'ln x', description: '自然对数' },
   { latex: 'e^x', display: 'eˣ', description: '自然指数' },
   { latex: 'a^{bc}', display: 'aᵇᶜ', description: '复合指数' },
-  
+
   // 极限
   { latex: '\\lim_{x \\to a}', display: 'lim_{x→a}', description: '极限' },
   { latex: '\\lim_{x \\to \\infty}', display: 'lim_{x→∞}', description: '无穷极限' },
   { latex: '\\lim_{x \\to 0^+}', display: 'lim_{x→0⁺}', description: '右极限' },
   { latex: '\\lim_{x \\to 0^-}', display: 'lim_{x→0⁻}', description: '左极限' },
-  
+
   // 求和与乘积
   { latex: '\\sum_{i=1}^{n}', display: '∑ᵢ₌₁ⁿ', description: '求和' },
   { latex: '\\sum_{i=0}^{\\infty}', display: '∑ᵢ₌₀^∞', description: '无穷求和' },
   { latex: '\\prod_{i=1}^{n}', display: '∏ᵢ₌₁ⁿ', description: '乘积' },
   { latex: '\\prod_{i=1}^{\\infty}', display: '∏ᵢ₌₁^∞', description: '无穷乘积' },
-  
+
   // 分数
   { latex: '\\frac{a}{b}', display: 'a/b', description: '通用分数' },
   { latex: '\\frac{x^2}{y^2}', display: 'x²/y²', description: '平方分数' },
   { latex: '\\frac{\\sqrt{a}}{\\sqrt{b}}', display: '√a/√b', description: '根式分数' },
   { latex: '\\frac{1}{x}', display: '1/x', description: '倒数' },
   { latex: '\\frac{1}{x^2}', display: '1/x²', description: '平方倒数' },
-  
+
   // 函数相关
   { latex: 'f(x)', display: 'f(x)', description: '函数' },
   { latex: 'f_x', display: 'fₓ', description: '偏导fx' },
   { latex: 'f^{-1}(x)', display: 'f⁻¹(x)', description: '反函数' },
   { latex: 'g \\circ f', display: 'g∘f', description: '复合函数' },
-  
+
   // 其他结构符号
   { latex: '\\nabla', display: '∇', description: 'nabla' },
   { latex: '\\Delta', display: 'Δ', description: 'Delta' },
@@ -311,7 +321,7 @@ const basicSymbols = [
   { latex: '7', display: '7', description: '数字7' },
   { latex: '8', display: '8', description: '数字8' },
   { latex: '9', display: '9', description: '数字9' },
-]
+];
 
 // 希腊字母
 const greekSymbols = [
@@ -326,7 +336,7 @@ const greekSymbols = [
   { latex: 'B', display: 'B', description: 'Beta' },
   { latex: '\\Gamma', display: 'Γ', description: 'Gamma' },
   { latex: '\\Delta', display: 'Δ', description: 'Delta' },
-  
+
   // 第二行：Zeta到Kappa
   { latex: '\\zeta', display: 'ζ', description: 'Zeta' },
   { latex: '\\eta', display: 'η', description: 'Eta' },
@@ -338,7 +348,7 @@ const greekSymbols = [
   { latex: 'Z', display: 'Z', description: 'Zeta' },
   { latex: 'H', display: 'H', description: 'Eta' },
   { latex: '\\Theta', display: 'Θ', description: 'Theta' },
-  
+
   // 第三行：Lambda到Omicron
   { latex: '\\lambda', display: 'λ', description: 'Lambda' },
   { latex: '\\mu', display: 'μ', description: 'Mu' },
@@ -350,7 +360,7 @@ const greekSymbols = [
   { latex: '\\Lambda', display: 'Λ', description: 'Lambda' },
   { latex: 'M', display: 'M', description: 'Mu' },
   { latex: 'N', display: 'N', description: 'Nu' },
-  
+
   // 第四行：Pi到Upsilon
   { latex: '\\pi', display: 'π', description: 'Pi' },
   { latex: '\\varpi', display: 'ϖ', description: 'Var Pi' },
@@ -362,7 +372,7 @@ const greekSymbols = [
   { latex: '\\upsilon', display: 'υ', description: 'Upsilon' },
   { latex: '\\Xi', display: 'Ξ', description: 'Xi' },
   { latex: 'O', display: 'O', description: 'Omicron' },
-  
+
   // 第五行：Phi到Omega
   { latex: '\\phi', display: 'φ', description: 'Phi' },
   { latex: '\\varphi', display: 'φ', description: 'Var Phi' },
@@ -374,13 +384,13 @@ const greekSymbols = [
   { latex: '\\Sigma', display: 'Σ', description: 'Sigma' },
   { latex: 'T', display: 'T', description: 'Tau' },
   { latex: '\\Upsilon', display: 'Υ', description: 'Upsilon' },
-  
+
   // 第六行：大写Phi到Omega
   { latex: '\\Phi', display: 'Φ', description: 'Phi' },
   { latex: 'X', display: 'X', description: 'Chi' },
   { latex: '\\Psi', display: 'Ψ', description: 'Psi' },
-  { latex: '\\Omega', display: 'Ω', description: 'Omega' }
-]
+  { latex: '\\Omega', display: 'Ω', description: 'Omega' },
+];
 
 // 高级符号
 const advancedSymbols = [
@@ -395,7 +405,7 @@ const advancedSymbols = [
   { latex: '\\prod', display: '∏', description: 'Product' },
   { latex: '\\lim', display: 'lim', description: 'Limit' },
   { latex: '\\sup', display: 'sup', description: 'Supremum' },
-  
+
   // 逻辑符号
   { latex: '\\forall', display: '∀', description: 'For All' },
   { latex: '\\exists', display: '∃', description: 'Exists' },
@@ -407,7 +417,7 @@ const advancedSymbols = [
   { latex: '\\iff', display: '⟺', description: 'If and Only If' },
   { latex: '\\therefore', display: '∴', description: 'Therefore' },
   { latex: '\\because', display: '∵', description: 'Because' },
-  
+
   // 集合论符号
   { latex: '\\in', display: '∈', description: 'Belongs To' },
   { latex: '\\notin', display: '∉', description: 'Does Not Belong To' },
@@ -419,7 +429,7 @@ const advancedSymbols = [
   { latex: '\\cap', display: '∩', description: 'Intersection' },
   { latex: '\\setminus', display: '∖', description: 'Set Difference' },
   { latex: '\\emptyset', display: '∅', description: 'Empty Set' },
-  
+
   // 数字集合
   { latex: '\\mathbb{N}', display: 'ℕ', description: 'Natural Number Set' },
   { latex: '\\mathbb{Z}', display: 'ℤ', description: 'Integer Set' },
@@ -431,7 +441,7 @@ const advancedSymbols = [
   { latex: '\\hbar', display: 'ℏ', description: 'Reduced Planck Constant' },
   { latex: '\\ell', display: 'ℓ', description: 'Script L' },
   { latex: '\\wp', display: '℘', description: 'Weierstrass P' },
-  
+
   // 关系符号
   { latex: '\\equiv', display: '≡', description: 'Equivalent' },
   { latex: '\\approx', display: '≈', description: 'Approximately Equal' },
@@ -443,7 +453,7 @@ const advancedSymbols = [
   { latex: '\\doteq', display: '≐', description: 'Approaches Limit' },
   { latex: '\\bowtie', display: '⋈', description: 'Natural Join' },
   { latex: '\\models', display: '⊨', description: 'Models' },
-  
+
   // 箭头符号
   { latex: '\\rightarrow', display: '→', description: 'Right Arrow' },
   { latex: '\\leftarrow', display: '←', description: 'Left Arrow' },
@@ -455,7 +465,7 @@ const advancedSymbols = [
   { latex: '\\downarrow', display: '↓', description: 'Down Arrow' },
   { latex: '\\updownarrow', display: '↕', description: 'Up Down Arrow' },
   { latex: '\\nearrow', display: '↗', description: 'Northeast Arrow' },
-  
+
   // 运算符号
   { latex: '\\oplus', display: '⊕', description: 'Direct Sum' },
   { latex: '\\ominus', display: '⊖', description: 'Symmetric Difference' },
@@ -466,95 +476,219 @@ const advancedSymbols = [
   { latex: '\\bullet', display: '∙', description: 'Bullet' },
   { latex: '\\star', display: '⋆', description: 'Star' },
   { latex: '\\ast', display: '∗', description: 'Asterisk' },
-  { latex: '\\diamond', display: '⋄', description: 'Diamond' }
-]
+  { latex: '\\diamond', display: '⋄', description: 'Diamond' },
+];
 
 // 常用公式示例
 const formulaExamples = [
   // 基础代数公式
   { latex: 'x^2 + y^2 = z^2', display: 'x² + y² = z²', description: 'Pythagorean theorem' },
-  { latex: '(a + b)^2 = a^2 + 2ab + b^2', display: '(a + b)² = a² + 2ab + b²', description: 'Perfect square formula' },
-  { latex: '(a - b)^2 = a^2 - 2ab + b^2', display: '(a - b)² = a² - 2ab + b²', description: 'Perfect square difference formula' },
-  { latex: 'a^2 - b^2 = (a + b)(a - b)', display: 'a² - b² = (a + b)(a - b)', description: 'Square difference formula' },
-  
+  {
+    latex: '(a + b)^2 = a^2 + 2ab + b^2',
+    display: '(a + b)² = a² + 2ab + b²',
+    description: 'Perfect square formula',
+  },
+  {
+    latex: '(a - b)^2 = a^2 - 2ab + b^2',
+    display: '(a - b)² = a² - 2ab + b²',
+    description: 'Perfect square difference formula',
+  },
+  {
+    latex: 'a^2 - b^2 = (a + b)(a - b)',
+    display: 'a² - b² = (a + b)(a - b)',
+    description: 'Square difference formula',
+  },
+
   // 分数运算
-  { latex: '\\frac{a}{b} + \\frac{c}{d} = \\frac{ad + bc}{bd}', display: 'a/b + c/d = (ad + bc)/bd', description: 'Fraction addition' },
-  { latex: '\\frac{a}{b} \\times \\frac{c}{d} = \\frac{ac}{bd}', display: 'a/b × c/d = ac/bd', description: 'Fraction multiplication' },
-  { latex: '\\frac{a}{b} \\div \\frac{c}{d} = \\frac{a}{b} \\times \\frac{d}{c}', display: 'a/b ÷ c/d = a/b × d/c', description: 'Fraction division' },
-  
+  {
+    latex: '\\frac{a}{b} + \\frac{c}{d} = \\frac{ad + bc}{bd}',
+    display: 'a/b + c/d = (ad + bc)/bd',
+    description: 'Fraction addition',
+  },
+  {
+    latex: '\\frac{a}{b} \\times \\frac{c}{d} = \\frac{ac}{bd}',
+    display: 'a/b × c/d = ac/bd',
+    description: 'Fraction multiplication',
+  },
+  {
+    latex: '\\frac{a}{b} \\div \\frac{c}{d} = \\frac{a}{b} \\times \\frac{d}{c}',
+    display: 'a/b ÷ c/d = a/b × d/c',
+    description: 'Fraction division',
+  },
+
   // 根式公式
   { latex: '\\sqrt{a^2 + b^2}', display: '√(a² + b²)', description: 'Square root formula' },
-  { latex: '\\sqrt{ab} = \\sqrt{a} \\cdot \\sqrt{b}', display: '√(ab) = √a · √b', description: 'Root multiplication' },
-  { latex: '\\sqrt[n]{a^m} = a^{\\frac{m}{n}}', display: 'ⁿ√(aᵐ) = a^(m/n)', description: 'Root exponentiation' },
-  
+  {
+    latex: '\\sqrt{ab} = \\sqrt{a} \\cdot \\sqrt{b}',
+    display: '√(ab) = √a · √b',
+    description: 'Root multiplication',
+  },
+  {
+    latex: '\\sqrt[n]{a^m} = a^{\\frac{m}{n}}',
+    display: 'ⁿ√(aᵐ) = a^(m/n)',
+    description: 'Root exponentiation',
+  },
+
   // 指数对数公式
-  { latex: 'a^m \\cdot a^n = a^{m+n}', display: 'aᵐ · aⁿ = a^(m+n)', description: 'Same base power multiplication' },
-  { latex: '\\frac{a^m}{a^n} = a^{m-n}', display: 'aᵐ/aⁿ = a^(m-n)', description: 'Same base power division' },
+  {
+    latex: 'a^m \\cdot a^n = a^{m+n}',
+    display: 'aᵐ · aⁿ = a^(m+n)',
+    description: 'Same base power multiplication',
+  },
+  {
+    latex: '\\frac{a^m}{a^n} = a^{m-n}',
+    display: 'aᵐ/aⁿ = a^(m-n)',
+    description: 'Same base power division',
+  },
   { latex: '(a^m)^n = a^{mn}', display: '(aᵐ)ⁿ = a^(mn)', description: 'Power of power' },
-  { latex: '\\log_a(xy) = \\log_a x + \\log_a y', display: 'log_a(xy) = log_a x + log_a y', description: 'Logarithm multiplication rule' },
-  { latex: '\\log_a\\left(\\frac{x}{y}\\right) = \\log_a x - \\log_a y', display: 'log_a(x/y) = log_a x - log_a y', description: 'Logarithm division rule' },
-  
+  {
+    latex: '\\log_a(xy) = \\log_a x + \\log_a y',
+    display: 'log_a(xy) = log_a x + log_a y',
+    description: 'Logarithm multiplication rule',
+  },
+  {
+    latex: '\\log_a\\left(\\frac{x}{y}\\right) = \\log_a x - \\log_a y',
+    display: 'log_a(x/y) = log_a x - log_a y',
+    description: 'Logarithm division rule',
+  },
+
   // 三角函数公式
-  { latex: '\\sin^2 x + \\cos^2 x = 1', display: 'sin²x + cos²x = 1', description: 'Trigonometric identity' },
-  { latex: '\\sin(A + B) = \\sin A \\cos B + \\cos A \\sin B', display: 'sin(A + B) = sinA cosB + cosA sinB', description: 'Sine addition formula' },
-  { latex: '\\cos(A + B) = \\cos A \\cos B - \\sin A \\sin B', display: 'cos(A + B) = cosA cosB - sinA sinB', description: 'Cosine addition formula' },
-  { latex: '\\tan x = \\frac{\\sin x}{\\cos x}', display: 'tan x = sin x / cos x', description: 'Tangent definition' },
-  
+  {
+    latex: '\\sin^2 x + \\cos^2 x = 1',
+    display: 'sin²x + cos²x = 1',
+    description: 'Trigonometric identity',
+  },
+  {
+    latex: '\\sin(A + B) = \\sin A \\cos B + \\cos A \\sin B',
+    display: 'sin(A + B) = sinA cosB + cosA sinB',
+    description: 'Sine addition formula',
+  },
+  {
+    latex: '\\cos(A + B) = \\cos A \\cos B - \\sin A \\sin B',
+    display: 'cos(A + B) = cosA cosB - sinA sinB',
+    description: 'Cosine addition formula',
+  },
+  {
+    latex: '\\tan x = \\frac{\\sin x}{\\cos x}',
+    display: 'tan x = sin x / cos x',
+    description: 'Tangent definition',
+  },
+
   // 微积分公式
-  { latex: '\\lim_{x \\to \\infty} \\frac{1}{x} = 0', display: 'lim(x→∞) 1/x = 0', description: 'Infinite limit' },
-  { latex: 'f\'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}', display: 'f\'(x) = lim(h→0) [f(x+h) - f(x)]/h', description: 'Derivative definition' },
-  { latex: '\\frac{d}{dx}(x^n) = nx^{n-1}', display: 'd/dx(xⁿ) = nxⁿ⁻¹', description: 'Power function derivative' },
-  { latex: '\\int x^n dx = \\frac{x^{n+1}}{n+1} + C', display: '∫xⁿdx = x^(n+1)/(n+1) + C', description: 'Power function integral' },
+  {
+    latex: '\\lim_{x \\to \\infty} \\frac{1}{x} = 0',
+    display: 'lim(x→∞) 1/x = 0',
+    description: 'Infinite limit',
+  },
+  {
+    latex: "f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}",
+    display: "f'(x) = lim(h→0) [f(x+h) - f(x)]/h",
+    description: 'Derivative definition',
+  },
+  {
+    latex: '\\frac{d}{dx}(x^n) = nx^{n-1}',
+    display: 'd/dx(xⁿ) = nxⁿ⁻¹',
+    description: 'Power function derivative',
+  },
+  {
+    latex: '\\int x^n dx = \\frac{x^{n+1}}{n+1} + C',
+    display: '∫xⁿdx = x^(n+1)/(n+1) + C',
+    description: 'Power function integral',
+  },
   { latex: '\\int_{a}^{b} f(x) dx', display: '∫ᵃᵇ f(x) dx', description: 'Definite integral' },
-  
+
   // 数列公式
-  { latex: '\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}', display: '∑(i=1 to n) i = n(n+1)/2', description: 'Arithmetic sequence sum' },
-  { latex: '\\sum_{i=1}^{n} i^2 = \\frac{n(n+1)(2n+1)}{6}', display: '∑(i=1 to n) i² = n(n+1)(2n+1)/6', description: 'Square number sum' },
-  { latex: 'S_n = \\frac{a_1(1-r^n)}{1-r}', display: 'Sₙ = a₁(1-rⁿ)/(1-r)', description: 'Geometric sequence sum' },
-  
+  {
+    latex: '\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}',
+    display: '∑(i=1 to n) i = n(n+1)/2',
+    description: 'Arithmetic sequence sum',
+  },
+  {
+    latex: '\\sum_{i=1}^{n} i^2 = \\frac{n(n+1)(2n+1)}{6}',
+    display: '∑(i=1 to n) i² = n(n+1)(2n+1)/6',
+    description: 'Square number sum',
+  },
+  {
+    latex: 'S_n = \\frac{a_1(1-r^n)}{1-r}',
+    display: 'Sₙ = a₁(1-rⁿ)/(1-r)',
+    description: 'Geometric sequence sum',
+  },
+
   // 概率统计公式
-  { latex: 'P(A \\cup B) = P(A) + P(B) - P(A \\cap B)', display: 'P(A∪B) = P(A) + P(B) - P(A∩B)', description: 'Probability addition formula' },
-  { latex: 'C_n^r = \\frac{n!}{r!(n-r)!}', display: 'Cₙʳ = n!/[r!(n-r)!]', description: 'Combination formula' },
-  { latex: '\\bar{x} = \\frac{1}{n}\\sum_{i=1}^{n} x_i', display: 'x̄ = (1/n)∑xᵢ', description: 'Arithmetic mean' },
-  
+  {
+    latex: 'P(A \\cup B) = P(A) + P(B) - P(A \\cap B)',
+    display: 'P(A∪B) = P(A) + P(B) - P(A∩B)',
+    description: 'Probability addition formula',
+  },
+  {
+    latex: 'C_n^r = \\frac{n!}{r!(n-r)!}',
+    display: 'Cₙʳ = n!/[r!(n-r)!]',
+    description: 'Combination formula',
+  },
+  {
+    latex: '\\bar{x} = \\frac{1}{n}\\sum_{i=1}^{n} x_i',
+    display: 'x̄ = (1/n)∑xᵢ',
+    description: 'Arithmetic mean',
+  },
+
   // 几何公式
   { latex: 'A = \\pi r^2', display: 'A = πr²', description: 'Circle area formula' },
-  { latex: 'V = \\frac{4}{3}\\pi r^3', display: 'V = (4/3)πr³', description: 'Sphere volume formula' },
-  { latex: 'c^2 = a^2 + b^2 - 2ab\\cos C', display: 'c² = a² + b² - 2ab cosC', description: 'Cosine theorem' },
-  
+  {
+    latex: 'V = \\frac{4}{3}\\pi r^3',
+    display: 'V = (4/3)πr³',
+    description: 'Sphere volume formula',
+  },
+  {
+    latex: 'c^2 = a^2 + b^2 - 2ab\\cos C',
+    display: 'c² = a² + b² - 2ab cosC',
+    description: 'Cosine theorem',
+  },
+
   // 特殊常数和公式
   { latex: 'e^{i\\pi} + 1 = 0', display: 'e^(iπ) + 1 = 0', description: 'Euler formula' },
-  { latex: 'e = \\lim_{n \\to \\infty} \\left(1 + \\frac{1}{n}\\right)^n', display: 'e = lim(n→∞)(1 + 1/n)ⁿ', description: 'Natural constant e' },
-  { latex: '\\zeta(2) = \\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}', display: 'ζ(2) = ∑(1/n²) = π²/6', description: 'Basel problem' }
-]
+  {
+    latex: 'e = \\lim_{n \\to \\infty} \\left(1 + \\frac{1}{n}\\right)^n',
+    display: 'e = lim(n→∞)(1 + 1/n)ⁿ',
+    description: 'Natural constant e',
+  },
+  {
+    latex: '\\zeta(2) = \\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}',
+    display: 'ζ(2) = ∑(1/n²) = π²/6',
+    description: 'Basel problem',
+  },
+];
 
 // 当前显示的符号
 const currentSymbols = computed(() => {
   switch (activeCategory.value) {
     case SymbolCategory.BASIC:
-      return basicSymbols
+      return basicSymbols;
     case SymbolCategory.GREEK:
-      return greekSymbols
+      return greekSymbols;
     case SymbolCategory.ADVANCED:
-      return advancedSymbols
+      return advancedSymbols;
     default:
-      return basicSymbols
+      return basicSymbols;
   }
-})
+});
 
 // 响应式符号显示数组
-const currentSymbolsWithSvg = ref<Array<{latex: string, display: string, description: string}>>([])
+const currentSymbolsWithSvg = ref<Array<{ latex: string; display: string; description: string }>>(
+  []
+);
 
 // 响应式常用公式示例显示数组
-const formulaExamplesWithSvg = ref<Array<{latex: string, display: string, description: string}>>([])
+const formulaExamplesWithSvg = ref<Array<{ latex: string; display: string; description: string }>>(
+  []
+);
 
 // 生成符号的SVG显示
 const generateSymbolSvg = async (latex: string): Promise<string> => {
   // 检查缓存
   if (symbolDisplayCache.value.has(latex)) {
-    return symbolDisplayCache.value.get(latex)!
+    return symbolDisplayCache.value.get(latex)!;
   }
-  
+
   try {
     if (window.MathJax && window.MathJax.tex2svgPromise) {
       const svg = await window.MathJax.tex2svgPromise(latex, {
@@ -562,9 +696,9 @@ const generateSymbolSvg = async (latex: string): Promise<string> => {
         scale: 1.0,
         em: 14,
         ex: 7,
-        containerWidth: 400
+        containerWidth: 400,
       });
-      
+
       const svgElement = svg.getElementsByTagName('svg')[0];
       if (svgElement) {
         // 设置SVG样式以适应按钮
@@ -572,7 +706,7 @@ const generateSymbolSvg = async (latex: string): Promise<string> => {
         svgElement.style.verticalAlign = 'middle';
         svgElement.style.maxWidth = '100%';
         svgElement.style.height = 'auto';
-        
+
         const svgHtml = svgElement.outerHTML;
         // 缓存结果
         symbolDisplayCache.value.set(latex, svgHtml);
@@ -582,18 +716,18 @@ const generateSymbolSvg = async (latex: string): Promise<string> => {
   } catch (error) {
     console.warn('Symbol SVG generation failed for:', latex, error);
   }
-  
+
   // 回退到原始LaTeX代码
   return latex;
-}
+};
 
 // 生成常用公式示例的SVG显示
 const generateExampleSvg = async (latex: string): Promise<string> => {
   // 检查缓存
   if (symbolDisplayCache.value.has(`example_${latex}`)) {
-    return symbolDisplayCache.value.get(`example_${latex}`)!
+    return symbolDisplayCache.value.get(`example_${latex}`)!;
   }
-  
+
   try {
     if (window.MathJax && window.MathJax.tex2svgPromise) {
       const svg = await window.MathJax.tex2svgPromise(latex, {
@@ -601,9 +735,9 @@ const generateExampleSvg = async (latex: string): Promise<string> => {
         scale: 1.1,
         em: 16,
         ex: 8,
-        containerWidth: 600
+        containerWidth: 600,
       });
-      
+
       const svgElement = svg.getElementsByTagName('svg')[0];
       if (svgElement) {
         // 设置SVG样式以适应示例按钮
@@ -612,7 +746,7 @@ const generateExampleSvg = async (latex: string): Promise<string> => {
         svgElement.style.maxWidth = '100%';
         svgElement.style.height = 'auto';
         svgElement.style.color = 'inherit';
-        
+
         const svgHtml = svgElement.outerHTML;
         // 缓存结果，使用不同的键名避免冲突
         symbolDisplayCache.value.set(`example_${latex}`, svgHtml);
@@ -622,62 +756,66 @@ const generateExampleSvg = async (latex: string): Promise<string> => {
   } catch (error) {
     console.warn('Example SVG generation failed for:', latex, error);
   }
-  
+
   // 回退到原始LaTeX代码
   return latex;
-}
+};
 
 // 更新符号显示
 const updateSymbolsDisplay = async () => {
   const symbols = currentSymbols.value;
   const symbolsWithSvg = [];
-  
+
   for (const symbol of symbols) {
     const svgDisplay = await generateSymbolSvg(symbol.latex);
     symbolsWithSvg.push({
       ...symbol,
-      display: svgDisplay
+      display: svgDisplay,
     });
   }
-  
+
   currentSymbolsWithSvg.value = symbolsWithSvg;
-}
+};
 
 // 更新常用公式示例显示
 const updateFormulaExamplesDisplay = async () => {
   const examplesWithSvg = [];
-  
+
   for (const example of formulaExamples) {
     const svgDisplay = await generateExampleSvg(example.latex);
     examplesWithSvg.push({
       ...example,
-      display: svgDisplay
+      display: svgDisplay,
     });
   }
-  
+
   formulaExamplesWithSvg.value = examplesWithSvg;
-}
+};
 
 // 监听分类变化，更新符号显示
-watch(activeCategory, () => {
-  updateSymbolsDisplay();
-  // 当切换到基础分类时，也更新常用公式示例
-  if (activeCategory.value === SymbolCategory.BASIC) {
-    updateFormulaExamplesDisplay();
-  }
-}, { immediate: true })
+watch(
+  activeCategory,
+  () => {
+    updateSymbolsDisplay();
+    // 当切换到基础分类时，也更新常用公式示例
+    if (activeCategory.value === SymbolCategory.BASIC) {
+      updateFormulaExamplesDisplay();
+    }
+  },
+  { immediate: true }
+);
 
 // 插入符号
 const insertSymbol = (latex: string) => {
   latexInput.value += latex;
   updatePreview();
-}
+};
 
 // 清空输入
 const clearInput = () => {
   latexInput.value = '';
   updatePreview();
-}
+};
 
 // 更新预览
 const updatePreview = async () => {
@@ -685,7 +823,7 @@ const updatePreview = async () => {
     renderedFormula.value = '';
     return;
   }
-  
+
   try {
     // 使用MathJax将LaTeX转换为SVG
     if (window.MathJax && window.MathJax.tex2svgPromise) {
@@ -694,9 +832,9 @@ const updatePreview = async () => {
         scale: 1.2, // 增加缩放比例
         em: 16, // 设置em单位大小
         ex: 8, // 设置ex单位大小
-        containerWidth: 800 // 设置容器宽度
+        containerWidth: 800, // 设置容器宽度
       });
-      
+
       // 获取SVG元素
       const svgElement = svg.getElementsByTagName('svg')[0];
       if (svgElement) {
@@ -705,7 +843,7 @@ const updatePreview = async () => {
         svgElement.style.color = '#2d3748';
         svgElement.style.maxWidth = '100%';
         svgElement.style.height = 'auto';
-        
+
         renderedFormula.value = svgElement.outerHTML;
       } else {
         // 如果没有SVG，回退到LaTeX显示
@@ -720,34 +858,34 @@ const updatePreview = async () => {
     // 出错时显示LaTeX原始代码
     renderedFormula.value = latexInput.value;
   }
-}
+};
 
 // 处理关闭
 const handleClose = () => {
   visible.value = false;
   // 清理编辑状态
   clearEditingState();
-}
+};
 
 // 处理插入
 const handleInsert = () => {
   emit('insert', latexInput.value);
   handleClose();
-}
+};
 
 // 清理编辑状态
 const clearEditingState = () => {
   // 移除所有正在编辑的公式的高亮状态
-  const editingFormulas = document.querySelectorAll('.math-formula.editing')
-  editingFormulas.forEach(formula => {
+  const editingFormulas = document.querySelectorAll('.math-formula.editing');
+  editingFormulas.forEach((formula) => {
     formula.classList.remove('editing');
   });
-}
+};
 
 // 计算对话框标题
 const dialogTitle = computed(() => {
-  return 'Equation Editor'
-})
+  return 'Equation Editor';
+});
 
 // 确保MathJax可用
 const initializeMathJax = () => {
@@ -759,11 +897,11 @@ const initializeMathJax = () => {
   updatePreview();
   updateSymbolsDisplay();
   updateFormulaExamplesDisplay();
-}
+};
 
 onMounted(() => {
   initializeMathJax();
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -838,7 +976,12 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
   pointer-events: none;
   z-index: 0;
 }
@@ -1070,8 +1213,13 @@ onMounted(() => {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .preview-container {
@@ -1370,8 +1518,6 @@ onMounted(() => {
   color: white;
 }
 
-
-
 .dialog-footer {
   display: flex;
   justify-content: flex-end;
@@ -1454,7 +1600,7 @@ onMounted(() => {
   .formula-editor-dialog {
     max-width: 95vw;
   }
-  
+
   .formula-editor-dialog :deep(.el-dialog) {
     height: 85vh !important;
     max-height: 85vh !important;
@@ -1464,59 +1610,59 @@ onMounted(() => {
     margin-left: -47.5vw !important;
     width: 95vw !important;
   }
-  
+
   .scrollable-content {
     max-height: 350px;
     padding: 6px;
   }
-  
+
   .symbols-grid {
     grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
     gap: 6px;
     padding: 8px;
   }
-  
+
   .symbol-button {
     min-width: 42px;
     height: 42px;
     font-size: 14px;
     padding: 2px 6px;
   }
-  
+
   .examples-grid {
     grid-template-columns: repeat(1, 1fr);
     gap: 8px;
     padding: 6px;
   }
-  
+
   .example-button {
     padding: 8px 12px;
     gap: 8px;
   }
-  
+
   .example-preview {
     font-size: 16px;
     min-height: 20px;
   }
-  
+
   .example-description {
     font-size: 12px;
   }
-  
+
   .category-tabs {
     flex-wrap: wrap;
     gap: 4px;
   }
-  
+
   .tab-button {
     padding: 10px 16px;
     min-width: 80px;
   }
-  
+
   .formula-preview {
     font-size: 18px;
   }
-  
+
   .preview-container {
     padding: 16px;
     min-height: 70px;
@@ -1536,7 +1682,8 @@ onMounted(() => {
 }
 
 @keyframes symbolPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -1586,8 +1733,17 @@ onMounted(() => {
   bottom: 0;
   border: 2px solid transparent;
   border-radius: 10px;
-  background: linear-gradient(45deg, var(--el-color-primary), #764ba2, var(--el-color-primary), #764ba2) border-box;
-  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  background: linear-gradient(
+      45deg,
+      var(--el-color-primary),
+      #764ba2,
+      var(--el-color-primary),
+      #764ba2
+    )
+    border-box;
+  mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
   mask-composite: exclude;
   opacity: 0;
   transition: opacity 0.3s ease;

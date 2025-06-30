@@ -2,6 +2,7 @@ import { defineConfig } from 'eslint-define-config'
 import vue from 'eslint-plugin-vue'
 import typescript from '@typescript-eslint/eslint-plugin'
 import typescriptParser from '@typescript-eslint/parser'
+import prettier from 'eslint-plugin-prettier'
 
 export default defineConfig([
   {
@@ -16,9 +17,13 @@ export default defineConfig([
     },
     plugins: {
       vue,
-      '@typescript-eslint': typescript
+      '@typescript-eslint': typescript,
+      prettier
     },
     rules: {
+      // Prettier 规则
+      'prettier/prettier': 'error',
+      
       // Vue 规则
       'vue/multi-word-component-names': 'off',
       'vue/no-unused-vars': 'error',
@@ -32,7 +37,10 @@ export default defineConfig([
       'no-console': 'warn',
       'no-debugger': 'error',
       'prefer-const': 'error',
-      'no-var': 'error'
+      'no-var': 'error',
+      
+      // 分号规则（确保与Prettier一致）
+      'semi': ['error', 'always']
     }
   },
   {

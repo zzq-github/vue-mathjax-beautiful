@@ -1,7 +1,7 @@
 export interface Symbol {
-  latex: string
-  description: string
-  display: string
+  latex: string;
+  description: string;
+  display: string;
 }
 
 // 基础符号
@@ -14,7 +14,7 @@ export const basicSymbols: Symbol[] = [
   { latex: '\\cdot', description: '点乘', display: '' },
   { latex: '\\pm', description: '正负号', display: '' },
   { latex: '\\mp', description: '负正号', display: '' },
-  
+
   // 比较符号
   { latex: '=', description: '等号', display: '' },
   { latex: '\\neq', description: '不等号', display: '' },
@@ -27,7 +27,7 @@ export const basicSymbols: Symbol[] = [
   { latex: '\\propto', description: '正比于', display: '' },
   { latex: '\\sim', description: '相似于', display: '' },
   { latex: '\\cong', description: '全等于', display: '' },
-  
+
   // 上下标和结构
   { latex: 'x^2', description: '平方', display: '' },
   { latex: 'x^3', description: '立方', display: '' },
@@ -35,19 +35,19 @@ export const basicSymbols: Symbol[] = [
   { latex: 'a_n', description: '下标', display: '' },
   { latex: 'a_{ij}', description: '双下标', display: '' },
   { latex: 'x_{n}', description: '下标n', display: '' },
-  
+
   // 根式
   { latex: '\\sqrt{a}', description: '平方根', display: '' },
   { latex: '\\sqrt[3]{a}', description: '立方根', display: '' },
   { latex: '\\sqrt[n]{a}', description: 'n次根', display: '' },
   { latex: '\\sqrt{x}', description: '根号x', display: '' },
-  
+
   // 分数
   { latex: '\\frac{a}{b}', description: '通用分数', display: '' },
   { latex: '\\frac{1}{x}', description: '倒数', display: '' },
   { latex: '\\frac{1}{x^2}', description: '平方倒数', display: '' },
   { latex: '\\frac{x^2}{y^2}', description: '平方分数', display: '' },
-  
+
   // 积分和求和
   { latex: '\\int', description: '积分', display: '' },
   { latex: '\\int_{a}^{b}', description: '定积分', display: '' },
@@ -58,22 +58,22 @@ export const basicSymbols: Symbol[] = [
   { latex: '\\sum_{i=0}^{\\infty}', description: '无穷求和', display: '' },
   { latex: '\\prod', description: '连乘', display: '' },
   { latex: '\\prod_{i=1}^{n}', description: '乘积1到n', display: '' },
-  
+
   // 导数和偏导数
   { latex: '\\frac{dx}{dy}', description: '导数', display: '' },
   { latex: '\\frac{\\partial x}{\\partial y}', description: '偏导数', display: '' },
-  { latex: 'f\'(x)', description: '导数符号', display: '' },
+  { latex: "f'(x)", description: '导数符号', display: '' },
   { latex: 'f^{(n)}(x)', description: 'n阶导数', display: '' },
   { latex: '\\partial', description: '偏导符号', display: '' },
   { latex: '\\nabla', description: '梯度', display: '' },
-  
+
   // 极限
   { latex: '\\lim', description: '极限', display: '' },
   { latex: '\\lim_{x \\to a}', description: '极限x趋于a', display: '' },
   { latex: '\\lim_{x \\to \\infty}', description: '无穷极限', display: '' },
   { latex: '\\lim_{x \\to 0^+}', description: '右极限', display: '' },
   { latex: '\\lim_{x \\to 0^-}', description: '左极限', display: '' },
-  
+
   // 三角函数
   { latex: '\\sin', description: '正弦', display: '' },
   { latex: '\\cos', description: '余弦', display: '' },
@@ -84,7 +84,7 @@ export const basicSymbols: Symbol[] = [
   { latex: '\\arcsin', description: '反正弦', display: '' },
   { latex: '\\arccos', description: '反余弦', display: '' },
   { latex: '\\arctan', description: '反正切', display: '' },
-  
+
   // 对数和指数
   { latex: '\\log', description: '对数', display: '' },
   { latex: '\\ln', description: '自然对数', display: '' },
@@ -93,14 +93,14 @@ export const basicSymbols: Symbol[] = [
   { latex: 'e^x', description: '自然指数', display: '' },
   { latex: 'a^{bc}', description: '复合指数', display: '' },
   { latex: '\\exp', description: '指数函数', display: '' },
-  
+
   // 括号
   { latex: '[x]', description: '方括号', display: '' },
   { latex: '(x)', description: '圆括号', display: '' },
   { latex: '\\{x\\}', description: '花括号', display: '' },
   { latex: '|x|', description: '绝对值', display: '' },
   { latex: '\\|x\\|', description: '范数', display: '' },
-  
+
   // 特殊符号
   { latex: '\\infty', description: '无穷大', display: '' },
   { latex: '\\pi', description: '圆周率', display: '' },
@@ -110,13 +110,13 @@ export const basicSymbols: Symbol[] = [
   { latex: '\\parallel', description: '平行', display: '' },
   { latex: '^\\circ', description: '度数符号', display: '' },
   { latex: '\\%', description: '百分号', display: '' },
-  
+
   // 向量和修饰符
   { latex: '\\vec{a}', description: '向量', display: '' },
   { latex: '\\overline{AB}', description: '上划线', display: '' },
   { latex: '\\overrightarrow{AB}', description: '向量AB', display: '' },
   { latex: '\\hat{a}', description: '单位向量', display: '' },
-  
+
   // 数字
   { latex: '0', description: '数字0', display: '' },
   { latex: '1', description: '数字1', display: '' },
@@ -128,8 +128,8 @@ export const basicSymbols: Symbol[] = [
   { latex: '7', description: '数字7', display: '' },
   { latex: '8', description: '数字8', display: '' },
   { latex: '9', description: '数字9', display: '' },
-  { latex: '.', description: '小数点', display: '' }
-]
+  { latex: '.', description: '小数点', display: '' },
+];
 
 // 希腊字母
 export const greekSymbols: Symbol[] = [
@@ -144,7 +144,7 @@ export const greekSymbols: Symbol[] = [
   { latex: '\\eta', description: 'Eta', display: '' },
   { latex: '\\theta', description: 'Theta', display: '' },
   { latex: '\\vartheta', description: 'Var Theta', display: '' },
-  
+
   // 小写希腊字母 - 第二行
   { latex: '\\iota', description: 'Iota', display: '' },
   { latex: '\\kappa', description: 'Kappa', display: '' },
@@ -156,7 +156,7 @@ export const greekSymbols: Symbol[] = [
   { latex: '\\pi', description: 'Pi', display: '' },
   { latex: '\\varpi', description: 'Var Pi', display: '' },
   { latex: '\\rho', description: 'Rho', display: '' },
-  
+
   // 小写希腊字母 - 第三行
   { latex: '\\varrho', description: 'Var Rho', display: '' },
   { latex: '\\sigma', description: 'Sigma', display: '' },
@@ -168,7 +168,7 @@ export const greekSymbols: Symbol[] = [
   { latex: '\\chi', description: 'Chi', display: '' },
   { latex: '\\psi', description: 'Psi', display: '' },
   { latex: '\\omega', description: 'Omega', display: '' },
-  
+
   // 大写希腊字母 - 第一行
   { latex: 'A', description: 'Alpha (大写)', display: '' },
   { latex: 'B', description: 'Beta (大写)', display: '' },
@@ -180,7 +180,7 @@ export const greekSymbols: Symbol[] = [
   { latex: '\\Theta', description: 'Theta (大写)', display: '' },
   { latex: 'I', description: 'Iota (大写)', display: '' },
   { latex: 'K', description: 'Kappa (大写)', display: '' },
-  
+
   // 大写希腊字母 - 第二行
   { latex: '\\Lambda', description: 'Lambda (大写)', display: '' },
   { latex: 'M', description: 'Mu (大写)', display: '' },
@@ -192,13 +192,13 @@ export const greekSymbols: Symbol[] = [
   { latex: '\\Sigma', description: 'Sigma (大写)', display: '' },
   { latex: 'T', description: 'Tau (大写)', display: '' },
   { latex: '\\Upsilon', description: 'Upsilon (大写)', display: '' },
-  
+
   // 大写希腊字母 - 第三行
   { latex: '\\Phi', description: 'Phi (大写)', display: '' },
   { latex: 'X', description: 'Chi (大写)', display: '' },
   { latex: '\\Psi', description: 'Psi (大写)', display: '' },
-  { latex: '\\Omega', description: 'Omega (大写)', display: '' }
-]
+  { latex: '\\Omega', description: 'Omega (大写)', display: '' },
+];
 
 // 高级符号
 export const advancedSymbols: Symbol[] = [
@@ -213,7 +213,7 @@ export const advancedSymbols: Symbol[] = [
   { latex: '\\iff', description: '当且仅当', display: '' },
   { latex: '\\therefore', description: '因此', display: '' },
   { latex: '\\because', description: '因为', display: '' },
-  
+
   // 集合论符号
   { latex: '\\in', description: '属于', display: '' },
   { latex: '\\notin', description: '不属于', display: '' },
@@ -225,7 +225,7 @@ export const advancedSymbols: Symbol[] = [
   { latex: '\\cap', description: '交集', display: '' },
   { latex: '\\setminus', description: '集合差', display: '' },
   { latex: '\\emptyset', description: '空集', display: '' },
-  
+
   // 数字集合
   { latex: '\\mathbb{N}', description: '自然数集', display: '' },
   { latex: '\\mathbb{Z}', description: '整数集', display: '' },
@@ -237,7 +237,7 @@ export const advancedSymbols: Symbol[] = [
   { latex: '\\hbar', description: '约化普朗克常数', display: '' },
   { latex: '\\ell', description: '脚本L', display: '' },
   { latex: '\\wp', description: 'Weierstrass P', display: '' },
-  
+
   // 积分符号
   { latex: '\\int', description: '积分', display: '' },
   { latex: '\\iint', description: '二重积分', display: '' },
@@ -249,7 +249,7 @@ export const advancedSymbols: Symbol[] = [
   { latex: '\\prod', description: '连乘', display: '' },
   { latex: '\\lim', description: '极限', display: '' },
   { latex: '\\sup', description: '上确界', display: '' },
-  
+
   // 关系符号
   { latex: '\\equiv', description: '恒等于', display: '' },
   { latex: '\\approx', description: '约等于', display: '' },
@@ -261,7 +261,7 @@ export const advancedSymbols: Symbol[] = [
   { latex: '\\doteq', description: '趋于', display: '' },
   { latex: '\\bowtie', description: '自然连接', display: '' },
   { latex: '\\models', description: '模型', display: '' },
-  
+
   // 箭头符号
   { latex: '\\rightarrow', description: '右箭头', display: '' },
   { latex: '\\leftarrow', description: '左箭头', display: '' },
@@ -273,7 +273,7 @@ export const advancedSymbols: Symbol[] = [
   { latex: '\\downarrow', description: '下箭头', display: '' },
   { latex: '\\updownarrow', description: '上下箭头', display: '' },
   { latex: '\\nearrow', description: '东北箭头', display: '' },
-  
+
   // 运算符号
   { latex: '\\oplus', description: '直和', display: '' },
   { latex: '\\ominus', description: '对称差', display: '' },
@@ -285,7 +285,7 @@ export const advancedSymbols: Symbol[] = [
   { latex: '\\star', description: '星号', display: '' },
   { latex: '\\ast', description: '星号', display: '' },
   { latex: '\\diamond', description: '菱形', display: '' },
-  
+
   // 几何符号
   { latex: '\\triangle', description: '三角形', display: '' },
   { latex: '\\square', description: '正方形', display: '' },
@@ -294,7 +294,7 @@ export const advancedSymbols: Symbol[] = [
   { latex: '\\perp', description: '垂直', display: '' },
   { latex: '\\sphericalangle', description: '球面角', display: '' },
   { latex: '\\measuredangle', description: '测量角', display: '' },
-  
+
   // 特殊符号
   { latex: '\\infty', description: '无穷大', display: '' },
   { latex: '\\varnothing', description: '空集变体', display: '' },
@@ -308,5 +308,5 @@ export const advancedSymbols: Symbol[] = [
   { latex: '\\clubsuit', description: '梅花', display: '' },
   { latex: '\\diamondsuit', description: '方块', display: '' },
   { latex: '\\heartsuit', description: '红心', display: '' },
-  { latex: '\\spadesuit', description: '黑桃', display: '' }
-] 
+  { latex: '\\spadesuit', description: '黑桃', display: '' },
+];

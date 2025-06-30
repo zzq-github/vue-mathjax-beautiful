@@ -1,9 +1,11 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import './style.css'
+import { createApp } from 'vue';
+import App from './App.vue';
+import './style.css';
+import i18n from './i18n';
 
 // 导入核心包样式
-import 'vue-mathjax-beautiful/dist/style.css'
+import 'vue-mathjax-beautiful/dist/style.css';
 
-const app = createApp(App)
-app.mount('#app') 
+const app = createApp(App);
+app.use(i18n);
+app.mount('#app');

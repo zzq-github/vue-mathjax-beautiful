@@ -11,7 +11,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/",
+    "format": "prettier --write packages/*/src/**/*.{vue,ts,js} examples/*/src/**/*.{vue,ts,js}",
     "prepare": "husky install",
     "changeset": "changeset",
     "version-packages": "changeset version",
@@ -41,6 +41,7 @@
     "@vue/test-utils": "^2.4.3",
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^8.49.0",
+    "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-vue": "^9.17.0",
     "husky": "^8.0.3",
     "jsdom": "^23.0.1",
@@ -53,4 +54,4 @@
     "vue": "^3.3.11",
     "vue-tsc": "^1.8.25"
   }
-} 
+}
