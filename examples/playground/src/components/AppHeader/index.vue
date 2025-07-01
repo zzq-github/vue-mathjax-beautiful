@@ -28,6 +28,14 @@
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         >{{ t('nav.editor') }}</a>
         <a
+          href="#config"
+          class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+        >{{ t('nav.config') }}</a>
+        <a
+          href="#editor-config"
+          class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+        >{{ t('nav.editorConfig') }}</a>
+        <a
           href="#features"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         >{{ t('nav.features') }}</a>
@@ -254,6 +262,20 @@
             class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >
             {{ t('nav.editor') }}
+          </a>
+          <a
+            href="#config"
+            @click="$emit('closeMobileMenu')"
+            class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            {{ t('nav.config') }}
+          </a>
+          <a
+            href="#editor-config"
+            @click="$emit('closeMobileMenu')"
+            class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            {{ t('nav.editorConfig') }}
           </a>
           <a
             href="#features"

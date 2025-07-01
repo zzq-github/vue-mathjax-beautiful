@@ -31,6 +31,12 @@
         @editor-blur="handleBlur"
       />
 
+      <!-- 公式编辑器配置示例区域 -->
+      <ConfigSection />
+
+      <!-- 富文本编辑器配置示例区域 -->
+      <EditorConfigSection />
+
       <!-- 功能特性 -->
       <FeaturesSection />
 
@@ -74,6 +80,8 @@ import {
 import AppHeader from './components/AppHeader/index.vue';
 import HeroSection from './components/HeroSection/index.vue';
 import DemoSection from './components/DemoSection/index.vue';
+import ConfigSection from './components/ConfigSection/index.vue';
+import EditorConfigSection from './components/EditorConfigSection/index.vue';
 import FeaturesSection from './components/FeaturesSection/index.vue';
 import ExamplesSection from './components/ExamplesSection/index.vue';
 import DocsSection from './components/DocsSection/index.vue';

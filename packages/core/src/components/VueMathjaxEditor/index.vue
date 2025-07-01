@@ -1,41 +1,50 @@
 <template>
   <div
     class="vue-mathjax-editor"
-    :class="{
-      'full-screen': isFullScreen,
-      'theme-dark': internalTheme === 'dark',
-      'theme-light': internalTheme === 'light',
-    }"
+    :class="[
+      {
+        'full-screen': isFullScreen,
+        'theme-dark': internalTheme === 'dark',
+        'theme-light': internalTheme === 'light',
+      },
+      toolbarPositionClass,
+      props.customClass
+    ]"
+    :style="editorStyle"
   >
     <!-- 工具栏 -->
-    <div class="toolbar" v-if="showToolbar">
+    <div class="toolbar" :class="props.toolbarClass" v-if="showToolbar">
       <!-- 基础格式工具 -->
-      <div class="format-group">
+      <div class="format-group" v-if="shouldShowTool('bold') || shouldShowTool('italic') || shouldShowTool('underline') || shouldShowTool('strikethrough')">
         <button
+          v-if="shouldShowTool('bold')"
           class="toolbar-btn"
           :class="{ active: isFormatActive('bold') }"
           @click="toggleFormat('bold')"
-          title="粗体 (Ctrl+B) - 点击激活后，输入的文本将自动应用此格式"
+          :title="props.enableShortcuts ? '粗体 (Ctrl+B) - 点击激活后，输入的文本将自动应用此格式' : '粗体 - 点击激活后，输入的文本将自动应用此格式'"
         >
           <strong>B</strong>
         </button>
         <button
+          v-if="shouldShowTool('italic')"
           class="toolbar-btn"
           :class="{ active: isFormatActive('italic') }"
           @click="toggleFormat('italic')"
-          title="斜体 (Ctrl+I) - 点击激活后，输入的文本将自动应用此格式"
+          :title="props.enableShortcuts ? '斜体 (Ctrl+I) - 点击激活后，输入的文本将自动应用此格式' : '斜体 - 点击激活后，输入的文本将自动应用此格式'"
         >
           <em>I</em>
         </button>
         <button
+          v-if="shouldShowTool('underline')"
           class="toolbar-btn"
           :class="{ active: isFormatActive('underline') }"
           @click="toggleFormat('underline')"
-          title="下划线 (Ctrl+U) - 点击激活后，输入的文本将自动应用此格式"
+          :title="props.enableShortcuts ? '下划线 (Ctrl+U) - 点击激活后，输入的文本将自动应用此格式' : '下划线 - 点击激活后，输入的文本将自动应用此格式'"
         >
           <u>U</u>
         </button>
         <button
+          v-if="shouldShowTool('strikethrough')"
           class="toolbar-btn"
           :class="{ active: isFormatActive('strikethrough') }"
           @click="toggleFormat('strikethrough')"
@@ -45,31 +54,33 @@
         </button>
       </div>
 
-      <div class="divider"></div>
+      <div class="divider" v-if="(shouldShowTool('bold') || shouldShowTool('italic') || shouldShowTool('underline') || shouldShowTool('strikethrough')) && shouldShowTool('formula')"></div>
 
       <!-- 公式工具 -->
-      <div class="math-group">
+      <div class="math-group" v-if="shouldShowTool('formula')">
         <button class="toolbar-btn formula-btn" @click="showFormulaEditor" title="插入数学公式">
           <span class="fx-icon">fx</span>
           <span>公式</span>
         </button>
       </div>
 
-      <div class="divider"></div>
+      <div class="divider" v-if="shouldShowTool('formula') && (shouldShowTool('image') || shouldShowTool('clear') || shouldShowTool('theme'))"></div>
 
       <!-- 插入工具 -->
-      <div class="insert-group">
+      <div class="insert-group" v-if="shouldShowTool('image') || shouldShowTool('clear') || shouldShowTool('theme')">
         <input
+          v-if="shouldShowTool('image')"
           ref="imageInput"
           type="file"
-          accept="image/*"
+          :accept="props.allowedImageTypes.join(',')"
           @change="handleImageUpload"
           style="display: none"
         />
         <button
+          v-if="shouldShowTool('image')"
           class="toolbar-btn image-btn"
           @click="imageInput?.click()"
-          :disabled="uploadLoading"
+          :disabled="uploadLoading || props.readonly"
           title="插入图片"
         >
           <span v-if="uploadLoading" class="loading-icon">⟳</span>
@@ -77,16 +88,27 @@
           <span>图片</span>
         </button>
 
-        <div class="divider"></div>
+        <div class="divider" v-if="shouldShowTool('image') && (shouldShowTool('clear') || shouldShowTool('theme'))"></div>
 
-        <button class="toolbar-btn clear-btn" @click="clearFormat" title="清除格式">
+        <button 
+          v-if="shouldShowTool('clear')"
+          class="toolbar-btn clear-btn" 
+          @click="clearFormat" 
+          :title="props.enableShortcuts ? '清除格式 (Ctrl+Shift+X)' : '清除格式'"
+          :disabled="props.readonly"
+        >
           <span class="icon">🧹</span>
           <span>清除</span>
         </button>
 
-        <div class="divider"></div>
+        <div class="divider" v-if="shouldShowTool('clear') && shouldShowTool('theme')"></div>
 
-        <button class="toolbar-btn theme-btn" @click="toggleTheme" :title="themeButtonTitle">
+        <button 
+          v-if="shouldShowTool('theme')"
+          class="toolbar-btn theme-btn" 
+          @click="toggleTheme" 
+          :title="themeButtonTitle"
+        >
           <span class="icon">{{ themeIcon }}</span>
           <span>主题</span>
         </button>
@@ -98,7 +120,9 @@
       <div
         ref="editorRef"
         class="editor-content"
-        contenteditable="true"
+        :class="props.editorClass"
+        :contenteditable="!props.readonly"
+        :spellcheck="props.spellcheck"
         @input="handleInput"
         @beforeinput="handleBeforeInput"
         @keydown="handleKeydown"
@@ -108,21 +132,23 @@
         @mouseup="updateSelection"
         @keyup="updateSelection"
         :placeholder="placeholder"
-        :style="{ minHeight: minHeight }"
+        :style="{ minHeight: minHeight, maxHeight: props.maxHeight !== 'none' ? props.maxHeight : undefined }"
       ></div>
 
-      <!-- 字符数统计 -->
-      <div class="char-counter">
-        <span class="char-count">{{ charCount }}</span>
-        <span class="char-label">字符</span>
+      <!-- 统计信息 -->
+      <div class="char-counter" v-if="props.showCharCount || props.showWordCount">
+        <span>{{ statsDisplay }}</span>
+        <span v-if="props.maxLength" class="limit-info">/ {{ props.maxLength }}</span>
       </div>
     </div>
 
     <!-- 公式编辑器弹窗 -->
     <VueMathjaxBeautiful
+      v-if="props.enableFormula"
       v-model="showFormula"
       :existing-latex="editingLatex"
       :theme="internalTheme"
+      v-bind="props.formulaEditorProps"
       @insert="insertFormula"
     />
   </div>
@@ -134,21 +160,121 @@ import VueMathjaxBeautiful from '../VueMathjaxBeautiful/index.vue';
 import { convertLatexToSvg, extractLatexFromSvg, initMathJax } from '../../utils/latex';
 
 interface Props {
+  // 基础内容控制
   modelValue?: string;
   placeholder?: string;
+  
+  // 尺寸和样式
   minHeight?: string;
+  maxHeight?: string;
+  width?: string;
+  borderRadius?: string;
+  
+  // 工具栏配置
   showToolbar?: boolean;
+  toolbarPosition?: 'top' | 'bottom';
+  enabledTools?: string[];
+  
+  // 格式功能控制
+  enableBold?: boolean;
+  enableItalic?: boolean;
+  enableUnderline?: boolean;
+  enableStrikethrough?: boolean;
+  
+  // 插入功能控制
+  enableFormula?: boolean;
+  enableImage?: boolean;
+  enableClearFormat?: boolean;
+  enableThemeToggle?: boolean;
+  
+  // 编辑器行为配置
   readonly?: boolean;
+  autoFocus?: boolean;
+  spellcheck?: boolean;
+  maxLength?: number;
+  
+  // 主题和外观
   theme?: 'light' | 'dark';
+  
+  // 统计显示
+  showCharCount?: boolean;
+  showWordCount?: boolean;
+  
+  // 功能增强
+  enableShortcuts?: boolean;
+  enableAutoSave?: boolean;
+  autoSaveInterval?: number;
+  
+  // 公式编辑器配置
+  formulaEditorProps?: Record<string, any>;
+  
+  // 上传配置
+  maxImageSize?: number;
+  allowedImageTypes?: string[];
+  
+  // 自定义样式类
+  customClass?: string;
+  toolbarClass?: string;
+  editorClass?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  // 基础内容控制
   modelValue: '',
   placeholder: '开始编写您的内容...',
+  
+  // 尺寸和样式
   minHeight: '300px',
+  maxHeight: 'none',
+  width: '100%',
+  borderRadius: '12px',
+  
+  // 工具栏配置
   showToolbar: true,
+  toolbarPosition: 'top',
+  enabledTools: () => ['bold', 'italic', 'underline', 'strikethrough', 'formula', 'image', 'clear', 'theme'],
+  
+  // 格式功能控制
+  enableBold: true,
+  enableItalic: true,
+  enableUnderline: true,
+  enableStrikethrough: true,
+  
+  // 插入功能控制
+  enableFormula: true,
+  enableImage: true,
+  enableClearFormat: true,
+  enableThemeToggle: true,
+  
+  // 编辑器行为配置
   readonly: false,
+  autoFocus: false,
+  spellcheck: true,
+  maxLength: 10000,
+  
+  // 主题和外观
   theme: 'light',
+  
+  // 统计显示
+  showCharCount: true,
+  showWordCount: false,
+  
+  // 功能增强
+  enableShortcuts: true,
+  enableAutoSave: false,
+  autoSaveInterval: 30000,
+  
+  // 公式编辑器配置
+  formulaEditorProps: () => ({}),
+  
+  // 上传配置
+  maxImageSize: 5242880, // 5MB
+  allowedImageTypes: () => ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+  
+  // 自定义样式类
+  customClass: '',
+  toolbarClass: '',
+  editorClass: '',
 });
 
 const emit = defineEmits<{
@@ -156,6 +282,18 @@ const emit = defineEmits<{
   change: [value: string];
   focus: [];
   blur: [];
+  ready: [];
+  error: [error: Error];
+  themeChange: [theme: string];
+  formatToggle: [format: string, active: boolean];
+  imageUpload: [file: File];
+  imageUploaded: [url: string];
+  imageError: [error: string];
+  formulaInsert: [latex: string];
+  save: [content: string];
+  charLimitReached: [];
+  wordCountChange: [count: number];
+  charCountChange: [count: number];
 }>();
 
 // 响应式数据
@@ -168,8 +306,11 @@ const editingFormulaElement = ref<HTMLElement | null>(null);
 const isFullScreen = ref(false);
 const content = ref('');
 const charCount = ref(0);
+const wordCount = ref(0);
 const uploadLoading = ref(false);
 const activeFormats = ref(new Set<string>());
+const autoSaveTimer = ref<number | null>(null);
+const lastSavedContent = ref('');
 
 // 组件内部主题状态（独立于外部传入的theme）
 const internalTheme = ref(props.theme || 'light');
@@ -182,6 +323,69 @@ const themeIcon = computed(() => {
 
 const themeButtonTitle = computed(() => {
   return internalTheme.value === 'dark' ? '切换到亮色主题' : '切换到暗色主题';
+});
+
+// 编辑器样式计算
+const editorStyle = computed(() => {
+  const style: Record<string, string> = {
+    minHeight: props.minHeight,
+    width: props.width,
+    borderRadius: props.borderRadius,
+  };
+  
+  if (props.maxHeight !== 'none') {
+    style.maxHeight = props.maxHeight;
+  }
+  
+  return style;
+});
+
+// 工具栏显示控制
+const shouldShowTool = (tool: string) => {
+  if (!props.enabledTools.includes(tool)) return false;
+  
+  switch (tool) {
+    case 'bold':
+      return props.enableBold;
+    case 'italic':
+      return props.enableItalic;
+    case 'underline':
+      return props.enableUnderline;
+    case 'strikethrough':
+      return props.enableStrikethrough;
+    case 'formula':
+      return props.enableFormula;
+    case 'image':
+      return props.enableImage;
+    case 'clear':
+      return props.enableClearFormat;
+    case 'theme':
+      return props.enableThemeToggle;
+    default:
+      return true;
+  }
+};
+
+// 工具栏位置类
+const toolbarPositionClass = computed(() => {
+  return props.toolbarPosition === 'bottom' ? 'toolbar-bottom' : 'toolbar-top';
+});
+
+// 统计信息显示
+const statsDisplay = computed(() => {
+  const stats: string[] = [];
+  if (props.showCharCount) {
+    stats.push(`${charCount.value} 字符`);
+  }
+  if (props.showWordCount) {
+    stats.push(`${wordCount.value} 单词`);
+  }
+  return stats.join(' · ');
+});
+
+// 是否需要自动保存
+const needsAutoSave = computed(() => {
+  return props.enableAutoSave && content.value !== lastSavedContent.value;
 });
 
 // 监听外部值变化
@@ -288,7 +492,23 @@ const isFormatActive = (format: string): boolean => {
 
 // 切换格式
 const toggleFormat = (format: string) => {
-  if (!editorRef.value) return;
+  if (!editorRef.value || props.readonly) return;
+
+  // 检查格式是否启用
+  switch (format) {
+    case 'bold':
+      if (!props.enableBold) return;
+      break;
+    case 'italic':
+      if (!props.enableItalic) return;
+      break;
+    case 'underline':
+      if (!props.enableUnderline) return;
+      break;
+    case 'strikethrough':
+      if (!props.enableStrikethrough) return;
+      break;
+  }
 
   try {
     const selection = window.getSelection();
@@ -301,15 +521,19 @@ const toggleFormat = (format: string) => {
       document.execCommand(format, false);
       // 清除激活格式状态
       activeFormats.value.clear();
+      emit('formatToggle', format, true);
     } else {
       // 没有选中文字，切换激活状态（完全互斥模式）
-      if (activeFormats.value.has(format)) {
+      const wasActive = activeFormats.value.has(format);
+      if (wasActive) {
         // 如果已经激活，则取消激活
         activeFormats.value.clear();
+        emit('formatToggle', format, false);
       } else {
         // 清除所有格式，只激活当前格式
         activeFormats.value.clear();
         activeFormats.value.add(format);
+        emit('formatToggle', format, true);
       }
     }
     
@@ -317,6 +541,7 @@ const toggleFormat = (format: string) => {
     handleInput();
   } catch (error) {
     console.warn('切换格式失败:', error);
+    emit('error', error as Error);
   }
 };
 
@@ -478,6 +703,9 @@ const insertFormula = async (latex: string) => {
     await nextTick();
     setupFormulaClickEvents();
 
+    // 发出公式插入事件
+    emit('formulaInsert', latex);
+    
     console.log('公式插入成功');
   } catch (error) {
     console.error('插入公式失败:', error);
@@ -494,6 +722,8 @@ const insertFormula = async (latex: string) => {
 
 // 显示公式编辑器
 const showFormulaEditor = () => {
+  if (!props.enableFormula || props.readonly) return;
+  
   showFormula.value = true;
   editingLatex.value = '';
   editingFormulaElement.value = null;
@@ -529,9 +759,26 @@ const handleImageUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
 
-  if (!file || !editorRef.value) return;
+  if (!file || !editorRef.value || props.readonly || !props.enableImage) return;
+
+  // 检查文件类型
+  if (!props.allowedImageTypes.includes(file.type)) {
+    const error = `不支持的文件类型: ${file.type}`;
+    emit('imageError', error);
+    target.value = '';
+    return;
+  }
+
+  // 检查文件大小
+  if (file.size > props.maxImageSize) {
+    const error = `文件过大: ${(file.size / 1024 / 1024).toFixed(2)}MB，最大允许: ${(props.maxImageSize / 1024 / 1024).toFixed(2)}MB`;
+    emit('imageError', error);
+    target.value = '';
+    return;
+  }
 
   uploadLoading.value = true;
+  emit('imageUpload', file);
 
   try {
     // 创建本地预览URL
@@ -543,9 +790,12 @@ const handleImageUpload = async (event: Event) => {
     editorRef.value.focus();
     document.execCommand('insertHTML', false, imgHtml);
 
+    emit('imageUploaded', imageUrl);
     handleInput();
   } catch (error) {
     console.error('图片上传失败:', error);
+    emit('imageError', error instanceof Error ? error.message : '图片上传失败');
+    emit('error', error as Error);
   } finally {
     uploadLoading.value = false;
     target.value = ''; // 清空input
@@ -554,7 +804,7 @@ const handleImageUpload = async (event: Event) => {
 
 // 清除格式
 const clearFormat = async () => {
-  if (!editorRef.value) return;
+  if (!editorRef.value || props.readonly || !props.enableClearFormat) return;
 
   try {
     const selection = window.getSelection();
@@ -693,8 +943,12 @@ const clearSelectionFormat = async (range: Range) => {
 
 // 主题切换方法（仅影响当前组件）
 const toggleTheme = () => {
-  internalTheme.value = internalTheme.value === 'dark' ? 'light' : 'dark';
+  if (!props.enableThemeToggle) return;
+  
+  const newTheme = internalTheme.value === 'dark' ? 'light' : 'dark';
+  internalTheme.value = newTheme;
   hasUserChangedTheme.value = true;
+  emit('themeChange', newTheme);
 };
 
 // 更新统计信息
@@ -702,12 +956,43 @@ const updateStats = () => {
   if (!editorRef.value) return;
 
   const text = editorRef.value.textContent || '';
+  const previousCharCount = charCount.value;
+  const previousWordCount = wordCount.value;
+  
   charCount.value = text.length;
+  wordCount.value = text.trim() ? text.trim().split(/\s+/).length : 0;
+  
+  // 发出统计变化事件
+  if (charCount.value !== previousCharCount) {
+    emit('charCountChange', charCount.value);
+  }
+  if (wordCount.value !== previousWordCount) {
+    emit('wordCountChange', wordCount.value);
+  }
+  
+  // 检查字符限制
+  if (props.maxLength && charCount.value >= props.maxLength) {
+    emit('charLimitReached');
+  }
 };
 
 // 输入处理
 const handleInput = () => {
   if (!editorRef.value) return;
+
+  // 检查字符限制
+  if (props.maxLength && editorRef.value.textContent && editorRef.value.textContent.length > props.maxLength) {
+    const text = editorRef.value.textContent.substring(0, props.maxLength);
+    editorRef.value.textContent = text;
+    
+    // 恢复光标位置到末尾
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(editorRef.value);
+    range.collapse(false);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  }
 
   const newContent = convertToStandardSyntax(editorRef.value);
   content.value = newContent;
@@ -715,10 +1000,25 @@ const handleInput = () => {
   emit('change', newContent);
 
   updateStats();
+  
+  // 自动保存逻辑
+  if (props.enableAutoSave) {
+    if (autoSaveTimer.value) {
+      window.clearTimeout(autoSaveTimer.value);
+    }
+    autoSaveTimer.value = window.setTimeout(() => {
+      if (needsAutoSave.value) {
+        lastSavedContent.value = content.value;
+        emit('save', content.value);
+      }
+    }, props.autoSaveInterval);
+  }
 };
 
 // 处理键盘事件
 const handleKeydown = (event: KeyboardEvent) => {
+  if (props.readonly) return;
+  
   // 按Escape键清除格式状态
   if (event.key === 'Escape') {
     activeFormats.value.clear();
@@ -726,20 +1026,33 @@ const handleKeydown = (event: KeyboardEvent) => {
     return;
   }
 
-  // 处理快捷键
-  if (event.ctrlKey || event.metaKey) {
+  // 处理快捷键（仅在启用时）
+  if (props.enableShortcuts && (event.ctrlKey || event.metaKey)) {
     switch (event.key) {
       case 'b':
-        event.preventDefault();
-        toggleFormat('bold');
+        if (props.enableBold) {
+          event.preventDefault();
+          toggleFormat('bold');
+        }
         break;
       case 'i':
-        event.preventDefault();
-        toggleFormat('italic');
+        if (props.enableItalic) {
+          event.preventDefault();
+          toggleFormat('italic');
+        }
         break;
       case 'u':
-        event.preventDefault();
-        toggleFormat('underline');
+        if (props.enableUnderline) {
+          event.preventDefault();
+          toggleFormat('underline');
+        }
+        break;
+      case 's':
+        if (props.enableAutoSave) {
+          event.preventDefault();
+          lastSavedContent.value = content.value;
+          emit('save', content.value);
+        }
         break;
     }
   }
@@ -824,14 +1137,27 @@ onMounted(async () => {
     }
 
     updateStats();
+    
+    // 自动聚焦
+    if (props.autoFocus && editorRef.value) {
+      editorRef.value.focus();
+    }
+    
+    // 发出就绪事件
+    emit('ready');
+    
     console.log('VueMathjaxEditor初始化完成');
   } catch (error) {
     console.error('VueMathjaxEditor初始化失败:', error);
+    emit('error', error as Error);
   }
 });
 
 onUnmounted(() => {
   // 清理资源
+  if (autoSaveTimer.value) {
+    window.clearTimeout(autoSaveTimer.value);
+  }
 });
 </script>
 
@@ -1321,6 +1647,64 @@ onUnmounted(() => {
 .format-group .toolbar-btn.active s {
   color: white !important;
   font-weight: 700 !important;
+}
+
+/* 工具栏位置样式 */
+.vue-mathjax-editor.toolbar-bottom {
+  flex-direction: column-reverse;
+}
+
+.vue-mathjax-editor.toolbar-bottom .toolbar {
+  border-top: 1px solid #e2e8f0;
+  border-bottom: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.vue-mathjax-editor.toolbar-bottom .editor-container {
+  border-radius: 12px 12px 0 0;
+}
+
+.vue-mathjax-editor.toolbar-bottom .editor-content {
+  border-radius: 12px 12px 0 0;
+}
+
+/* 只读状态样式 */
+.vue-mathjax-editor .editor-content[contenteditable="false"] {
+  background: #f8fafc !important;
+  cursor: default;
+  user-select: text;
+}
+
+.vue-mathjax-editor.theme-dark .editor-content[contenteditable="false"] {
+  background: #1f2937 !important;
+  opacity: 0.8;
+}
+
+/* 字符限制样式 */
+.char-counter .limit-info {
+  color: #6b7280;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.char-counter.over-limit {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* 禁用状态按钮样式 */
+.toolbar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.toolbar-btn:disabled:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: rgba(255, 255, 255, 0.8) !important;
 }
 
 /* 响应式设计 */

@@ -2,6 +2,8 @@ export default {
   // Navigation
   nav: {
     editor: 'Editor',
+    config: 'Formula Config',
+    editorConfig: 'Editor Config',
     features: 'Features',
     examples: 'Examples',
     docs: 'Documentation',
@@ -150,6 +152,136 @@ export default {
       matrix: 'Matrix',
       limit: 'Limit',
       trigonometric: 'Trigonometric Function',
+    },
+  },
+
+  // Configuration
+  config: {
+    title: 'Component Configuration',
+    description: 'Customize the behavior and appearance of VueMathjaxBeautiful component through rich configuration options',
+    settings: 'Configuration Settings',
+    settingsDescription: 'Adjust the settings below to see real-time changes in the component',
+    preview: 'Live Preview',
+    previewDescription: 'Real-time component demonstration based on left configuration',
+    mode: 'Display Mode',
+    dialogMode: 'Dialog Mode',
+    inlineMode: 'Inline Mode',
+    theme: 'Theme',
+    lightTheme: 'Light Theme',
+    darkTheme: 'Dark Theme',
+    features: 'Feature Toggles',
+    showSymbols: 'Show Symbol Panel',
+    showPreview: 'Show Live Preview',
+    showThemeToggle: 'Show Theme Toggle',
+    showClearButton: 'Show Clear Button',
+    readonly: 'Read-only Mode',
+    autoFocus: 'Auto Focus',
+    inputSettings: 'Input Settings',
+    placeholder: 'Placeholder Text',
+    maxLength: 'Maximum Characters',
+    rows: 'Textarea Rows',
+    enabledCategories: 'Enabled Symbol Categories',
+    basicSymbols: 'Basic Symbols',
+    greekLetters: 'Greek Letters',
+    advancedSymbols: 'Advanced Symbols',
+    openDialog: 'Open Formula Editor',
+    eventLog: 'Event Log',
+    noEvents: 'No events yet',
+    showConfig: 'Show Code Configuration',
+    hideConfig: 'Hide Code Configuration',
+    currentConfig: 'Current Configuration Code',
+    currentConfigDescription: 'Copy the code below to use the same configuration in your project',
+  },
+
+  // Editor Configuration
+  editorConfig: {
+    title: 'Rich Text Editor Configuration',
+    description: 'Experience all configuration options of VueMathjaxEditor component through the real-time configuration panel. Adjust parameters on the left and preview effects on the right.',
+    
+    tabs: {
+      basic: 'Basic',
+      toolbar: 'Toolbar',
+      format: 'Format',
+      features: 'Features',
+      limits: 'Limits',
+      stats: 'Stats',
+    },
+    
+    basic: {
+      title: 'Basic Configuration',
+      placeholder: 'Placeholder Text',
+      minHeight: 'Min Height',
+      maxHeight: 'Max Height',
+      width: 'Width',
+      borderRadius: 'Border Radius',
+      theme: 'Theme',
+    },
+    
+    toolbar: {
+      title: 'Toolbar Configuration',
+      showToolbar: 'Show Toolbar',
+      position: 'Toolbar Position',
+      enabledTools: 'Enabled Tools',
+    },
+    
+    format: {
+      title: 'Format Features',
+      enableBold: 'Enable Bold',
+      enableItalic: 'Enable Italic',
+      enableUnderline: 'Enable Underline',
+      enableStrikethrough: 'Enable Strikethrough',
+    },
+    
+    features: {
+      title: 'Feature Options',
+      enableFormula: 'Enable Formula Editing',
+      enableImage: 'Enable Image Upload',
+      enableClearFormat: 'Enable Clear Format',
+      enableThemeToggle: 'Enable Theme Toggle',
+      readonly: 'Read Only',
+      autoFocus: 'Auto Focus',
+      spellcheck: 'Spell Check',
+      enableShortcuts: 'Enable Shortcuts',
+    },
+    
+    limits: {
+      title: 'Limit Settings',
+      maxLength: 'Max Character Count',
+      maxImageSize: 'Max Image Size',
+      allowedImageTypes: 'Allowed Image Types',
+    },
+    
+    stats: {
+      title: 'Statistics & Save',
+      showCharCount: 'Show Character Count',
+      showWordCount: 'Show Word Count',
+      enableAutoSave: 'Enable Auto Save',
+      autoSaveInterval: 'Auto Save Interval',
+    },
+    
+    tools: {
+      bold: 'Bold',
+      italic: 'Italic',
+      underline: 'Underline',
+      strikethrough: 'Strikethrough',
+      formula: 'Formula',
+      image: 'Image',
+      clear: 'Clear',
+      theme: 'Theme',
+    },
+    
+    preview: {
+      title: 'Live Preview',
+    },
+    
+    events: {
+      title: 'Event Log',
+      clear: 'Clear Log',
+    },
+    
+    code: {
+      title: 'Generated Code',
+      copy: 'Copy Code',
     },
   },
 

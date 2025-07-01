@@ -2,6 +2,8 @@ export default {
   // 导航
   nav: {
     editor: '编辑器',
+    config: '公式配置',
+    editorConfig: '编辑器配置',
     features: '功能特性',
     examples: '示例',
     docs: '文档',
@@ -150,6 +152,136 @@ export default {
       matrix: '矩阵',
       limit: '极限',
       trigonometric: '三角函数',
+    },
+  },
+
+  // 配置示例
+  config: {
+    title: '组件配置',
+    description: '通过丰富的配置选项，自定义 VueMathjaxBeautiful 组件的行为和外观',
+    settings: '配置设置',
+    settingsDescription: '调整下方设置来查看组件的实时变化',
+    preview: '实时预览',
+    previewDescription: '根据左侧配置实时展示组件效果',
+    mode: '显示模式',
+    dialogMode: '弹窗模式',
+    inlineMode: '内联模式',
+    theme: '主题',
+    lightTheme: '亮色主题',
+    darkTheme: '暗色主题',
+    features: '功能开关',
+    showSymbols: '显示符号面板',
+    showPreview: '显示实时预览',
+    showThemeToggle: '显示主题切换',
+    showClearButton: '显示清空按钮',
+    readonly: '只读模式',
+    autoFocus: '自动聚焦',
+    inputSettings: '输入设置',
+    placeholder: '占位符文本',
+    maxLength: '最大字符数',
+    rows: '文本框行数',
+    enabledCategories: '启用的符号分类',
+    basicSymbols: '基础符号',
+    greekLetters: '希腊字母',
+    advancedSymbols: '高级符号',
+    openDialog: '打开公式编辑器',
+    eventLog: '事件日志',
+    noEvents: '暂无事件',
+    showConfig: '显示代码配置',
+    hideConfig: '隐藏代码配置',
+    currentConfig: '当前配置代码',
+    currentConfigDescription: '复制下方代码即可在您的项目中使用相同的配置',
+  },
+
+  // 编辑器配置
+  editorConfig: {
+    title: '富文本编辑器配置',
+    description: '通过实时配置面板体验 VueMathjaxEditor 组件的所有功能选项，左侧调整参数，右侧即时预览效果。',
+    
+    tabs: {
+      basic: '基础配置',
+      toolbar: '工具栏',
+      format: '格式功能',
+      features: '功能特性',
+      limits: '限制设置',
+      stats: '统计保存',
+    },
+    
+    basic: {
+      title: '基础配置',
+      placeholder: '占位符文本',
+      minHeight: '最小高度',
+      maxHeight: '最大高度',
+      width: '宽度',
+      borderRadius: '边框圆角',
+      theme: '主题',
+    },
+    
+    toolbar: {
+      title: '工具栏配置',
+      showToolbar: '显示工具栏',
+      position: '工具栏位置',
+      enabledTools: '启用的工具',
+    },
+    
+    format: {
+      title: '格式功能',
+      enableBold: '启用粗体',
+      enableItalic: '启用斜体',
+      enableUnderline: '启用下划线',
+      enableStrikethrough: '启用删除线',
+    },
+    
+    features: {
+      title: '功能特性',
+      enableFormula: '启用公式编辑',
+      enableImage: '启用图片上传',
+      enableClearFormat: '启用清除格式',
+      enableThemeToggle: '启用主题切换',
+      readonly: '只读模式',
+      autoFocus: '自动聚焦',
+      spellcheck: '拼写检查',
+      enableShortcuts: '启用快捷键',
+    },
+    
+    limits: {
+      title: '限制设置',
+      maxLength: '最大字符数',
+      maxImageSize: '最大图片大小',
+      allowedImageTypes: '允许的图片类型',
+    },
+    
+    stats: {
+      title: '统计和保存',
+      showCharCount: '显示字符数',
+      showWordCount: '显示单词数',
+      enableAutoSave: '启用自动保存',
+      autoSaveInterval: '自动保存间隔',
+    },
+    
+    tools: {
+      bold: '粗体',
+      italic: '斜体',
+      underline: '下划线',
+      strikethrough: '删除线',
+      formula: '公式',
+      image: '图片',
+      clear: '清除',
+      theme: '主题',
+    },
+    
+    preview: {
+      title: '实时预览',
+    },
+    
+    events: {
+      title: '事件日志',
+      clear: '清除日志',
+    },
+    
+    code: {
+      title: '生成代码',
+      copy: '复制代码',
     },
   },
 

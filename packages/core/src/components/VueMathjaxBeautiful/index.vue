@@ -15,10 +15,20 @@
             <span>LaTeX 输入</span>
           </div>
           <div class="input-actions">
-            <button class="action-btn" @click="toggleTheme" :title="themeButtonTitle">
+            <button 
+              v-if="showThemeToggle"
+              class="action-btn" 
+              @click="toggleTheme" 
+              :title="themeButtonTitle"
+            >
               <span class="icon">{{ themeIcon }}</span>
             </button>
-            <button class="action-btn" @click="clearInput" title="清空">
+            <button 
+              v-if="showClearButton && !readonly"
+              class="action-btn" 
+              @click="clearInput" 
+              :title="clearButtonText"
+            >
               <span class="icon">🗑️</span>
             </button>
           </div>
@@ -27,15 +37,17 @@
           <textarea
             v-model="latexInput"
             class="latex-input"
-            placeholder="输入 LaTeX 公式或点击下方符号..."
-            @input="updatePreview"
-            rows="3"
+            :placeholder="placeholder"
+            :readonly="readonly"
+            :rows="rows"
+            :maxlength="maxLength"
+            @input="handleInput"
           ></textarea>
         </div>
       </div>
 
       <!-- 预览区域 -->
-      <div class="preview-section">
+      <div v-if="showPreview" class="preview-section">
         <div class="section-header">
           <div class="section-title">
             <span class="icon">👁️</span>
@@ -56,11 +68,11 @@
       </div>
 
       <!-- 符号面板 -->
-      <div class="symbols-section">
+      <div v-if="showSymbols" class="symbols-section">
         <!-- 分类标签 -->
         <div class="category-tabs">
           <button
-            v-for="category in categories"
+            v-for="category in filteredCategories"
             :key="category.key"
             :class="['tab-button', { active: activeCategory === category.key }]"
             @click="activeCategory = category.key"
@@ -110,9 +122,19 @@
 
       <!-- 底部操作（内联模式） -->
       <div class="inline-footer">
-        <button class="btn btn-secondary" @click="clearInput">清空</button>
-        <button class="btn btn-primary" @click="handleInsert" :disabled="!latexInput">
-          应用公式
+        <button 
+          v-if="showClearButton && !readonly"
+          class="btn btn-secondary" 
+          @click="clearInput"
+        >
+          {{ clearButtonText }}
+        </button>
+        <button 
+          class="btn btn-primary" 
+          @click="handleInsert" 
+          :disabled="!latexInput || readonly"
+        >
+          {{ insertButtonText }}
         </button>
       </div>
     </div>
@@ -128,6 +150,7 @@
     <div
       class="vue-mathjax-beautiful-dialog"
       :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light' }"
+      :style="dialogStyle"
       @click.stop
     >
       <!-- 头部 -->
@@ -137,8 +160,8 @@
             <span class="icon">📐</span>
           </div>
           <div class="header-text">
-            <h3 class="header-title">数学公式编辑器</h3>
-            <p class="header-subtitle">使用下方按钮或直接输入 LaTeX 代码</p>
+            <h3 class="header-title">{{ title }}</h3>
+            <p class="header-subtitle">{{ subtitle }}</p>
           </div>
           <div class="header-badge">
             <span>LaTeX</span>
@@ -159,10 +182,20 @@
               <span>LaTeX 输入</span>
             </div>
             <div class="input-actions">
-              <button class="action-btn" @click="toggleTheme" :title="themeButtonTitle">
+              <button 
+                v-if="showThemeToggle"
+                class="action-btn" 
+                @click="toggleTheme" 
+                :title="themeButtonTitle"
+              >
                 <span class="icon">{{ themeIcon }}</span>
               </button>
-              <button class="action-btn" @click="clearInput" title="清空">
+              <button 
+                v-if="showClearButton && !readonly"
+                class="action-btn" 
+                @click="clearInput" 
+                :title="clearButtonText"
+              >
                 <span class="icon">🗑️</span>
               </button>
             </div>
@@ -171,15 +204,17 @@
             <textarea
               v-model="latexInput"
               class="latex-input"
-              placeholder="输入 LaTeX 公式或点击下方符号..."
-              @input="updatePreview"
-              rows="3"
+              :placeholder="placeholder"
+              :readonly="readonly"
+              :rows="rows"
+              :maxlength="maxLength"
+              @input="handleInput"
             ></textarea>
           </div>
         </div>
 
         <!-- 预览区域 -->
-        <div class="preview-section">
+        <div v-if="showPreview" class="preview-section">
           <div class="section-header">
             <div class="section-title">
               <span class="icon">👁️</span>
@@ -200,11 +235,11 @@
         </div>
 
         <!-- 符号面板 -->
-        <div class="symbols-section">
+        <div v-if="showSymbols" class="symbols-section">
           <!-- 分类标签 -->
           <div class="category-tabs">
             <button
-              v-for="category in categories"
+              v-for="category in filteredCategories"
               :key="category.key"
               :class="['tab-button', { active: activeCategory === category.key }]"
               @click="activeCategory = category.key"
@@ -255,9 +290,13 @@
 
       <!-- 底部操作（弹窗模式） -->
       <div class="dialog-footer">
-        <button class="btn btn-secondary" @click="handleClose">取消</button>
-        <button class="btn btn-primary" @click="handleInsert" :disabled="!latexInput">
-          插入公式
+        <button class="btn btn-secondary" @click="handleClose">{{ cancelButtonText }}</button>
+        <button 
+          class="btn btn-primary" 
+          @click="handleInsert" 
+          :disabled="!latexInput || readonly"
+        >
+          {{ insertButtonText }}
         </button>
       </div>
     </div>
@@ -279,28 +318,85 @@ import {
 
 const props = withDefaults(
   defineProps<{
+    // 基础控制
     modelValue?: boolean;
     existingLatex?: string;
     inlineMode?: boolean;
+    
+    // 主题和样式
     theme?: string;
+    width?: string;
+    height?: string;
+    scale?: number;
+    fontSize?: string;
+    
+    // 功能控制
+    readonly?: boolean;
+    showSymbols?: boolean;
+    showPreview?: boolean;
+    showThemeToggle?: boolean;
+    showClearButton?: boolean;
+    autoFocus?: boolean;
+    
+    // 输入控制
+    placeholder?: string;
+    maxLength?: number;
+    rows?: number;
+    
+    // 符号面板控制
+    enabledCategories?: string[];
+    defaultCategory?: string;
+    
+    // 按钮文本自定义
+    insertButtonText?: string;
+    cancelButtonText?: string;
+    clearButtonText?: string;
+    
+    // 标题自定义
+    title?: string;
+    subtitle?: string;
   }>(),
   {
     modelValue: false,
     existingLatex: '',
     inlineMode: false,
     theme: 'light',
+    width: 'auto',
+    height: 'auto',
+    scale: 1.2,
+    fontSize: '16px',
+    readonly: false,
+    showSymbols: true,
+    showPreview: true,
+    showThemeToggle: true,
+    showClearButton: true,
+    autoFocus: true,
+    placeholder: '输入 LaTeX 公式或点击下方符号...',
+    maxLength: 1000,
+    rows: 3,
+    enabledCategories: () => ['basic', 'greek', 'advanced'],
+    defaultCategory: 'basic',
+    insertButtonText: '插入公式',
+    cancelButtonText: '取消',
+    clearButtonText: '清空',
+    title: '数学公式编辑器',
+    subtitle: '使用下方按钮或直接输入 LaTeX 代码',
   }
 );
 
 const emit = defineEmits<{
   'update:modelValue': [value: boolean];
   insert: [latex: string];
+  change: [latex: string];
+  clear: [];
+  close: [];
+  themeChange: [theme: string];
 }>();
 
 // 响应式数据
 const visible = ref(false);
 const latexInput = ref('');
-const activeCategory = ref('basic');
+const activeCategory = ref(props.defaultCategory);
 const renderedFormula = ref('');
 const symbolDisplayCache = new Map<string, string>();
 
@@ -314,6 +410,10 @@ const reactiveAdvancedSymbols = ref([...advancedSymbols]);
 const reactiveFormulaExamples = ref([...formulaExamples]);
 
 // 计算属性
+const filteredCategories = computed(() => {
+  return categories.filter(category => props.enabledCategories.includes(category.key));
+});
+
 const currentSymbols = computed(() => {
   switch (activeCategory.value) {
     case 'greek':
@@ -323,6 +423,18 @@ const currentSymbols = computed(() => {
     default:
       return reactiveBasicSymbols.value;
   }
+});
+
+// 弹窗样式计算属性
+const dialogStyle = computed(() => {
+  const style: Record<string, string> = {};
+  if (props.width !== 'auto') {
+    style.width = props.width;
+  }
+  if (props.height !== 'auto') {
+    style.height = props.height;
+  }
+  return style;
 });
 
 // 主题相关计算属性
@@ -342,6 +454,7 @@ watch(
     if (newVal) {
       latexInput.value = props.existingLatex || '';
       updatePreview();
+      focusInput();
     }
   }
 );
@@ -407,6 +520,17 @@ watch(internalTheme, (newTheme, oldTheme) => {
   console.log('组件内部主题变化:', newTheme);
 });
 
+// 监听启用的分类变化，确保当前分类有效
+watch(
+  () => props.enabledCategories,
+  (newCategories) => {
+    if (!newCategories.includes(activeCategory.value)) {
+      activeCategory.value = newCategories[0] || 'basic';
+    }
+  },
+  { immediate: true }
+);
+
 // 方法
 const handleOverlayClick = () => {
   handleClose();
@@ -415,16 +539,30 @@ const handleOverlayClick = () => {
 const handleClose = () => {
   visible.value = false;
   emit('update:modelValue', false);
-  latexInput.value = '';
-  renderedFormula.value = '';
+  emit('close');
+  if (!props.readonly) {
+    latexInput.value = '';
+    renderedFormula.value = '';
+  }
 };
 
 const clearInput = () => {
+  if (props.readonly) return;
   latexInput.value = '';
   renderedFormula.value = '';
+  emit('clear');
+  emit('change', '');
 };
 
 const insertSymbol = (symbol: string) => {
+  if (props.readonly) return;
+  
+  // 检查最大长度限制
+  if (props.maxLength && (latexInput.value + symbol).length > props.maxLength) {
+    console.warn('已达到最大输入长度限制');
+    return;
+  }
+  
   const textarea = document.querySelector('.latex-input') as HTMLTextAreaElement;
   if (textarea) {
     const start = textarea.selectionStart;
@@ -446,6 +584,9 @@ const insertSymbol = (symbol: string) => {
 
 const updatePreview = async () => {
   console.log('开始更新预览，输入内容:', latexInput.value);
+  
+  // 发出change事件
+  emit('change', latexInput.value);
 
   if (!latexInput.value.trim()) {
     renderedFormula.value = '';
@@ -469,14 +610,14 @@ const updatePreview = async () => {
     console.log('开始渲染LaTeX:', latexInput.value);
     const result = await window.MathJax.tex2svgPromise(latexInput.value, {
       display: false,
-      scale: 1.2,
+      scale: props.scale,
     });
 
     console.log('MathJax渲染结果:', result);
 
     const svg = result.getElementsByTagName('svg')[0];
     if (svg) {
-      svg.style.fontSize = '20px';
+      svg.style.fontSize = props.fontSize;
       svg.style.verticalAlign = 'middle';
       renderedFormula.value = svg.outerHTML;
       console.log('预览更新成功，SVG HTML:', svg.outerHTML);
@@ -494,13 +635,50 @@ const updatePreview = async () => {
 const handleInsert = () => {
   if (latexInput.value.trim()) {
     emit('insert', latexInput.value.trim());
-    handleClose();
+    if (!props.inlineMode) {
+      handleClose();
+    }
   }
 };
 
 // 主题切换方法（仅影响当前组件）
 const toggleTheme = () => {
-  internalTheme.value = internalTheme.value === 'dark' ? 'light' : 'dark';
+  if (!props.showThemeToggle) return;
+  const newTheme = internalTheme.value === 'dark' ? 'light' : 'dark';
+  internalTheme.value = newTheme;
+  emit('themeChange', newTheme);
+};
+
+// 处理输入变化
+const handleInput = (event: Event) => {
+  if (props.readonly) {
+    event.preventDefault();
+    return;
+  }
+  
+  const target = event.target as HTMLTextAreaElement;
+  let value = target.value;
+  
+  // 应用最大长度限制
+  if (props.maxLength && value.length > props.maxLength) {
+    value = value.substring(0, props.maxLength);
+    target.value = value;
+    latexInput.value = value;
+  }
+  
+  updatePreview();
+};
+
+// 自动聚焦功能
+const focusInput = () => {
+  if (props.autoFocus) {
+    nextTick(() => {
+      const textarea = document.querySelector('.latex-input') as HTMLTextAreaElement;
+      if (textarea) {
+        textarea.focus();
+      }
+    });
+  }
 };
 
 // 渲染符号
@@ -635,6 +813,12 @@ const renderFormulaExamples = async () => {
 // 生命周期
 onMounted(async () => {
   console.log('VueMathjaxBeautiful组件挂载，开始初始化...');
+  
+  // 如果是内联模式或者弹窗已显示，则执行自动聚焦
+  if (props.inlineMode || visible.value) {
+    focusInput();
+  }
+  
   try {
     await initMathJax();
     console.log('MathJax初始化完成，开始渲染符号和公式示例...');
