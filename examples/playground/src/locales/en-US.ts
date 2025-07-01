@@ -32,12 +32,19 @@ export default {
 
   // Hero Section
   hero: {
+    badge: 'Professional Math Formula Editor',
     title: 'Vue Math Formula',
     titleHighlight: 'Editor',
     description: 'Professional math formula editor component library, provides 240+ symbol panels, 38 formula templates, supports rich text editing and LaTeX syntax',
     technologies: ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX'],
     getStarted: 'Get Started',
     viewSource: 'View Source',
+    scrollHint: 'Explore Powerful Features',
+    highlights: {
+      symbols: '240+ Math Symbols',
+      templates: '38 Formula Templates',
+      preview: 'Real-time Preview',
+    },
   },
 
   // Demo Section

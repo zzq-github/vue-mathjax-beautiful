@@ -204,10 +204,10 @@ watch(
 watch(
   () => props.theme,
   (newTheme) => {
-    // 只有在组件内部主题还没有被用户手动修改时才同步外部主题
-    if (!hasUserChangedTheme.value) {
+  // 只有在组件内部主题还没有被用户手动修改时才同步外部主题
+  if (!hasUserChangedTheme.value) {
       internalTheme.value = newTheme;
-    }
+  }
   },
   { immediate: true }
 );
@@ -295,7 +295,7 @@ const toggleFormat = (format: string) => {
     if (!selection || selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
-
+    
     if (!range.collapsed) {
       // 有选中文字，直接应用格式
       document.execCommand(format, false);
@@ -312,7 +312,7 @@ const toggleFormat = (format: string) => {
         activeFormats.value.add(format);
       }
     }
-
+    
     editorRef.value.focus();
     handleInput();
   } catch (error) {
@@ -325,7 +325,7 @@ const updateFormatState = () => {
   // 这个函数现在主要用于兼容性，实际格式状态由activeFormats管理
   // 但我们可以用它来检查光标位置的实际格式状态
   const formats = ['bold', 'italic', 'underline', 'strikethrough'];
-
+  
   // 如果没有激活的格式，检查光标位置的格式状态来更新UI显示
   if (activeFormats.value.size === 0) {
     const selection = window.getSelection();
@@ -350,17 +350,17 @@ const handleBeforeInput = (event: Event) => {
   // 如果有激活的格式状态，应用格式
   if (activeFormats.value.size > 0 && inputEvent.inputType === 'insertText' && inputEvent.data) {
     event.preventDefault();
-
+    
     let wrappedText = inputEvent.data;
     const activeFormatsArray = Array.from(activeFormats.value);
-
+    
     // 构建样式对象
     const styles: string[] = [];
     let htmlTags = {
       start: '',
       end: '',
     };
-
+    
     // 处理每个激活的格式
     activeFormatsArray.forEach((format) => {
       switch (format) {
@@ -382,35 +382,35 @@ const handleBeforeInput = (event: Event) => {
           break;
       }
     });
-
+    
     // 如果有样式，包装在span中
     if (styles.length > 0) {
       wrappedText = `<span style="${styles.join('; ')}">${wrappedText}</span>`;
     }
-
+    
     // 应用HTML标签
     wrappedText = htmlTags.start + wrappedText + htmlTags.end;
-
+    
     // 插入格式化的文字
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       range.deleteContents();
-
+      
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = wrappedText;
       const fragment = document.createDocumentFragment();
-
+      
       while (tempDiv.firstChild) {
         fragment.appendChild(tempDiv.firstChild);
       }
-
+      
       range.insertNode(fragment);
       range.collapse(false);
       selection.removeAllRanges();
       selection.addRange(range);
     }
-
+    
     handleInput();
   }
 };
@@ -426,12 +426,12 @@ const updateSelection = () => {
   }
 
   const range = selection.getRangeAt(0);
-
+  
   // 如果有选中的文字，清除激活格式状态（因为要对选中文字应用格式）
   if (!range.collapsed) {
     activeFormats.value.clear();
   }
-
+  
   // 更新格式状态
   updateFormatState();
 };
@@ -566,7 +566,7 @@ const clearFormat = async () => {
     }
 
     const range = selection.getRangeAt(0);
-
+    
     if (range.collapsed) {
       // 光标位置，清除激活的格式状态
       activeFormats.value.clear();
@@ -576,7 +576,7 @@ const clearFormat = async () => {
 
     // 有选中文本，清除选中文本的格式
     await clearSelectionFormat(range);
-
+    
     // 清除激活的格式状态
     activeFormats.value.clear();
     editorRef.value.focus();
@@ -592,15 +592,15 @@ const clearSelectionFormat = async (range: Range) => {
 
   // 获取选中的内容
   const selectedContent = range.extractContents();
-
+  
   // 创建一个临时容器来处理内容
   const tempContainer = document.createElement('div');
   tempContainer.appendChild(selectedContent);
-
+  
   // 保存数学公式和图片
   const formulas: Array<{ element: Element; placeholder: Text }> = [];
   const images: Array<{ element: Element; placeholder: Text }> = [];
-
+  
   // 保存SVG公式
   const svgFormulas = tempContainer.querySelectorAll('svg[data-latex]');
   svgFormulas.forEach((svg, index) => {
@@ -608,7 +608,7 @@ const clearSelectionFormat = async (range: Range) => {
     formulas.push({ element: svg.cloneNode(true) as Element, placeholder });
     svg.parentNode?.replaceChild(placeholder, svg);
   });
-
+  
   // 保存传统公式
   const spanFormulas = tempContainer.querySelectorAll('.math-formula');
   spanFormulas.forEach((formula, index) => {
@@ -616,7 +616,7 @@ const clearSelectionFormat = async (range: Range) => {
     formulas.push({ element: formula.cloneNode(true) as Element, placeholder });
     formula.parentNode?.replaceChild(placeholder, formula);
   });
-
+  
   // 保存图片
   const imgElements = tempContainer.querySelectorAll('img');
   imgElements.forEach((img, index) => {
@@ -624,29 +624,29 @@ const clearSelectionFormat = async (range: Range) => {
     images.push({ element: img.cloneNode(true) as Element, placeholder });
     img.parentNode?.replaceChild(placeholder, img);
   });
-
+  
   // 获取纯文本内容（移除所有HTML格式）
   let cleanText = tempContainer.textContent || '';
-
+  
   // 恢复公式和图片的占位符
   formulas.forEach(({ placeholder }, index) => {
     cleanText = cleanText.replace(`__FORMULA_${index}__`, `__FORMULA_${index}__`);
     cleanText = cleanText.replace(`__SPAN_FORMULA_${index}__`, `__SPAN_FORMULA_${index}__`);
   });
-
+  
   images.forEach(({ placeholder }, index) => {
     cleanText = cleanText.replace(`__IMAGE_${index}__`, `__IMAGE_${index}__`);
   });
-
+  
   // 创建新的内容容器
   const newContainer = document.createElement('div');
   newContainer.textContent = cleanText;
-
+  
   // 恢复公式
   formulas.forEach(({ element }, index) => {
     const formulaPlaceholder = `__FORMULA_${index}__`;
     const spanFormulaPlaceholder = `__SPAN_FORMULA_${index}__`;
-
+    
     if (newContainer.textContent?.includes(formulaPlaceholder)) {
       newContainer.innerHTML = newContainer.innerHTML.replace(
         formulaPlaceholder,
@@ -660,7 +660,7 @@ const clearSelectionFormat = async (range: Range) => {
       );
     }
   });
-
+  
   // 恢复图片
   images.forEach(({ element }, index) => {
     const imagePlaceholder = `__IMAGE_${index}__`;
@@ -668,16 +668,16 @@ const clearSelectionFormat = async (range: Range) => {
       newContainer.innerHTML = newContainer.innerHTML.replace(imagePlaceholder, element.outerHTML);
     }
   });
-
+  
   // 创建文档片段
   const fragment = document.createDocumentFragment();
   while (newContainer.firstChild) {
     fragment.appendChild(newContainer.firstChild);
   }
-
+  
   // 插入清理后的内容
   range.insertNode(fragment);
-
+  
   // 重新设置选区
   range.collapse(false);
   const selection = window.getSelection();
@@ -685,7 +685,7 @@ const clearSelectionFormat = async (range: Range) => {
     selection.removeAllRanges();
     selection.addRange(range);
   }
-
+  
   // 重新设置公式点击事件
   await nextTick();
   setupFormulaClickEvents();
@@ -808,7 +808,7 @@ const handleBlur = () => {
 // 生命周期
 onMounted(async () => {
   console.log('VueMathjaxEditor组件挂载，开始初始化MathJax...');
-
+  
   try {
     // 初始化MathJax
     await initMathJax();
@@ -1343,44 +1343,44 @@ onUnmounted(() => {
   .editor-content {
     border-radius: 0 0 8px 8px;
   }
-
+  
   .toolbar-btn {
     padding: 8px 12px;
     font-size: 13px;
     height: 36px;
     min-width: 36px;
   }
-
+  
   .formula-btn,
   .image-btn,
   .clear-btn {
     padding: 8px 14px !important;
     font-size: 12px !important;
   }
-
+  
   .format-group .toolbar-btn {
     font-size: 14px !important;
     min-width: 36px !important;
   }
-
+  
   .divider {
     height: 20px;
     margin: 0 8px;
   }
-
+  
   .editor-content {
     padding: 18px;
     font-size: 15px;
     line-height: 1.6;
   }
-
+  
   .char-counter {
     bottom: 12px;
     right: 16px;
     font-size: 11px;
     padding: 4px 8px;
   }
-
+  
   .fx-icon {
     font-size: 16px;
     margin-right: 2px;
@@ -1392,26 +1392,26 @@ onUnmounted(() => {
     padding: 10px 12px;
     gap: 6px;
   }
-
+  
   .toolbar-btn {
     padding: 6px 10px;
     font-size: 12px;
     height: 32px;
     min-width: 32px;
   }
-
+  
   .formula-btn,
   .image-btn,
   .clear-btn {
     padding: 6px 12px !important;
     font-size: 11px !important;
   }
-
+  
   .editor-content {
     padding: 16px;
     font-size: 14px;
   }
-
+  
   .char-counter {
     bottom: 10px;
     right: 12px;
@@ -1459,7 +1459,7 @@ onUnmounted(() => {
   background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
   border-color: #60a5fa !important;
   color: white !important;
-  box-shadow:
+  box-shadow: 
     0 4px 8px rgba(0, 0, 0, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
@@ -1476,7 +1476,7 @@ onUnmounted(() => {
   background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
   border-color: #60a5fa !important;
   color: white !important;
-  box-shadow:
+  box-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }

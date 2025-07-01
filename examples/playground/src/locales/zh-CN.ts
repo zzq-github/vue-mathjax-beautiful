@@ -32,12 +32,19 @@ export default {
 
   // 英雄区域
   hero: {
+    badge: '专业数学公式编辑器',
     title: 'Vue 数学公式',
     titleHighlight: '编辑器',
     description: '专业的数学公式编辑器组件库，提供 240+ 符号面板、38 个公式模板，支持富文本编辑和 LaTeX 语法',
     technologies: ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX'],
     getStarted: '开始使用',
     viewSource: '查看源码',
+    scrollHint: '体验强大功能',
+    highlights: {
+      symbols: '240+ 数学符号',
+      templates: '38 个公式模板',
+      preview: '实时预览',
+    },
   },
 
   // 演示区域
