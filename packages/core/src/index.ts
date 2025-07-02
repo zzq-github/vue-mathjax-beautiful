@@ -11,6 +11,26 @@ export * from './types';
 // 导出工具函数
 export { initMathJax, convertLatexToSvg, extractLatexFromSvg } from './utils/latex';
 
+// 导出国际化
+export { useI18n } from './composables/useI18n';
+export type { Locale, Messages } from './composables/useI18n';
+
+// 数据相关
+export {
+  type Symbol,
+  type Category,
+  type LocalizedText,
+  basicSymbols,
+  greekSymbols,
+  advancedSymbols,
+  formulaExamples,
+  categories,
+  getLocalizedText,
+  getSymbolDescription,
+  getCategoryName,
+} from './data';
+export type { Locale as DataLocale } from './data';
+
 // 样式
 import './styles/index.scss';
 

@@ -21,7 +21,7 @@
           class="toolbar-btn"
           :class="{ active: isFormatActive('bold') }"
           @click="toggleFormat('bold')"
-          :title="props.enableShortcuts ? '粗体 (Ctrl+B) - 点击激活后，输入的文本将自动应用此格式' : '粗体 - 点击激活后，输入的文本将自动应用此格式'"
+          :title="tooltipTexts.bold"
         >
           <strong>B</strong>
         </button>
@@ -30,7 +30,7 @@
           class="toolbar-btn"
           :class="{ active: isFormatActive('italic') }"
           @click="toggleFormat('italic')"
-          :title="props.enableShortcuts ? '斜体 (Ctrl+I) - 点击激活后，输入的文本将自动应用此格式' : '斜体 - 点击激活后，输入的文本将自动应用此格式'"
+          :title="tooltipTexts.italic"
         >
           <em>I</em>
         </button>
@@ -39,7 +39,7 @@
           class="toolbar-btn"
           :class="{ active: isFormatActive('underline') }"
           @click="toggleFormat('underline')"
-          :title="props.enableShortcuts ? '下划线 (Ctrl+U) - 点击激活后，输入的文本将自动应用此格式' : '下划线 - 点击激活后，输入的文本将自动应用此格式'"
+          :title="tooltipTexts.underline"
         >
           <u>U</u>
         </button>
@@ -48,7 +48,7 @@
           class="toolbar-btn"
           :class="{ active: isFormatActive('strikethrough') }"
           @click="toggleFormat('strikethrough')"
-          title="删除线 - 点击激活后，输入的文本将自动应用此格式"
+          :title="tooltipTexts.strikethrough"
         >
           <s>S</s>
         </button>
@@ -58,9 +58,9 @@
 
       <!-- 公式工具 -->
       <div class="math-group" v-if="shouldShowTool('formula')">
-        <button class="toolbar-btn formula-btn" @click="showFormulaEditor" title="插入数学公式">
+        <button class="toolbar-btn formula-btn" @click="showFormulaEditor" :title="tooltipTexts.formula">
           <span class="fx-icon">fx</span>
-          <span>公式</span>
+          <span>{{ t.editor.toolbar.formulaShort }}</span>
         </button>
       </div>
 
@@ -81,11 +81,11 @@
           class="toolbar-btn image-btn"
           @click="imageInput?.click()"
           :disabled="uploadLoading || props.readonly"
-          title="插入图片"
+          :title="tooltipTexts.image"
         >
           <span v-if="uploadLoading" class="loading-icon">⟳</span>
           <span v-else class="icon">🖼️</span>
-          <span>图片</span>
+          <span>{{ t.editor.toolbar.imageShort }}</span>
         </button>
 
         <div class="divider" v-if="shouldShowTool('image') && (shouldShowTool('clear') || shouldShowTool('theme'))"></div>
@@ -94,23 +94,35 @@
           v-if="shouldShowTool('clear')"
           class="toolbar-btn clear-btn" 
           @click="clearFormat" 
-          :title="props.enableShortcuts ? '清除格式 (Ctrl+Shift+X)' : '清除格式'"
+          :title="tooltipTexts.clear"
           :disabled="props.readonly"
         >
           <span class="icon">🧹</span>
-          <span>清除</span>
+          <span>{{ t.editor.toolbar.clearShort }}</span>
         </button>
 
-        <div class="divider" v-if="shouldShowTool('clear') && shouldShowTool('theme')"></div>
+        <div class="divider" v-if="shouldShowTool('clear') && (shouldShowTool('theme') || availableLocales.length > 1)"></div>
+
+        <button 
+          v-if="availableLocales.length > 1"
+          class="toolbar-btn language-btn" 
+          @click="toggleLanguage" 
+          :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
+        >
+          <span class="icon">🌐</span>
+          <span>{{ locale === 'zh-CN' ? '中' : 'EN' }}</span>
+        </button>
+
+        <div class="divider" v-if="availableLocales.length > 1 && shouldShowTool('theme')"></div>
 
         <button 
           v-if="shouldShowTool('theme')"
           class="toolbar-btn theme-btn" 
           @click="toggleTheme" 
-          :title="themeButtonTitle"
+          :title="tooltipTexts.theme"
         >
           <span class="icon">{{ themeIcon }}</span>
-          <span>主题</span>
+          <span>{{ t.editor.toolbar.theme }}</span>
         </button>
       </div>
     </div>
@@ -158,6 +170,7 @@
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import VueMathjaxBeautiful from '../VueMathjaxBeautiful/index.vue';
 import { convertLatexToSvg, extractLatexFromSvg, initMathJax } from '../../utils/latex';
+import { useI18n } from '../../composables/useI18n';
 
 interface Props {
   // 基础内容控制
@@ -221,7 +234,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   // 基础内容控制
   modelValue: '',
-  placeholder: '开始编写您的内容...',
+  placeholder: '',
   
   // 尺寸和样式
   minHeight: '300px',
@@ -295,6 +308,9 @@ const emit = defineEmits<{
   wordCountChange: [count: number];
   charCountChange: [count: number];
 }>();
+
+// 国际化
+const { t, locale, setLocale, availableLocales } = useI18n();
 
 // 响应式数据
 const editorRef = ref<HTMLElement>();
@@ -375,10 +391,10 @@ const toolbarPositionClass = computed(() => {
 const statsDisplay = computed(() => {
   const stats: string[] = [];
   if (props.showCharCount) {
-    stats.push(`${charCount.value} 字符`);
+    stats.push(`${charCount.value} ${t.value.editor.stats.characters}`);
   }
   if (props.showWordCount) {
-    stats.push(`${wordCount.value} 单词`);
+    stats.push(`${wordCount.value} ${t.value.editor.stats.words}`);
   }
   return stats.join(' · ');
 });
@@ -386,6 +402,37 @@ const statsDisplay = computed(() => {
 // 是否需要自动保存
 const needsAutoSave = computed(() => {
   return props.enableAutoSave && content.value !== lastSavedContent.value;
+});
+
+// 计算化的文本
+const placeholder = computed(() => {
+  return props.placeholder || t.value.editor.placeholder;
+});
+
+const tooltipTexts = computed(() => {
+  if (props.enableShortcuts) {
+    return {
+      bold: t.value.editor.shortcuts.bold,
+      italic: t.value.editor.shortcuts.italic,
+      underline: t.value.editor.shortcuts.underline,
+      strikethrough: t.value.editor.toolbar.strikethrough + ' - 点击激活后，输入的文本将自动应用此格式',
+      formula: t.value.editor.toolbar.formula,
+      image: t.value.editor.toolbar.image,
+      clear: t.value.editor.shortcuts.clear,
+      theme: locale.value === 'zh-CN' ? (internalTheme.value === 'dark' ? '切换到亮色主题' : '切换到暗色主题') : (internalTheme.value === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'),
+    };
+  } else {
+    return {
+      bold: t.value.editor.toolbar.bold + ' - 点击激活后，输入的文本将自动应用此格式',
+      italic: t.value.editor.toolbar.italic + ' - 点击激活后，输入的文本将自动应用此格式',
+      underline: t.value.editor.toolbar.underline + ' - 点击激活后，输入的文本将自动应用此格式',
+      strikethrough: t.value.editor.toolbar.strikethrough + ' - 点击激活后，输入的文本将自动应用此格式',
+      formula: t.value.editor.toolbar.formula,
+      image: t.value.editor.toolbar.image,
+      clear: t.value.editor.toolbar.clear,
+      theme: locale.value === 'zh-CN' ? (internalTheme.value === 'dark' ? '切换到亮色主题' : '切换到暗色主题') : (internalTheme.value === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'),
+    };
+  }
 });
 
 // 监听外部值变化
@@ -421,7 +468,6 @@ watch(internalTheme, (newTheme, oldTheme) => {
   if (oldTheme !== undefined) {
     hasUserChangedTheme.value = true;
   }
-  console.log('富文本编辑器内部主题变化:', newTheme);
 });
 
 // 将标准表达式语法转换为HTML显示
@@ -633,7 +679,7 @@ const handleBeforeInput = (event: Event) => {
       range.insertNode(fragment);
       range.collapse(false);
       selection.removeAllRanges();
-      selection.addRange(range);
+      selection?.addRange(range);
     }
     
     handleInput();
@@ -665,12 +711,9 @@ const updateSelection = () => {
 const insertFormula = async (latex: string) => {
   if (!editorRef.value) return;
 
-  console.log('开始插入公式:', latex);
-
   try {
     // 确保MathJax已经初始化
     if (!window.MathJax?.tex2svgPromise) {
-      console.warn('MathJax未初始化，正在尝试初始化...');
       await initMathJax();
     }
 
@@ -680,9 +723,7 @@ const insertFormula = async (latex: string) => {
     }
 
     // 转换LaTeX为SVG
-    console.log('开始转换LaTeX为SVG...');
     const svgHtml = await convertLatexToSvg(`$$${latex}$$`);
-    console.log('转换结果:', svgHtml);
 
     // 确保编辑器获得焦点
     editorRef.value.focus();
@@ -706,7 +747,6 @@ const insertFormula = async (latex: string) => {
     // 发出公式插入事件
     emit('formulaInsert', latex);
     
-    console.log('公式插入成功');
   } catch (error) {
     console.error('插入公式失败:', error);
     // 如果SVG转换失败，作为备用方案插入LaTeX文本
@@ -951,6 +991,12 @@ const toggleTheme = () => {
   emit('themeChange', newTheme);
 };
 
+// 语言切换方法
+const toggleLanguage = () => {
+  const newLocale = locale.value === 'zh-CN' ? 'en-US' : 'zh-CN';
+  setLocale(newLocale);
+};
+
 // 更新统计信息
 const updateStats = () => {
   if (!editorRef.value) return;
@@ -1120,16 +1166,12 @@ const handleBlur = () => {
 
 // 生命周期
 onMounted(async () => {
-  console.log('VueMathjaxEditor组件挂载，开始初始化MathJax...');
-  
   try {
     // 初始化MathJax
     await initMathJax();
-    console.log('MathJax初始化成功，可用方法:', Object.keys(window.MathJax || {}));
 
     // 设置初始内容
     if (props.modelValue && editorRef.value) {
-      console.log('设置初始内容:', props.modelValue);
       const htmlContent = await convertFromStandardSyntax(props.modelValue);
       editorRef.value.innerHTML = htmlContent;
       await nextTick();
@@ -1146,7 +1188,6 @@ onMounted(async () => {
     // 发出就绪事件
     emit('ready');
     
-    console.log('VueMathjaxEditor初始化完成');
   } catch (error) {
     console.error('VueMathjaxEditor初始化失败:', error);
     emit('error', error as Error);

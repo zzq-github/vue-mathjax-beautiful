@@ -3,6 +3,12 @@
  * 支持LaTeX公式转换和处理
  */
 
+declare global {
+  interface Window {
+    MathJax?: any;
+  }
+}
+
 /**
  * 匹配LaTeX公式的正则表达式
  * 支持以下格式：
@@ -118,21 +124,15 @@ export function clearMathTags(element: HTMLElement, tagName: string) {
  */
 export async function convertLatexToSvg(content: string): Promise<string> {
   if (!content) return '';
-
-  console.log('开始转换LaTeX为SVG，输入内容:', content);
-
   try {
     // 如果内容中包含SVG公式，则先转换为LaTeX代码，重新转换为SVG
     if (content.includes('<svg') && content.includes('data-latex')) {
-      console.log('检测到已有SVG，先提取LaTeX代码');
       content = extractLatexFromSvg(content);
     }
 
     const matches = matchLatex(content);
-    console.log('匹配到的LaTeX公式:', matches);
 
     if (!matches.length) {
-      console.log('未匹配到LaTeX公式，返回原内容');
       return content;
     }
 
@@ -149,13 +149,6 @@ export async function convertLatexToSvg(content: string): Promise<string> {
           continue;
         }
 
-        console.log(
-          '正在转换LaTeX公式:',
-          match.content,
-          '类型:',
-          match.isInline ? 'inline' : 'display'
-        );
-
         const svg = await window.MathJax.tex2svgPromise(match.content, {
           display: !match.isInline,
           scale: 1.2, // 增加缩放比例
@@ -163,8 +156,6 @@ export async function convertLatexToSvg(content: string): Promise<string> {
           ex: 8, // 设置ex单位大小
           containerWidth: 1200, // 设置容器宽度
         });
-
-        console.log('MathJax转换结果:', svg);
 
         // 检查返回的SVG对象
         if (!svg || typeof svg.getElementsByTagName !== 'function') {
@@ -180,7 +171,6 @@ export async function convertLatexToSvg(content: string): Promise<string> {
         }
 
         const svgElement = svgElements[0];
-        console.log('获取到SVG元素:', svgElement);
 
         // 添加原始LaTeX公式作为属性
         svgElement.setAttribute('data-latex', match.content);
@@ -196,7 +186,6 @@ export async function convertLatexToSvg(content: string): Promise<string> {
 
         // 获取处理后的SVG HTML，前后添加零宽度空格
         const svgHtml = '\u200B' + svgElement.outerHTML + '\u200B';
-        console.log('最终SVG HTML:', svgHtml);
 
         // 计算新的位置（考虑之前替换造成的偏移）
         const start = match.start + offset;
@@ -214,7 +203,6 @@ export async function convertLatexToSvg(content: string): Promise<string> {
       }
     }
 
-    console.log('LaTeX转SVG完成，最终结果:', result);
     return result;
   } catch (error) {
     console.error('convert latex error:', error);
@@ -328,6 +316,11 @@ export function hasLatexFormula(content: string): boolean {
 export async function initMathJax(config?: any): Promise<void> {
   if (typeof window === 'undefined') return;
 
+  // 先移除所有旧的MathJax脚本，避免冲突
+  document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
+  // 彻底清理全局MathJax对象，避免只读属性报错
+  if (window.MathJax) delete window.MathJax;
+
   // 如果MathJax已经加载并且可用，直接返回
   if (window.MathJax?.tex2svgPromise) {
     return;
@@ -369,30 +362,24 @@ export async function initMathJax(config?: any): Promise<void> {
     while (!window.MathJax?.tex2svgPromise && retries < maxRetries) {
       await new Promise((resolve) => setTimeout(resolve, 100));
       retries++;
-
-      // 每20次重试打印一次日志
-      if (retries % 20 === 0) {
-        console.log(`Waiting for MathJax initialization... (${retries}/${maxRetries})`);
-        console.log('Current MathJax state:', {
-          exists: !!window.MathJax,
-          tex2svgPromise: !!window.MathJax?.tex2svgPromise,
-          startup: !!window.MathJax?.startup,
-        });
-      }
     }
 
     if (!window.MathJax?.tex2svgPromise) {
+      // 失败时移除所有相关脚本，避免缓存和冲突
+      document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
       console.error('MathJax initialization failed. Final state:', {
         exists: !!window.MathJax,
         tex2svgPromise: !!window.MathJax?.tex2svgPromise,
         startup: !!window.MathJax?.startup,
         keys: window.MathJax ? Object.keys(window.MathJax) : [],
+        MathJax: window.MathJax,
       });
       throw new Error('MathJax tex2svgPromise not available after initialization');
     }
-
-    console.log('MathJax initialized successfully');
+          
   } catch (error) {
+    // 失败时移除所有相关脚本，避免缓存和冲突
+    document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
     console.error('Failed to initialize MathJax:', error);
     throw error;
   }
@@ -412,8 +399,6 @@ const MATHJAX_CDNS = [
  */
 function loadMathJaxFromUrl(url: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    console.log('Trying to load MathJax from:', url);
-
     const script = document.createElement('script');
     script.src = url;
     script.async = true;
@@ -426,7 +411,6 @@ function loadMathJaxFromUrl(url: string): Promise<void> {
 
     script.onload = () => {
       clearTimeout(timeout);
-      console.log('MathJax script loaded from:', url);
       resolve();
     };
 
@@ -452,10 +436,14 @@ export async function loadMathJax(
     throw new Error('MathJax can only be loaded in browser environment');
   }
 
+  // 加载前移除所有旧的MathJax脚本，避免冲突
+  document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
+  // 彻底清理全局MathJax对象，避免只读属性报错
+  if (window.MathJax) delete window.MathJax;
+
   // 检查是否已经有MathJax脚本
   const existingScript = document.querySelector(`script[src*="mathjax"]`);
   if (existingScript) {
-    console.log('MathJax script already exists');
     return;
   }
 
@@ -475,13 +463,10 @@ export async function loadMathJax(
   // 去重
   const uniqueUrls = [...new Set(allUrls)];
 
-  console.log('Attempting to load MathJax from CDNs:', uniqueUrls);
-
   // 依次尝试每个CDN
   for (const url of uniqueUrls) {
     try {
       await loadMathJaxFromUrl(url);
-      console.log('Successfully loaded MathJax from:', url);
       return;
     } catch (error) {
       console.warn('Failed to load from:', url, error);

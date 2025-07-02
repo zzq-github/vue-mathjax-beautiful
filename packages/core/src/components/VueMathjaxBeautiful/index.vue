@@ -12,14 +12,22 @@
         <div class="section-header">
           <div class="section-title">
             <span class="icon">📝</span>
-            <span>LaTeX 输入</span>
+            <span>{{ t.beautiful.inputSection }}</span>
           </div>
           <div class="input-actions">
+            <button 
+              v-if="availableLocales.length > 1"
+              class="action-btn" 
+              @click="toggleLanguage" 
+              :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
+            >
+              <span class="icon">🌐</span>
+            </button>
             <button 
               v-if="showThemeToggle"
               class="action-btn" 
               @click="toggleTheme" 
-              :title="themeButtonTitle"
+              :title="internalTheme === 'dark' ? t.beautiful.themeToggle.light : t.beautiful.themeToggle.dark"
             >
               <span class="icon">{{ themeIcon }}</span>
             </button>
@@ -27,7 +35,7 @@
               v-if="showClearButton && !readonly"
               class="action-btn" 
               @click="clearInput" 
-              :title="clearButtonText"
+              :title="t.beautiful.clearButton"
             >
               <span class="icon">🗑️</span>
             </button>
@@ -37,7 +45,7 @@
           <textarea
             v-model="latexInput"
             class="latex-input"
-            :placeholder="placeholder"
+            :placeholder="computedPlaceholder"
             :readonly="readonly"
             :rows="rows"
             :maxlength="maxLength"
@@ -51,18 +59,18 @@
         <div class="section-header">
           <div class="section-title">
             <span class="icon">👁️</span>
-            <span>实时预览</span>
+            <span>{{ t.beautiful.previewSection }}</span>
           </div>
           <div class="preview-status" :class="{ active: latexInput }">
             <span v-if="latexInput" class="status-dot"></span>
-            {{ latexInput ? '渲染中' : '无公式' }}
+            {{ latexInput ? t.beautiful.rendering : t.beautiful.noFormula }}
           </div>
         </div>
         <div class="preview-container">
           <div v-if="latexInput" class="formula-preview" v-html="renderedFormula"></div>
           <div v-else class="no-formula">
             <span class="icon">💡</span>
-            <span>输入 LaTeX 公式以查看预览</span>
+            <span>{{ t.beautiful.inputPlaceholder }}</span>
           </div>
         </div>
       </div>
@@ -78,7 +86,7 @@
             @click="activeCategory = category.key"
           >
             <span class="tab-icon">{{ category.icon }}</span>
-            <span class="tab-name">{{ category.name }}</span>
+            <span class="tab-name">{{ getCategoryName(category, locale) }}</span>
           </button>
         </div>
 
@@ -91,7 +99,7 @@
               :key="symbol.latex"
               class="symbol-button"
               @click="insertSymbol(symbol.latex)"
-              :title="symbol.description"
+              :title="getSymbolDescription(symbol, locale)"
             >
               <span v-if="symbol.display" v-html="symbol.display"></span>
               <span v-else class="symbol-fallback">{{ symbol.latex }}</span>
@@ -99,10 +107,10 @@
           </div>
 
           <!-- 常用公式示例 -->
-          <div v-if="activeCategory === 'basic'" class="formula-examples">
+          <div v-if="activeCategory === 'basic' && showFormulaExamples" class="formula-examples">
             <div class="examples-header">
               <span class="icon">⭐</span>
-              <span>常用公式</span>
+              <span>{{ t.beautiful.categories.formulas }}</span>
             </div>
             <div class="examples-grid">
               <button
@@ -110,10 +118,10 @@
                 :key="example.latex"
                 class="example-button"
                 @click="insertSymbol(example.latex)"
-                :title="example.description"
+                :title="getSymbolDescription(example, locale)"
               >
                 <div class="example-preview" v-html="example.display"></div>
-                <div class="example-description">{{ example.description }}</div>
+                <div class="example-description">{{ getSymbolDescription(example, locale) }}</div>
               </button>
             </div>
           </div>
@@ -127,22 +135,23 @@
           class="btn btn-secondary" 
           @click="clearInput"
         >
-          {{ clearButtonText }}
+          {{ t.beautiful.clearButton }}
         </button>
         <button 
           class="btn btn-primary" 
           @click="handleInsert" 
           :disabled="!latexInput || readonly"
         >
-          {{ insertButtonText }}
+          {{ t.beautiful.insertButton }}
         </button>
       </div>
     </div>
   </div>
 
   <!-- 弹窗模式 -->
+  <Teleport to="body">
   <div
-    v-else-if="visible"
+      v-if="visible"
     class="vue-mathjax-beautiful-overlay"
     :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light' }"
     @click="handleOverlayClick"
@@ -160,8 +169,8 @@
             <span class="icon">📐</span>
           </div>
           <div class="header-text">
-            <h3 class="header-title">{{ title }}</h3>
-            <p class="header-subtitle">{{ subtitle }}</p>
+            <h3 class="header-title">{{ title || t.beautiful.title }}</h3>
+            <p class="header-subtitle">{{ subtitle || t.beautiful.subtitle }}</p>
           </div>
           <div class="header-badge">
             <span>LaTeX</span>
@@ -179,14 +188,22 @@
           <div class="section-header">
             <div class="section-title">
               <span class="icon">📝</span>
-              <span>LaTeX 输入</span>
+              <span>{{ t.beautiful.inputSection }}</span>
             </div>
             <div class="input-actions">
+              <button 
+                v-if="availableLocales.length > 1"
+                class="action-btn" 
+                @click="toggleLanguage" 
+                :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
+              >
+                <span class="icon">🌐</span>
+              </button>
               <button 
                 v-if="showThemeToggle"
                 class="action-btn" 
                 @click="toggleTheme" 
-                :title="themeButtonTitle"
+                :title="internalTheme === 'dark' ? t.beautiful.themeToggle.light : t.beautiful.themeToggle.dark"
               >
                 <span class="icon">{{ themeIcon }}</span>
               </button>
@@ -194,7 +211,7 @@
                 v-if="showClearButton && !readonly"
                 class="action-btn" 
                 @click="clearInput" 
-                :title="clearButtonText"
+                :title="t.beautiful.clearButton"
               >
                 <span class="icon">🗑️</span>
               </button>
@@ -204,7 +221,7 @@
             <textarea
               v-model="latexInput"
               class="latex-input"
-              :placeholder="placeholder"
+              :placeholder="computedPlaceholder"
               :readonly="readonly"
               :rows="rows"
               :maxlength="maxLength"
@@ -218,18 +235,18 @@
           <div class="section-header">
             <div class="section-title">
               <span class="icon">👁️</span>
-              <span>实时预览</span>
+              <span>{{ t.beautiful.previewSection }}</span>
             </div>
             <div class="preview-status" :class="{ active: latexInput }">
               <span v-if="latexInput" class="status-dot"></span>
-              {{ latexInput ? '渲染中' : '无公式' }}
+              {{ latexInput ? t.beautiful.rendering : t.beautiful.noFormula }}
             </div>
           </div>
           <div class="preview-container">
             <div v-if="latexInput" class="formula-preview" v-html="renderedFormula"></div>
             <div v-else class="no-formula">
               <span class="icon">💡</span>
-              <span>输入 LaTeX 公式以查看预览</span>
+              <span>{{ t.beautiful.inputPlaceholder }}</span>
             </div>
           </div>
         </div>
@@ -245,7 +262,7 @@
               @click="activeCategory = category.key"
             >
               <span class="tab-icon">{{ category.icon }}</span>
-              <span class="tab-name">{{ category.name }}</span>
+              <span class="tab-name">{{ getCategoryName(category, locale) }}</span>
             </button>
           </div>
 
@@ -258,7 +275,7 @@
                 :key="symbol.latex"
                 class="symbol-button"
                 @click="insertSymbol(symbol.latex)"
-                :title="symbol.description"
+                :title="getSymbolDescription(symbol, locale)"
               >
                 <span v-if="symbol.display" v-html="symbol.display"></span>
                 <span v-else class="symbol-fallback">{{ symbol.latex }}</span>
@@ -266,10 +283,10 @@
             </div>
 
             <!-- 常用公式示例 -->
-            <div v-if="activeCategory === 'basic'" class="formula-examples">
+            <div v-if="activeCategory === 'basic' && showFormulaExamples" class="formula-examples">
               <div class="examples-header">
                 <span class="icon">⭐</span>
-                <span>常用公式</span>
+                <span>{{ t.beautiful.categories.formulas }}</span>
               </div>
               <div class="examples-grid">
                 <button
@@ -277,10 +294,10 @@
                   :key="example.latex"
                   class="example-button"
                   @click="insertSymbol(example.latex)"
-                  :title="example.description"
+                  :title="getSymbolDescription(example, locale)"
                 >
                   <div class="example-preview" v-html="example.display"></div>
-                  <div class="example-description">{{ example.description }}</div>
+                  <div class="example-description">{{ getSymbolDescription(example, locale) }}</div>
                 </button>
               </div>
             </div>
@@ -290,22 +307,24 @@
 
       <!-- 底部操作（弹窗模式） -->
       <div class="dialog-footer">
-        <button class="btn btn-secondary" @click="handleClose">{{ cancelButtonText }}</button>
+        <button class="btn btn-secondary" @click="handleClose">{{ t.beautiful.cancelButton }}</button>
         <button 
           class="btn btn-primary" 
           @click="handleInsert" 
           :disabled="!latexInput || readonly"
         >
-          {{ insertButtonText }}
+          {{ t.beautiful.insertButton }}
         </button>
       </div>
     </div>
   </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick } from 'vue';
 import { initMathJax } from '../../utils/latex';
+import { useI18n } from '../../composables/useI18n';
 import {
   type Symbol,
   type Category,
@@ -314,6 +333,8 @@ import {
   advancedSymbols,
   formulaExamples,
   categories,
+  getSymbolDescription,
+  getCategoryName,
 } from '../../data';
 
 const props = withDefaults(
@@ -336,6 +357,7 @@ const props = withDefaults(
     showPreview?: boolean;
     showThemeToggle?: boolean;
     showClearButton?: boolean;
+    showFormulaExamples?: boolean;
     autoFocus?: boolean;
     
     // 输入控制
@@ -370,8 +392,9 @@ const props = withDefaults(
     showPreview: true,
     showThemeToggle: true,
     showClearButton: true,
+    showFormulaExamples: true,
     autoFocus: true,
-    placeholder: '输入 LaTeX 公式或点击下方符号...',
+    placeholder: '',
     maxLength: 1000,
     rows: 3,
     enabledCategories: () => ['basic', 'greek', 'advanced'],
@@ -392,6 +415,9 @@ const emit = defineEmits<{
   close: [];
   themeChange: [theme: string];
 }>();
+
+// 国际化
+const { t, locale, setLocale, availableLocales } = useI18n();
 
 // 响应式数据
 const visible = ref(false);
@@ -446,6 +472,11 @@ const themeButtonTitle = computed(() => {
   return internalTheme.value === 'dark' ? '切换到亮色主题' : '切换到暗色主题';
 });
 
+// 计算化的placeholder
+const computedPlaceholder = computed(() => {
+  return props.placeholder || t.value.beautiful.inputPlaceholder;
+});
+
 // 监听器
 watch(
   () => props.modelValue,
@@ -485,7 +516,6 @@ watch(
             reactiveFormulaExamples.value.some((example) => !example.display);
 
           if (needsRender && window.MathJax?.tex2svgPromise) {
-            console.log('内联模式激活，开始渲染符号...');
             await Promise.all([renderAllSymbols(), renderFormulaExamples()]);
           }
         } catch (error) {
@@ -517,7 +547,6 @@ watch(internalTheme, (newTheme, oldTheme) => {
   if (oldTheme !== undefined) {
     hasUserChangedTheme.value = true;
   }
-  console.log('组件内部主题变化:', newTheme);
 });
 
 // 监听启用的分类变化，确保当前分类有效
@@ -559,7 +588,6 @@ const insertSymbol = (symbol: string) => {
   
   // 检查最大长度限制
   if (props.maxLength && (latexInput.value + symbol).length > props.maxLength) {
-    console.warn('已达到最大输入长度限制');
     return;
   }
   
@@ -583,7 +611,6 @@ const insertSymbol = (symbol: string) => {
 };
 
 const updatePreview = async () => {
-  console.log('开始更新预览，输入内容:', latexInput.value);
   
   // 发出change事件
   emit('change', latexInput.value);
@@ -596,7 +623,6 @@ const updatePreview = async () => {
   try {
     // 确保MathJax已经初始化
     if (!window.MathJax?.tex2svgPromise) {
-      console.warn('MathJax未初始化，正在尝试初始化...');
       await initMathJax();
     }
 
@@ -607,20 +633,17 @@ const updatePreview = async () => {
       return;
     }
 
-    console.log('开始渲染LaTeX:', latexInput.value);
     const result = await window.MathJax.tex2svgPromise(latexInput.value, {
       display: false,
       scale: props.scale,
     });
 
-    console.log('MathJax渲染结果:', result);
 
     const svg = result.getElementsByTagName('svg')[0];
     if (svg) {
       svg.style.fontSize = props.fontSize;
       svg.style.verticalAlign = 'middle';
       renderedFormula.value = svg.outerHTML;
-      console.log('预览更新成功，SVG HTML:', svg.outerHTML);
     } else {
       console.warn('未获取到SVG元素');
       renderedFormula.value = '<span style="color: red;">渲染失败</span>';
@@ -647,6 +670,12 @@ const toggleTheme = () => {
   const newTheme = internalTheme.value === 'dark' ? 'light' : 'dark';
   internalTheme.value = newTheme;
   emit('themeChange', newTheme);
+};
+
+// 语言切换方法
+const toggleLanguage = () => {
+  const newLocale = locale.value === 'zh-CN' ? 'en-US' : 'zh-CN';
+  setLocale(newLocale);
 };
 
 // 处理输入变化
@@ -688,7 +717,6 @@ const renderSymbols = async (symbols: Symbol[]) => {
     if (!symbol.display) {
       try {
         if (window.MathJax?.tex2svgPromise) {
-          console.log(`渲染符号 ${i + 1}/${symbols.length}: ${symbol.latex}`);
 
           const result = await window.MathJax.tex2svgPromise(symbol.latex, {
             display: false,
@@ -713,9 +741,7 @@ const renderSymbols = async (symbols: Symbol[]) => {
             svg.setAttribute('text-rendering', 'optimizeLegibility');
 
             symbol.display = svg.outerHTML;
-            console.log(`符号 ${symbol.latex} 渲染成功`);
           } else {
-            console.warn(`符号 ${symbol.latex} 未获取到SVG元素`);
             symbol.display = '';
           }
         }
@@ -732,8 +758,7 @@ const renderSymbols = async (symbols: Symbol[]) => {
 };
 
 // 渲染所有符号
-const renderAllSymbols = async () => {
-  console.log('开始渲染所有符号...');
+const renderAllSymbols = async () => {  
 
   // 检查MathJax是否可用
   if (!window.MathJax?.tex2svgPromise) {
@@ -743,16 +768,12 @@ const renderAllSymbols = async () => {
 
   try {
     // 串行渲染避免并发问题
-    console.log('渲染基础符号...');
     await renderSymbols(reactiveBasicSymbols.value);
 
-    console.log('渲染希腊字母...');
     await renderSymbols(reactiveGreekSymbols.value);
 
-    console.log('渲染高级符号...');
     await renderSymbols(reactiveAdvancedSymbols.value);
 
-    console.log('所有符号渲染完成');
   } catch (error) {
     console.error('符号渲染过程中出错:', error);
   }
@@ -760,10 +781,8 @@ const renderAllSymbols = async () => {
 
 // 渲染公式示例
 const renderFormulaExamples = async () => {
-  console.log('开始渲染公式示例...');
 
   if (!window.MathJax?.tex2svgPromise) {
-    console.warn('MathJax不可用，跳过公式示例渲染');
     return;
   }
 
@@ -771,7 +790,6 @@ const renderFormulaExamples = async () => {
     const example = reactiveFormulaExamples.value[i];
     if (!example.display) {
       try {
-        console.log(`渲染公式示例 ${i + 1}/${formulaExamples.length}: ${example.latex}`);
 
         const result = await window.MathJax.tex2svgPromise(example.latex, {
           display: false,
@@ -792,9 +810,7 @@ const renderFormulaExamples = async () => {
           svg.setAttribute('text-rendering', 'optimizeLegibility');
 
           example.display = svg.outerHTML;
-          console.log(`公式示例 ${example.description} 渲染成功`);
         } else {
-          console.warn(`公式示例 ${example.latex} 未获取到SVG元素`);
           example.display = '';
         }
       } catch (error) {
@@ -807,12 +823,10 @@ const renderFormulaExamples = async () => {
     }
   }
 
-  console.log('公式示例渲染完成');
 };
 
 // 生命周期
 onMounted(async () => {
-  console.log('VueMathjaxBeautiful组件挂载，开始初始化...');
   
   // 如果是内联模式或者弹窗已显示，则执行自动聚焦
   if (props.inlineMode || visible.value) {
@@ -821,7 +835,6 @@ onMounted(async () => {
   
   try {
     await initMathJax();
-    console.log('MathJax初始化完成，开始渲染符号和公式示例...');
 
     // 等待一段时间确保MathJax完全就绪
     await new Promise((resolve) => setTimeout(resolve, 300));
@@ -829,7 +842,6 @@ onMounted(async () => {
     // 并行渲染符号和公式示例
     await Promise.all([renderAllSymbols(), renderFormulaExamples()]);
 
-    console.log('VueMathjaxBeautiful初始化完成');
   } catch (error) {
     console.error('VueMathjaxBeautiful初始化失败:', error);
   }

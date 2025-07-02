@@ -105,12 +105,12 @@
             <a
               href="#"
               class="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
-              >隐私政策</a
+              >{{ t('footer.privacy') }}</a
             >
             <a
               href="#"
               class="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
-              >使用条款</a
+              >{{ t('footer.terms') }}</a
             >
           </div>
         </div>
