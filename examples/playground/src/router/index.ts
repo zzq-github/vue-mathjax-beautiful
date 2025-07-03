@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+// 获取base路径，用于GitHub Pages部署
+const base = import.meta.env.VITE_BASE_URL || '/'
+
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(base),
   routes: [
     {
       path: '/',

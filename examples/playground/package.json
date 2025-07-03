@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "build:gh-pages": "cross-env VITE_BASE_URL=/vue-mathjax-beautiful/ npm run build",
+    "preview": "vite preview",
+    "deploy": "npm run build:gh-pages && gh-pages -d dist"
   },
   "dependencies": {
     "lucide-vue-next": "^0.522.0",
@@ -19,6 +21,8 @@
     "@types/node": "^18.19.3",
     "@vitejs/plugin-vue": "^4.5.2",
     "autoprefixer": "^10.4.16",
+    "cross-env": "^7.0.3",
+    "gh-pages": "^6.1.1",
     "postcss": "^8.4.32",
     "sass-embedded": "^1.69.5",
     "tailwindcss": "^3.3.6",
