@@ -18,10 +18,7 @@
     <router-view />
 
     <!-- 返回顶部按钮 -->
-    <BackToTop
-      :show-back-to-top="showBackToTop"
-      :scroll-progress="scrollProgress"
-    />
+    <BackToTop :show-back-to-top="showBackToTop" :scroll-progress="scrollProgress" />
 
     <!-- 页脚 -->
     <AppFooter />
@@ -29,126 +26,126 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useI18n } from './composables/useI18n'
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { useI18n } from './composables/useI18n';
 
 // 导入组件
-import AppHeader from './components/AppHeader/index.vue'
-import AppFooter from './components/AppFooter/index.vue'
-import BackToTop from './components/BackToTop/index.vue'
+import AppHeader from './components/AppHeader/index.vue';
+import AppFooter from './components/AppFooter/index.vue';
+import BackToTop from './components/BackToTop/index.vue';
 
 // 国际化功能
-const { t } = useI18n()
+const { t } = useI18n();
 
 // 响应式数据
-const showBackToTop = ref(false)
-const scrollY = ref(0)
-const isDark = ref(false)
-const showMobileMenu = ref(false)
-const showLanguageMenu = ref(false)
+const showBackToTop = ref(false);
+const scrollY = ref(0);
+const isDark = ref(false);
+const showMobileMenu = ref(false);
+const showLanguageMenu = ref(false);
 
 // 响应式文档高度和窗口高度
-const windowHeight = ref(0)
-const documentHeight = ref(0)
+const windowHeight = ref(0);
+const documentHeight = ref(0);
 
 // 计算滚动进度
 const scrollProgress = computed(() => {
-  const maxScroll = documentHeight.value - windowHeight.value
-  const progress = maxScroll > 0 ? (scrollY.value / maxScroll) * 125.6 : 0 // 125.6 是圆周长 (2 * π * 20)
-  return `${progress} 125.6`
-})
+  const maxScroll = documentHeight.value - windowHeight.value;
+  const progress = maxScroll > 0 ? (scrollY.value / maxScroll) * 125.6 : 0; // 125.6 是圆周长 (2 * π * 20)
+  return `${progress} 125.6`;
+});
 
 // 语言切换相关功能
 function toggleLanguageMenu() {
-  showLanguageMenu.value = !showLanguageMenu.value
+  showLanguageMenu.value = !showLanguageMenu.value;
 }
 
 // 更新尺寸信息
 function updateDimensions() {
-  windowHeight.value = window.innerHeight
-  documentHeight.value = document.documentElement.scrollHeight
+  windowHeight.value = window.innerHeight;
+  documentHeight.value = document.documentElement.scrollHeight;
 }
 
 // 滚动事件处理
 function handleScroll() {
-  scrollY.value = window.scrollY
-  showBackToTop.value = window.scrollY > 300
+  scrollY.value = window.scrollY;
+  showBackToTop.value = window.scrollY > 300;
   // 更新文档尺寸（处理动态内容加载）
-  updateDimensions()
+  updateDimensions();
 }
 
 // 主题切换功能 - 在亮色和暗色主题之间切换
 function toggleTheme() {
-  isDark.value = !isDark.value
-  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
-  updateTheme()
+  isDark.value = !isDark.value;
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
+  updateTheme();
 }
 
 function updateTheme() {
   if (isDark.value) {
-    document.documentElement.classList.add('dark', 'theme-dark')
-    document.documentElement.classList.remove('theme-light')
+    document.documentElement.classList.add('dark', 'theme-dark');
+    document.documentElement.classList.remove('theme-light');
   } else {
-    document.documentElement.classList.remove('dark', 'theme-dark')
-    document.documentElement.classList.add('theme-light')
+    document.documentElement.classList.remove('dark', 'theme-dark');
+    document.documentElement.classList.add('theme-light');
   }
 }
 
 // 初始化主题
 function initTheme() {
   // 检查本地存储的主题设置
-  const savedTheme = localStorage.getItem('theme')
+  const savedTheme = localStorage.getItem('theme');
 
   if (savedTheme === 'light') {
-    isDark.value = false
+    isDark.value = false;
   } else if (savedTheme === 'dark') {
-    isDark.value = true
+    isDark.value = true;
   } else {
     // 没有保存的主题，使用系统默认
-    isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+    isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 
-  updateTheme()
+  updateTheme();
 }
 
 // 移动端菜单功能
 function toggleMobileMenu() {
-  showMobileMenu.value = !showMobileMenu.value
+  showMobileMenu.value = !showMobileMenu.value;
 }
 
 function closeMobileMenu() {
-  showMobileMenu.value = false
+  showMobileMenu.value = false;
 }
 
 // 生命周期
 onMounted(() => {
   // 初始化主题
-  initTheme()
+  initTheme();
 
   // 初始化尺寸信息
-  updateDimensions()
+  updateDimensions();
 
   // 添加滚动事件监听器
-  window.addEventListener('scroll', handleScroll)
-  
+  window.addEventListener('scroll', handleScroll);
+
   // 添加窗口大小改变监听器
-  window.addEventListener('resize', updateDimensions)
-  
+  window.addEventListener('resize', updateDimensions);
+
   // 添加文档点击事件监听器，用于关闭语言菜单
   document.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement
+    const target = e.target as HTMLElement;
     // 检查点击是否在语言菜单或语言按钮内部
     if (showLanguageMenu.value && !target.closest('[data-language-menu]')) {
-      showLanguageMenu.value = false
+      showLanguageMenu.value = false;
     }
-  })
-})
+  });
+});
 
 // 清理事件监听器
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('resize', updateDimensions)
-})
+  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('resize', updateDimensions);
+});
 </script>
 
 <style>
