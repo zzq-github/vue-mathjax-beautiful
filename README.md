@@ -1,6 +1,16 @@
+<div align="center">
+  <img src="./title.svg" alt="Vue MathJax Beautiful" />
+</div>
+
+<div align="center">
+
 # Vue MathJax Beautiful
 
 一个基于 Vue 3 和 MathJax 的强大数学公式编辑器组件库，提供专业的数学公式编辑和富文本编辑功能。
+
+</div>
+
+- 📖 演示地址: [在线地址](https://zzq-github.github.io/vue-mathjax-beautiful)
 
 ## ✨ 特性
 
@@ -818,6 +828,28 @@ vue-mathjax-beautiful/
 如果这个项目对您有帮助，请给我们一个 ⭐️！
 
 [![Star History Chart](https://api.star-history.com/svg?repos=zzq-github/vue-mathjax-beautiful&type=Date)](https://star-history.com/#zzq-github/vue-mathjax-beautiful&Date)
+
+## 💖 赞赏支持
+
+如果这个项目对您有帮助，欢迎请作者喝杯咖啡 ☕️
+
+<div align="center">
+  <div>
+    <img src="https://img.shields.io/badge/微信支付-00C853?style=for-the-badge&logo=wechat&logoColor=white" alt="微信支付" />
+    <br><br>
+    <img width="200" src="./packages/core/src/assets/zsm.jpg" alt="微信赞赏码" />
+    <br><br>
+    <small>微信扫码赞赏</small>
+  </div>
+</div>
+
+<div align="center">
+  <p>
+    <em>您的支持是我持续开发的动力！</em> 🚀
+    <br>
+    <small>赞赏金额不限，心意最重要 ❤️</small>
+  </p>
+</div>
 
 ---
 
