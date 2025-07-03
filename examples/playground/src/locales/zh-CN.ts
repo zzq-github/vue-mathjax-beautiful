@@ -395,99 +395,82 @@ export default {
   // 文档
   docs: {
     title: '使用文档',
-    description: '完整的使用指南和API文档',
+    description: '详细的组件使用指南和API文档',
     
     sections: {
       installation: {
         title: '安装',
-        description: '或者使用 yarn：',
-        yarn: '或者使用 yarn：',
-        pnpm: '或者使用 pnpm（推荐）：',
+        yarn: '使用 Yarn 安装：',
+        pnpm: '使用 pnpm 安装：',
       },
-
+      
       basicUsage: {
         title: '基本使用',
       },
-
+      
       coreComponents: {
         title: '核心组件',
         beautiful: {
           title: 'VueMathjaxBeautiful',
-          description: '专业公式编辑器，提供 240+ 符号面板和 38 个公式模板，支持内联和弹窗两种模式',
+          description: '专业的数学公式编辑器组件，提供240+符号和38个模板，支持弹窗和内联模式',
         },
         editor: {
           title: 'VueMathjaxEditor',
-          description: '富文本编辑器，支持文本格式和数学公式混合编辑，适合编写学术文档',
+          description: '富文本编辑器组件，支持文本格式和数学公式的混合编辑',
         },
       },
-
+      
       vueMathjaxBeautifulApi: {
-        title: 'VueMathjaxBeautiful API 文档',
+        title: 'VueMathjaxBeautiful API',
         basicProps: '基础属性',
-        behaviorProps: '行为属性', 
+        behaviorProps: '行为属性',
         events: '事件',
         props: {
-          modelValue: '控制弹窗显示状态 (boolean)',
-          title: '弹窗标题文字 (string, 默认: "公式编辑器")', 
-          subtitle: '弹窗副标题文字 (string)',
-          placeholder: '输入框占位符文本 (string)',
-          inlineMode: '是否启用内联模式 (boolean, 默认: false)',
-          existingLatex: '预设的LaTeX代码 (string)',
-          showThemeToggle: '是否显示主题切换按钮 (boolean, 默认: true)',
+          modelValue: '控制弹窗显示/隐藏状态',
+          title: '弹窗标题文本',
+          subtitle: '弹窗副标题文本',
+          placeholder: '输入框占位符文本',
+          inlineMode: '是否启用内联模式（默认false）',
+          existingLatex: '预设的LaTeX内容',
+          showThemeToggle: '是否显示主题切换按钮',
         },
         eventDesc: {
-          insert: '公式插入时触发 (latex: string)',
-          cancel: '取消操作时触发',
+          insert: '用户点击插入按钮时触发，参数为LaTeX字符串',
+          cancel: '用户点击取消按钮或关闭弹窗时触发',
         },
       },
-
+      
       vueMathjaxEditorApi: {
-        title: 'VueMathjaxEditor API 文档',
+        title: 'VueMathjaxEditor API',
         basicProps: '基础属性',
         featureProps: '功能属性',
         events: '事件',
         props: {
-          modelValue: '绑定的内容值 (string)',
-          placeholder: '占位符文本 (string)',
-          minHeight: '最小高度 (string, 默认: "200px")',
-          width: '编辑器宽度 (string, 默认: "100%")',
-          readonly: '只读模式 (boolean, 默认: false)',
-          showToolbar: '是否显示工具栏 (boolean, 默认: true)',
-          theme: '主题名称 (string, 可选: "default", "minimal")',
-          autoFocus: '是否自动聚焦 (boolean, 默认: false)',
+          modelValue: '编辑器内容（HTML字符串）',
+          placeholder: '编辑器占位符文本',
+          minHeight: '编辑器最小高度（默认200px）',
+          width: '编辑器宽度（默认100%）',
+          readonly: '是否只读模式',
+          showToolbar: '是否显示工具栏',
+          theme: '编辑器主题（default | minimal）',
+          autoFocus: '是否自动聚焦',
         },
         eventDesc: {
-          change: '内容变化时触发 (value: string)',
+          change: '内容变化时触发，参数为新的HTML内容',
           focus: '编辑器获得焦点时触发',
           blur: '编辑器失去焦点时触发',
-          ready: '编辑器准备就绪时触发',
-          error: '发生错误时触发 (error: any)',
+          ready: '编辑器初始化完成时触发',
+          error: '发生错误时触发，参数为错误信息',
         },
       },
-
-      latexApiUtils: {
-        title: 'LaTeX 工具函数 API',
-        coreConversion: '核心转换函数',
-        matchingDetection: '匹配与检测函数',
-        usageExample: '使用示例',
-        functions: {
-          initMathJax: '初始化MathJax引擎，配置渲染参数',
-          convertLatexToSvg: '将LaTeX公式转换为SVG格式',
-          batchConvertLatex: '批量转换多个LaTeX公式',
-          extractLatexFromSvg: '从SVG元素中提取原始LaTeX代码',
-          matchLatex: '匹配内容中的所有LaTeX公式，返回详细信息',
-          hasLatexFormula: '检测内容中是否包含LaTeX公式',
-          clearMathTags: '清理DOM元素中的特定数学标签',
-        },
-      },
-
+      
       events: {
-        title: '事件说明',
-        change: '内容变化时触发 (value: string)',
-        focus: '编辑器获得焦点时触发',
-        blur: '编辑器失去焦点时触发',
+        title: '事件处理',
+        change: '内容变化事件',
+        focus: '聚焦事件',
+        blur: '失焦事件',
       },
-
+      
       shortcuts: {
         title: '快捷键',
         bold: '粗体',
@@ -498,15 +481,15 @@ export default {
         redo: '重做',
         editFormula: '编辑公式',
         inlineFormula: '行内公式',
-        displayFormula: '独立公式',
+        displayFormula: '块级公式',
       },
-
+      
       latexSyntax: {
-        title: 'LaTeX 语法示例',
+        title: 'LaTeX 语法',
         inlineFormula: '行内公式',
-        displayFormula: '独立公式',
+        displayFormula: '块级公式',
         fraction: '分数',
-        sqrt: '根号',
+        sqrt: '平方根',
         superscript: '上标',
         subscript: '下标',
         sum: '求和',
@@ -516,44 +499,60 @@ export default {
         trigFunctions: '三角函数',
         specialSymbols: '特殊符号',
       },
-
+      
       advancedUsage: {
         title: '高级用法',
       },
-
+      
+      latexApiUtils: {
+        title: 'LaTeX API 工具',
+        coreConversion: '核心转换功能',
+        matchingDetection: '匹配检测功能',
+        usageExample: '使用示例',
+        functions: {
+          initMathJax: '初始化MathJax环境',
+          convertLatexToSvg: '将LaTeX转换为SVG',
+          batchConvertLatex: '批量转换LaTeX',
+          extractLatexFromSvg: '从SVG提取LaTeX',
+          matchLatex: '匹配LaTeX公式',
+          hasLatexFormula: '检测是否包含公式',
+          clearMathTags: '清理数学标签',
+        },
+      },
+      
       integrationExample: {
-        title: '完整集成示例',
-        composition: 'Vue 3 组合式 API',
-        typescript: 'TypeScript 类型支持',
+        title: '集成示例',
+        composition: 'Vue 3 组合式API',
+        typescript: 'TypeScript类型支持',
         utilityFunctions: '工具函数使用',
       },
-
+      
       faq: {
         title: '常见问题',
         questions: {
           complexFormulas: {
-            q: 'Q: 如何插入复杂的数学公式？',
-            a: 'A: 点击编辑器工具栏的"fx"按钮打开公式编辑器，或直接使用LaTeX语法编写。',
+            q: '如何处理复杂的数学公式？',
+            a: '组件支持完整的LaTeX语法，包括多行公式、矩阵、分数等复杂结构。建议使用模板快速开始。',
           },
           latexSupport: {
-            q: 'Q: 支持哪些LaTeX语法？',
-            a: 'A: 支持完整的MathJax LaTeX语法，包括分数、根式、积分、矩阵等。',
+            q: '支持哪些LaTeX语法？',
+            a: '支持大部分常用的LaTeX数学语法，包括符号、函数、环境等。完整列表请参考MathJax文档。',
           },
           customStyle: {
-            q: 'Q: 如何自定义编辑器样式？',
-            a: 'A: 可以通过CSS自定义样式，或使用min-height等属性调整编辑器外观。',
+            q: '如何自定义样式？',
+            a: '可以通过CSS变量或直接覆盖样式类来自定义外观。组件提供了多个CSS类用于样式定制。',
           },
           mobile: {
-            q: 'Q: 是否支持移动端？',
-            a: 'A: 完全支持移动端，采用响应式设计，在各种设备上都有良好体验。',
+            q: '移动端支持如何？',
+            a: '组件完全适配移动端，提供响应式设计和触摸友好的交互体验。',
           },
         },
       },
-
+      
       resources: {
         title: '更多资源',
         github: 'GitHub 仓库',
-        examples: '在线示例',
+        examples: '更多示例',
         api: 'API 文档',
         issues: '问题反馈',
         changelog: '更新日志',
