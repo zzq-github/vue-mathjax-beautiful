@@ -25,7 +25,7 @@
     "formula",
     "typescript"
   ],
-  "author": "Your Name",
+  "author": "不讲道理的柯里昂 <15096061897@163.com>",
   "license": "MIT",
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

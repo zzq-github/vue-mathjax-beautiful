@@ -1,6 +1,7 @@
 export default {
   // Navigation
   nav: {
+    home: 'Home',
     editor: 'Editor',
     config: 'Formula Config',
     editorConfig: 'Editor Config',
@@ -46,6 +47,19 @@ export default {
       symbols: '240+ Math Symbols',
       templates: '38 Formula Templates',
       preview: 'Real-time Preview',
+    },
+  },
+
+  // Home page content
+  home: {
+    quickStart: {
+      description: 'Get started with Vue MathJax Beautiful and experience professional mathematical formula editing',
+      tryDemo: 'Try Demo',
+      viewDocs: 'View Documentation',
+    },
+    installation: {
+      title: 'Quick Installation',
+      quickExample: 'Quick Example',
     },
   },
 
@@ -134,6 +148,7 @@ export default {
   examples: {
     title: 'Formula Examples Library',
     description: 'Click examples to quickly load into the formula editor, experience different types of mathematical formulas',
+    tryInteractive: 'Try Interactive Editor',
     categories: {
       physics: 'Physics',
       algebra: 'Algebra',
@@ -163,6 +178,42 @@ export default {
     settingsDescription: 'Adjust the settings below to see real-time changes in the component',
     preview: 'Live Preview',
     previewDescription: 'Real-time component demonstration based on left configuration',
+    
+    tabs: {
+      basic: 'Basic',
+      display: 'Display',
+      input: 'Input',
+      behavior: 'Behavior',
+    },
+    
+    textSettings: 'Text Settings',
+    subtitle: 'Subtitle',
+    buttonTextSettings: 'Button Text Settings',
+    insertButton: 'Insert Button',
+    cancelButton: 'Cancel Button',
+    clearButton: 'Clear Button',
+    
+    // Input placeholders
+    placeholders: {
+      title: 'Enter title',
+      subtitle: 'Enter subtitle',
+      placeholder: 'Enter placeholder text',
+      insertButton: 'Enter insert button text',
+      cancelButton: 'Enter cancel button text',
+      clearButton: 'Enter clear button text',
+    },
+    behaviorSettings: 'Behavior Settings',
+    basicSymbolsDesc: 'Basic mathematical symbols and operators',
+    greekLettersDesc: 'Greek letter symbols',
+    advancedSymbolsDesc: 'Advanced mathematical symbols and functions',
+    showFormulaExamplesDesc: 'Show formula examples',
+    readonlyDesc: 'Read-only mode, disable editing functions',
+    autoFocusDesc: 'Auto focus to input field',
+    showSymbolsDesc: 'Show symbol panel',
+    showPreviewDesc: 'Show live preview',
+    showThemeToggleDesc: 'Show theme toggle button',
+    showClearButtonDesc: 'Show clear button',
+    
     mode: 'Display Mode',
     dialogMode: 'Dialog Mode',
     inlineMode: 'Inline Mode',
@@ -192,6 +243,16 @@ export default {
     hideConfig: 'Hide Code Configuration',
     currentConfig: 'Current Configuration Code',
     currentConfigDescription: 'Copy the code below to use the same configuration in your project',
+    
+    // Mode annotations
+    modes: {
+      current: 'Current Mode',
+      universal: 'Universal Config',
+      dialogOnly: 'Dialog Mode Only',
+      inlineOnly: 'Inline Only',
+      dialog: 'Dialog',
+      inline: 'Inline',
+    },
   },
 
   // Editor Configuration
@@ -295,6 +356,40 @@ export default {
       title: 'Generated Code',
       copy: 'Copy Code',
     },
+    
+    // Modes and annotations
+    modes: {
+      editorType: 'Editor Type',
+      richTextEditor: 'Rich Text Editor',
+      universal: 'Universal Config',
+      toolbarSettings: 'Toolbar Settings',
+      showToolbarDesc: 'Show or hide editor toolbar',
+      formatFeatures: 'Format Features',
+      advancedFeatures: 'Advanced Features',
+      previewDescription: 'Real-time editor demonstration based on left configuration',
+      noEvents: 'No events yet',
+      categories: {
+        format: 'Format',
+        advanced: 'Advanced',
+        utility: 'Utility',
+      },
+      descriptions: {
+        enableBold: 'Enable bold format functionality',
+        enableItalic: 'Enable italic format functionality',
+        enableStrikethrough: 'Enable strikethrough format functionality',
+        enableFormula: 'Enable mathematical formula editing',
+        enableImage: 'Enable image upload functionality',
+        readonly: 'Read-only mode, disable editing',
+        autoFocus: 'Auto focus to editor',
+        toolBold: 'Add bold format to text',
+        toolItalic: 'Add italic format to text',
+        toolUnderline: 'Add underline to text',
+        toolStrikethrough: 'Add strikethrough to text',
+        toolFormula: 'Insert mathematical formula',
+        toolImage: 'Insert image',
+        toolClear: 'Clear all formats',
+      },
+    },
   },
 
   // Documentation
@@ -326,12 +421,64 @@ export default {
         },
       },
 
-      apiProps: {
-        title: 'API Properties',
-        modelValue: 'Bound content value (string)',
-        placeholder: 'Placeholder text (string)',
-        minHeight: 'Minimum height (string, default: "200px")',
-        readonly: 'Read-only mode (boolean, default: false)',
+      vueMathjaxBeautifulApi: {
+        title: 'VueMathjaxBeautiful API Documentation',
+        basicProps: 'Basic Properties',
+        behaviorProps: 'Behavior Properties',
+        events: 'Events',
+        props: {
+          modelValue: 'Control dialog visibility state (boolean)',
+          title: 'Dialog title text (string, default: "Formula Editor")',
+          subtitle: 'Dialog subtitle text (string)',
+          placeholder: 'Input placeholder text (string)',
+          inlineMode: 'Enable inline mode (boolean, default: false)',
+          existingLatex: 'Preset LaTeX code (string)',
+          showThemeToggle: 'Show theme toggle button (boolean, default: true)',
+        },
+        eventDesc: {
+          insert: 'Triggered when formula is inserted (latex: string)',
+          cancel: 'Triggered when operation is cancelled',
+        },
+      },
+
+      vueMathjaxEditorApi: {
+        title: 'VueMathjaxEditor API Documentation',
+        basicProps: 'Basic Properties',
+        featureProps: 'Feature Properties',
+        events: 'Events',
+        props: {
+          modelValue: 'Bound content value (string)',
+          placeholder: 'Placeholder text (string)',
+          minHeight: 'Minimum height (string, default: "200px")',
+          width: 'Editor width (string, default: "100%")',
+          readonly: 'Read-only mode (boolean, default: false)',
+          showToolbar: 'Show toolbar (boolean, default: true)',
+          theme: 'Theme name (string, options: "default", "minimal")',
+          autoFocus: 'Auto focus (boolean, default: false)',
+        },
+        eventDesc: {
+          change: 'Triggered when content changes (value: string)',
+          focus: 'Triggered when editor gains focus',
+          blur: 'Triggered when editor loses focus',
+          ready: 'Triggered when editor is ready',
+          error: 'Triggered when error occurs (error: any)',
+        },
+      },
+
+      latexApiUtils: {
+        title: 'LaTeX Utility Functions API',
+        coreConversion: 'Core Conversion Functions',
+        matchingDetection: 'Matching & Detection Functions',
+        usageExample: 'Usage Example',
+        functions: {
+          initMathJax: 'Initialize MathJax engine and configure rendering parameters',
+          convertLatexToSvg: 'Convert LaTeX formulas to SVG format',
+          batchConvertLatex: 'Batch convert multiple LaTeX formulas',
+          extractLatexFromSvg: 'Extract original LaTeX code from SVG elements',
+          matchLatex: 'Match all LaTeX formulas in content and return details',
+          hasLatexFormula: 'Detect if content contains LaTeX formulas',
+          clearMathTags: 'Clear specific math tags from DOM elements',
+        },
       },
 
       events: {
@@ -374,8 +521,11 @@ export default {
         title: 'Advanced Usage',
       },
 
-      formulaEditorUsage: {
-        title: 'Formula Editor Usage',
+      integrationExample: {
+        title: 'Complete Integration Example',
+        composition: 'Vue 3 Composition API',
+        typescript: 'TypeScript Type Support',
+        utilityFunctions: 'Utility Functions Usage',
       },
 
       faq: {

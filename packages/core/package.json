@@ -4,7 +4,8 @@
   "description": "🚀 精简、高效的 Vue 3 数学公式编辑器组件库",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "main": "./dist/vue-mathjax-beautiful.umd",
   "module": "./dist/vue-mathjax-beautiful.js",
@@ -29,9 +30,14 @@
     "editor",
     "mathjax",
     "formula",
-    "typescript"
+    "typescript",
+    "latex",
+    "mathematics",
+    "equation",
+    "component",
+    "ui"
   ],
-  "author": "Your Name",
+  "author": "不讲道理的柯里昂 <15096061897@163.com>",
   "license": "MIT",
   "peerDependencies": {
     "vue": "^3.3.0"

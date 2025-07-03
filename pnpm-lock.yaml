@@ -98,6 +98,9 @@ importers:
       vue-mathjax-beautiful:
         specifier: workspace:*
         version: link:../../packages/core
+      vue-router:
+        specifier: ^4.5.1
+        version: 4.5.1(vue@3.5.17(typescript@5.3.3))
     devDependencies:
       '@types/node':
         specifier: ^18.19.3
@@ -3424,6 +3427,11 @@ packages:
     engines: {node: '>= 16'}
     peerDependencies:
       vue: ^3.0.0
+
+  vue-router@4.5.1:
+    resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
+    peerDependencies:
+      vue: ^3.2.0
 
   vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}
@@ -7051,6 +7059,11 @@ snapshots:
       '@intlify/core-base': 12.0.0-alpha.2
       '@intlify/shared': 12.0.0-alpha.2
       '@intlify/vue-i18n-core': 12.0.0-alpha.2(vue@3.5.17(typescript@5.3.3))
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.17(typescript@5.3.3)
+
+  vue-router@4.5.1(vue@3.5.17(typescript@5.3.3)):
+    dependencies:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.17(typescript@5.3.3)
 

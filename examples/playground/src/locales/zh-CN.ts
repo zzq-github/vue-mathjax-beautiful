@@ -1,6 +1,7 @@
 export default {
   // 导航
   nav: {
+    home: '首页',
     editor: '编辑器',
     config: '公式配置',
     editorConfig: '编辑器配置',
@@ -46,6 +47,19 @@ export default {
       symbols: '240+ 数学符号',
       templates: '38 个公式模板',
       preview: '实时预览',
+    },
+  },
+
+  // 首页内容
+  home: {
+    quickStart: {
+      description: '快速开始使用 Vue MathJax Beautiful，体验专业的数学公式编辑功能',
+      tryDemo: '在线演示',
+      viewDocs: '查看文档',
+    },
+    installation: {
+      title: '快速安装',
+      quickExample: '快速示例',
     },
   },
 
@@ -134,6 +148,7 @@ export default {
   examples: {
     title: '公式示例库',
     description: '点击示例快速加载到公式编辑器，体验不同类型的数学公式',
+    tryInteractive: '体验交互式编辑器',
     categories: {
       physics: '物理',
       algebra: '代数',
@@ -163,6 +178,42 @@ export default {
     settingsDescription: '调整下方设置来查看组件的实时变化',
     preview: '实时预览',
     previewDescription: '根据左侧配置实时展示组件效果',
+    
+    tabs: {
+      basic: '基础',
+      display: '显示',
+      input: '输入',
+      behavior: '行为',
+    },
+    
+    textSettings: '文本设置',
+    subtitle: '子标题',
+    buttonTextSettings: '按钮文本设置',
+    insertButton: '插入按钮',
+    cancelButton: '取消按钮',
+    clearButton: '清空按钮',
+    
+    // 输入框占位符
+    placeholders: {
+      title: '请输入标题',
+      subtitle: '请输入子标题',
+      placeholder: '请输入占位符文本',
+      insertButton: '请输入插入按钮文本',
+      cancelButton: '请输入取消按钮文本',
+      clearButton: '请输入清空按钮文本',
+    },
+    behaviorSettings: '行为设置',
+    basicSymbolsDesc: '基础数学符号和运算符',
+    greekLettersDesc: '希腊字母符号',
+    advancedSymbolsDesc: '高级数学符号和函数',
+    showFormulaExamplesDesc: '显示公式示例',
+    readonlyDesc: '只读模式，禁用编辑功能',
+    autoFocusDesc: '自动聚焦到输入框',
+    showSymbolsDesc: '显示符号面板',
+    showPreviewDesc: '显示实时预览',
+    showThemeToggleDesc: '显示主题切换按钮',
+    showClearButtonDesc: '显示清空按钮',
+    
     mode: '显示模式',
     dialogMode: '弹窗模式',
     inlineMode: '内联模式',
@@ -192,6 +243,16 @@ export default {
     hideConfig: '隐藏代码配置',
     currentConfig: '当前配置代码',
     currentConfigDescription: '复制下方代码即可在您的项目中使用相同的配置',
+    
+    // 模式标注
+    modes: {
+      current: '当前模式',
+      universal: '通用配置',
+      dialogOnly: '仅弹窗模式',
+      inlineOnly: '仅内联',
+      dialog: '弹窗',
+      inline: '内联',
+    },
   },
 
   // 编辑器配置
@@ -295,6 +356,40 @@ export default {
       title: '生成代码',
       copy: '复制代码',
     },
+    
+    // 模式和标注
+    modes: {
+      editorType: '编辑器类型',
+      richTextEditor: '富文本编辑器',
+      universal: '通用配置',
+      toolbarSettings: '工具栏设置',
+      showToolbarDesc: '显示或隐藏编辑器工具栏',
+      formatFeatures: '格式功能',
+      advancedFeatures: '高级功能',
+      previewDescription: '根据左侧配置实时展示编辑器效果',
+      noEvents: '暂无事件',
+      categories: {
+        format: '格式',
+        advanced: '高级',
+        utility: '工具',
+      },
+      descriptions: {
+        enableBold: '启用粗体格式功能',
+        enableItalic: '启用斜体格式功能',
+        enableStrikethrough: '启用删除线格式功能',
+        enableFormula: '启用数学公式编辑功能',
+        enableImage: '启用图片上传功能',
+        readonly: '只读模式，禁用编辑功能',
+        autoFocus: '自动聚焦到编辑器',
+        toolBold: '为文本添加粗体格式',
+        toolItalic: '为文本添加斜体格式',
+        toolUnderline: '为文本添加下划线',
+        toolStrikethrough: '为文本添加删除线',
+        toolFormula: '插入数学公式',
+        toolImage: '插入图片',
+        toolClear: '清除所有格式',
+      },
+    },
   },
 
   // 文档
@@ -326,12 +421,64 @@ export default {
         },
       },
 
-      apiProps: {
-        title: 'API 属性',
-        modelValue: '绑定的内容值 (string)',
-        placeholder: '占位符文本 (string)',
-        minHeight: '最小高度 (string, 默认: "200px")',
-        readonly: '只读模式 (boolean, 默认: false)',
+      vueMathjaxBeautifulApi: {
+        title: 'VueMathjaxBeautiful API 文档',
+        basicProps: '基础属性',
+        behaviorProps: '行为属性', 
+        events: '事件',
+        props: {
+          modelValue: '控制弹窗显示状态 (boolean)',
+          title: '弹窗标题文字 (string, 默认: "公式编辑器")', 
+          subtitle: '弹窗副标题文字 (string)',
+          placeholder: '输入框占位符文本 (string)',
+          inlineMode: '是否启用内联模式 (boolean, 默认: false)',
+          existingLatex: '预设的LaTeX代码 (string)',
+          showThemeToggle: '是否显示主题切换按钮 (boolean, 默认: true)',
+        },
+        eventDesc: {
+          insert: '公式插入时触发 (latex: string)',
+          cancel: '取消操作时触发',
+        },
+      },
+
+      vueMathjaxEditorApi: {
+        title: 'VueMathjaxEditor API 文档',
+        basicProps: '基础属性',
+        featureProps: '功能属性',
+        events: '事件',
+        props: {
+          modelValue: '绑定的内容值 (string)',
+          placeholder: '占位符文本 (string)',
+          minHeight: '最小高度 (string, 默认: "200px")',
+          width: '编辑器宽度 (string, 默认: "100%")',
+          readonly: '只读模式 (boolean, 默认: false)',
+          showToolbar: '是否显示工具栏 (boolean, 默认: true)',
+          theme: '主题名称 (string, 可选: "default", "minimal")',
+          autoFocus: '是否自动聚焦 (boolean, 默认: false)',
+        },
+        eventDesc: {
+          change: '内容变化时触发 (value: string)',
+          focus: '编辑器获得焦点时触发',
+          blur: '编辑器失去焦点时触发',
+          ready: '编辑器准备就绪时触发',
+          error: '发生错误时触发 (error: any)',
+        },
+      },
+
+      latexApiUtils: {
+        title: 'LaTeX 工具函数 API',
+        coreConversion: '核心转换函数',
+        matchingDetection: '匹配与检测函数',
+        usageExample: '使用示例',
+        functions: {
+          initMathJax: '初始化MathJax引擎，配置渲染参数',
+          convertLatexToSvg: '将LaTeX公式转换为SVG格式',
+          batchConvertLatex: '批量转换多个LaTeX公式',
+          extractLatexFromSvg: '从SVG元素中提取原始LaTeX代码',
+          matchLatex: '匹配内容中的所有LaTeX公式，返回详细信息',
+          hasLatexFormula: '检测内容中是否包含LaTeX公式',
+          clearMathTags: '清理DOM元素中的特定数学标签',
+        },
       },
 
       events: {
@@ -374,8 +521,11 @@ export default {
         title: '高级用法',
       },
 
-      formulaEditorUsage: {
-        title: '公式编辑器用法',
+      integrationExample: {
+        title: '完整集成示例',
+        composition: 'Vue 3 组合式 API',
+        typescript: 'TypeScript 类型支持',
+        utilityFunctions: '工具函数使用',
       },
 
       faq: {

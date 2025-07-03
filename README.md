@@ -714,7 +714,7 @@ import 'vue-mathjax-beautiful/dist/style.css'
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/vue-mathjax-beautiful.git
+git clone https://github.com/zzq-github/vue-mathjax-beautiful.git
 
 # 进入项目目录
 cd vue-mathjax-beautiful
@@ -778,7 +778,7 @@ vue-mathjax-beautiful/
 我们欢迎所有形式的贡献！
 
 #### 报告问题
-- 使用 [GitHub Issues](https://github.com/your-username/vue-mathjax-beautiful/issues) 报告 bug
+- 使用 [GitHub Issues](https://github.com/zzq-github/vue-mathjax-beautiful/issues) 报告 bug
 - 提供详细的复现步骤和环境信息
 - 如果可能，请提供最小复现示例
 
@@ -809,15 +809,15 @@ vue-mathjax-beautiful/
 ## 📮 联系我们
 
 - 📧 Email: your-email@example.com
-- 🐛 Issues: [GitHub Issues](https://github.com/your-username/vue-mathjax-beautiful/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/your-username/vue-mathjax-beautiful/discussions)
-- 📖 文档: [在线文档](https://your-username.github.io/vue-mathjax-beautiful)
+- 🐛 Issues: [GitHub Issues](https://github.com/zzq-github/vue-mathjax-beautiful/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/zzq-github/vue-mathjax-beautiful/discussions)
+- 📖 文档: [在线文档](https://zzq-github.github.io/vue-mathjax-beautiful)
 
 ## ⭐ Star History
 
 如果这个项目对您有帮助，请给我们一个 ⭐️！
 
-[![Star History Chart](https://api.star-history.com/svg?repos=your-username/vue-mathjax-beautiful&type=Date)](https://star-history.com/#your-username/vue-mathjax-beautiful&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=zzq-github/vue-mathjax-beautiful&type=Date)](https://star-history.com/#zzq-github/vue-mathjax-beautiful&Date)
 
 ---
 

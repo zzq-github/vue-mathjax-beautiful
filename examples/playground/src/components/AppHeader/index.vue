@@ -23,30 +23,31 @@
       
       <!-- 桌面端导航 -->
       <nav class="hidden md:flex items-center space-x-8">
-        <a
-          href="#editor"
+        <router-link
+          to="/"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >{{ t('nav.editor') }}</a>
-        <a
-          href="#config"
+          :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/' }"
+        >{{ t('nav.home') }}</router-link>
+        <router-link
+          to="/demo"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >{{ t('nav.config') }}</a>
-        <a
-          href="#editor-config"
+          :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/demo' }"
+        >{{ t('nav.editor') }}</router-link>
+        <router-link
+          to="/config"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >{{ t('nav.editorConfig') }}</a>
-        <a
-          href="#features"
+          :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/config' }"
+        >{{ t('nav.config') }}</router-link>
+        <router-link
+          to="/editor-config"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >{{ t('nav.features') }}</a>
-        <a
-          href="#examples"
+          :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/editor-config' }"
+        >{{ t('nav.editorConfig') }}</router-link>
+        <router-link
+          to="/docs"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >{{ t('nav.examples') }}</a>
-        <a
-          href="#docs"
-          class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >{{ t('nav.docs') }}</a>
+          :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/docs' }"
+        >{{ t('nav.docs') }}</router-link>
 
         <!-- 语言切换器 -->
         <div class="relative" data-language-menu>
@@ -284,13 +285,13 @@
           >
             {{ t('nav.features') }}
           </a>
-          <a
-            href="#examples"
+          <router-link
+            to="/#examples"
             @click="$emit('closeMobileMenu')"
             class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >
             {{ t('nav.examples') }}
-          </a>
+          </router-link>
           <a
             href="#docs"
             @click="$emit('closeMobileMenu')"

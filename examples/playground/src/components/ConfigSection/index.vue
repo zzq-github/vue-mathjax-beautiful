@@ -11,186 +11,402 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 xl:grid-cols-5 gap-8">
         <!-- 配置面板 -->
-        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50">
-          <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-t-2xl">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-              {{ t('config.settings') }}
-            </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-              {{ t('config.settingsDescription') }}
-            </p>
-          </div>
+        <div class="xl:col-span-2">
+          <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+            <!-- 模式指示器 -->
+            <div class="px-6 pt-4 pb-2">
+              <div class="flex items-center gap-2 text-sm">
+                <span class="text-gray-600 dark:text-gray-400">{{ t('config.modes.current') }}:</span>
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
+                      :class="config.inlineMode 
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' 
+                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'">
+                  {{ config.inlineMode ? t('config.inlineMode') : t('config.dialogMode') }}
+                </span>
+              </div>
+            </div>
+            
+            <!-- 标签栏 -->
+            <div class="border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50">
+              <nav class="flex space-x-1 py-2 px-3">
+                <button 
+                  v-for="tab in configTabs"
+                  :key="tab.key"
+                  @click="activeTab = tab.key"
+                  :class="[
+                    'px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
+                    activeTab === tab.key 
+                      ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm ring-1 ring-blue-600/10 dark:ring-blue-400/10' 
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50'
+                  ]"
+                >
+                  {{ tab.label }}
+                </button>
+              </nav>
+            </div>
           
-          <div class="p-6 space-y-8">
-            <!-- 模式选择 -->
-            <div class="space-y-3">
-              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ t('config.mode') }}
-              </label>
-              <div class="flex gap-2 p-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                <button
-                  type="button"
-                  @click="config.inlineMode = false"
-                  :class="[
-                    'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
-                    !config.inlineMode
-                      ? 'bg-white dark:bg-gray-800 text-yellow-600 dark:text-yellow-400 shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                  ]"
-                >
-                  {{ t('config.dialogMode') }}
-                </button>
-                <button
-                  type="button"
-                  @click="config.inlineMode = true"
-                  :class="[
-                    'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
-                    config.inlineMode
-                      ? 'bg-white dark:bg-gray-800 text-yellow-600 dark:text-yellow-400 shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                  ]"
-                >
-                  {{ t('config.inlineMode') }}
-                </button>
-              </div>
-            </div>
-
-            <!-- 主题选择 -->
-            <div class="space-y-3">
-              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ t('config.theme') }}
-              </label>
-              <div class="flex gap-2 p-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                <button
-                  type="button"
-                  @click="config.theme = 'light'"
-                  :class="[
-                    'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
-                    config.theme === 'light'
-                      ? 'bg-white dark:bg-gray-800 text-yellow-600 dark:text-yellow-400 shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                  ]"
-                >
-                  {{ t('config.lightTheme') }}
-                </button>
-                <button
-                  type="button"
-                  @click="config.theme = 'dark'"
-                  :class="[
-                    'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
-                    config.theme === 'dark'
-                      ? 'bg-white dark:bg-gray-800 text-yellow-600 dark:text-yellow-400 shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                  ]"
-                >
-                  {{ t('config.darkTheme') }}
-                </button>
-              </div>
-            </div>
-
-            <!-- 功能开关 -->
-            <div class="space-y-4">
-              <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ t('config.features') }}
-              </h4>
-              
-              <div class="grid grid-cols-1 gap-3">
-                <div v-for="feature in featureList" :key="feature.key" class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
-                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ feature.label }}</span>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" v-model="config[feature.key as keyof typeof config]" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <!-- 输入设置 -->
-            <div class="space-y-4">
-              <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ t('config.inputSettings') }}
-              </h4>
-              
-              <div class="grid grid-cols-1 gap-4">
-                <div class="space-y-2">
-                  <label class="text-sm text-gray-700 dark:text-gray-300">
-                    {{ t('config.placeholder') }}
-                  </label>
-                  <input
-                    v-model="config.placeholder"
-                    type="text"
-                    class="w-full px-3 py-2.5 bg-white/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
-                  />
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                  <div class="space-y-2">
-                    <label class="text-sm text-gray-700 dark:text-gray-300">
-                      {{ t('config.maxLength') }}
+            <!-- 配置内容 -->
+            <div class="p-6">
+              <!-- 基础配置 -->
+              <div v-if="activeTab === 'basic'" class="space-y-6">
+                <!-- 模式选择 -->
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.mode') }}
                     </label>
-                    <input
-                      v-model.number="config.maxLength"
-                      type="number"
-                      min="10"
-                      max="5000"
-                      class="w-full px-3 py-2.5 bg-white/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
-                    />
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                      {{ t('config.modes.universal') }}
+                    </span>
+                  </div>
+                  <div class="flex gap-2 p-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                    <button
+                      type="button"
+                      @click="config.inlineMode = false"
+                      :class="[
+                        'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
+                        !config.inlineMode
+                          ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      ]"
+                    >
+                      {{ t('config.dialogMode') }}
+                    </button>
+                    <button
+                      type="button"
+                      @click="config.inlineMode = true"
+                      :class="[
+                        'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
+                        config.inlineMode
+                          ? 'bg-white dark:bg-gray-800 text-green-600 dark:text-green-400 shadow-sm'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      ]"
+                    >
+                      {{ t('config.inlineMode') }}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 主题选择 -->
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.theme') }}
+                    </label>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                      {{ t('config.modes.universal') }}
+                    </span>
+                  </div>
+                  <div class="flex gap-2 p-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                    <button
+                      type="button"
+                      @click="config.theme = 'light'"
+                      :class="[
+                        'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
+                        config.theme === 'light'
+                          ? 'bg-white dark:bg-gray-800 text-yellow-600 dark:text-yellow-400 shadow-sm'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      ]"
+                    >
+                      {{ t('config.lightTheme') }}
+                    </button>
+                    <button
+                      type="button"
+                      @click="config.theme = 'dark'"
+                      :class="[
+                        'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
+                        config.theme === 'dark'
+                          ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-sm'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      ]"
+                    >
+                      {{ t('config.darkTheme') }}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 弹窗专用文本设置 -->
+                <div v-if="!config.inlineMode" class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.textSettings') }}
+                    </h4>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
+                      {{ t('config.modes.dialogOnly') }}
+                    </span>
+                  </div>
+                  <div class="grid grid-cols-1 gap-4">
+                    <div class="space-y-2">
+                                              <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.textSettings') }}
+                        </label>
+                      <input
+                        v-model="config.title"
+                        type="text"
+                        :placeholder="t('config.placeholders.title')"
+                        class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                      />
+                    </div>
+                    
+                    <div class="space-y-2">
+                      <label class="text-sm text-gray-700 dark:text-gray-300">
+                        {{ t('config.subtitle') }}
+                      </label>
+                      <input
+                        v-model="config.subtitle"
+                        type="text"
+                        :placeholder="t('config.placeholders.subtitle')"
+                        class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 显示选项 -->
+              <div v-if="activeTab === 'display'" class="space-y-6">
+                <!-- 界面功能开关 -->
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.features') }}
+                    </h4>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                      {{ t('config.modes.universal') }}
+                    </span>
                   </div>
                   
-                  <div class="space-y-2">
-                    <label class="text-sm text-gray-700 dark:text-gray-300">
-                      {{ t('config.rows') }}
-                    </label>
-                    <input
-                      v-model.number="config.rows"
-                      type="number"
-                      min="1"
-                      max="10"
-                      class="w-full px-3 py-2.5 bg-white/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
-                    />
+                  <div class="grid grid-cols-1 gap-3">
+                    <div v-for="feature in featureList" :key="feature.key" class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                      <div class="flex-1">
+                        <div class="flex items-center gap-2">
+                          <span class="text-sm font-medium text-gray-900 dark:text-white">{{ feature.label }}</span>
+                          <span v-if="feature.mode" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                                :class="feature.mode === 'dialog' 
+                                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' 
+                                  : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'">
+                            {{ feature.mode === 'dialog' ? t('config.modes.dialog') : t('config.modes.inline') }}
+                          </span>
+                        </div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ feature.description }}</p>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer ml-3">
+                        <input type="checkbox" v-model="config[feature.key as keyof typeof config]" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 符号分类 -->
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.enabledCategories') }}
+                    </h4>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                      {{ t('config.modes.universal') }}
+                    </span>
+                  </div>
+                  <div class="grid grid-cols-1 gap-3">
+                    <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                      <div>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.basicSymbols') }}</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.basicSymbolsDesc') }}</p>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" v-model="enabledBasic" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                      <div>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.greekLetters') }}</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.greekLettersDesc') }}</p>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" v-model="enabledGreek" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                      <div>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.advancedSymbols') }}</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.advancedSymbolsDesc') }}</p>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" v-model="enabledAdvanced" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                      <div>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.showFormulaExamples') }}</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.showFormulaExamplesDesc') }}</p>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" v-model="config.showFormulaExamples" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 符号分类 -->
-            <div class="space-y-4">
-              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ t('config.enabledCategories') }}
-              </label>
-              <div class="grid grid-cols-1 gap-3">
-                <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
-                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('config.basicSymbols') }}</span>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" v-model="enabledBasic" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  </label>
+              <!-- 输入设置 -->
+              <div v-if="activeTab === 'input'" class="space-y-6">
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.inputSettings') }}
+                    </h4>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                      {{ t('config.modes.universal') }}
+                    </span>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 gap-4">
+                    <div class="space-y-2">
+                      <label class="text-sm text-gray-700 dark:text-gray-300">
+                        {{ t('config.placeholder') }}
+                      </label>
+                      <input
+                        v-model="config.placeholder"
+                        type="text"
+                        :placeholder="t('config.placeholders.placeholder')"
+                        class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                      />
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="space-y-2">
+                        <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.maxLength') }}
+                        </label>
+                        <input
+                          v-model.number="config.maxLength"
+                          type="number"
+                          min="10"
+                          max="5000"
+                          class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                        />
+                      </div>
+                      
+                      <div class="space-y-2">
+                        <div class="flex items-center gap-2">
+                          <label class="text-sm text-gray-700 dark:text-gray-300">
+                            {{ t('config.rows') }}
+                          </label>
+                          <span class="inline-flex items-center px-2 py-0.5 rounded text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                            {{ t('config.modes.inlineOnly') }}
+                          </span>
+                        </div>
+                        <input
+                          v-model.number="config.rows"
+                          type="number"
+                          min="1"
+                          max="10"
+                          :disabled="!config.inlineMode"
+                          class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                
-                <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
-                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('config.greekLetters') }}</span>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" v-model="enabledGreek" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  </label>
+
+                <!-- 弹窗专用按钮文本设置 -->
+                <div v-if="!config.inlineMode" class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.buttonTextSettings') }}
+                    </h4>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
+                      {{ t('config.modes.dialogOnly') }}
+                    </span>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 gap-4">
+                    <div class="space-y-2">
+                      <label class="text-sm text-gray-700 dark:text-gray-300">
+                        {{ t('config.insertButton') }}
+                      </label>
+                      <input
+                        v-model="config.insertButtonText"
+                        type="text"
+                        :placeholder="t('config.placeholders.insertButton')"
+                        class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                      />
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="space-y-2">
+                        <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.cancelButton') }}
+                        </label>
+                        <input
+                          v-model="config.cancelButtonText"
+                          type="text"
+                          :placeholder="t('config.placeholders.cancelButton')"
+                          class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                        />
+                      </div>
+                      
+                      <div class="space-y-2">
+                        <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.clearButton') }}
+                        </label>
+                        <input
+                          v-model="config.clearButtonText"
+                          type="text"
+                          :placeholder="t('config.placeholders.clearButton')"
+                          class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                
-                <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
-                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('config.advancedSymbols') }}</span>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" v-model="enabledAdvanced" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-                
-                <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
-                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('config.showFormulaExamples') }}</span>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" v-model="config.showFormulaExamples" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  </label>
+              </div>
+
+              <!-- 行为设置 -->
+              <div v-if="activeTab === 'behavior'" class="space-y-6">
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.behaviorSettings') }}
+                    </h4>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                      {{ t('config.modes.universal') }}
+                    </span>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 gap-3">
+                    <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                      <div>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.readonly') }}</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.readonlyDesc') }}</p>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" v-model="config.readonly" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                      <div>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.autoFocus') }}</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.autoFocusDesc') }}</p>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" v-model="config.autoFocus" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -198,121 +414,123 @@
         </div>
 
         <!-- 演示区域 -->
-        <div class="space-y-6">
-          <!-- 预览面板 -->
-          <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50">
-            <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-t-2xl">
-              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                {{ t('config.preview') }}
-              </h3>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                {{ t('config.previewDescription') }}
-              </p>
-            </div>
-            
-            <div class="p-6">
-              <!-- 弹窗模式预览 -->
-              <div v-if="!config.inlineMode" class="space-y-4">
-                <button
-                  type="button"
-                  @click="showDialog = true"
-                  class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
-                >
-                  {{ t('config.openDialog') }}
-                </button>
-                
-                <VueMathjaxBeautiful
-                  v-model="showDialog"
-                  :theme="config.theme"
-                  :show-symbols="config.showSymbols"
-                  :show-preview="config.showPreview"
-                  :show-theme-toggle="config.showThemeToggle"
-                  :show-clear-button="config.showClearButton"
-                  :show-formula-examples="config.showFormulaExamples"
-                  :readonly="config.readonly"
-                  :auto-focus="config.autoFocus"
-                  :placeholder="config.placeholder"
-                  :max-length="config.maxLength"
-                  :rows="config.rows"
-                  :enabled-categories="computedEnabledCategories"
-                  :title="config.title"
-                  :subtitle="config.subtitle"
-                  :insert-button-text="config.insertButtonText"
-                  :cancel-button-text="config.cancelButtonText"
-                  :clear-button-text="config.clearButtonText"
-                  @insert="handleInsert"
-                  @change="handleChange"
-                  @clear="handleClear"
-                  @close="handleClose"
-                  @theme-change="handleThemeChange"
-                />
+        <div class="xl:col-span-3">
+          <div class="sticky top-8 space-y-6">
+            <!-- 预览面板 -->
+            <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-700/50">
+              <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-t-xl">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                  {{ t('config.preview') }}
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                  {{ t('config.previewDescription') }}
+                </p>
               </div>
               
-              <!-- 内联模式预览 -->
-              <div v-else>
-                <VueMathjaxBeautiful
-                  :inline-mode="true"
-                  :theme="config.theme"
-                  :show-symbols="config.showSymbols"
-                  :show-preview="config.showPreview"
-                  :show-theme-toggle="config.showThemeToggle"
-                  :show-clear-button="config.showClearButton"
-                  :show-formula-examples="config.showFormulaExamples"
-                  :readonly="config.readonly"
-                  :auto-focus="config.autoFocus"
-                  :placeholder="config.placeholder"
-                  :max-length="config.maxLength"
-                  :rows="config.rows"
-                  :enabled-categories="computedEnabledCategories"
-                  :insert-button-text="config.insertButtonText"
-                  :clear-button-text="config.clearButtonText"
-                  @insert="handleInsert"
-                  @change="handleChange"
-                  @clear="handleClear"
-                  @theme-change="handleThemeChange"
-                />
-              </div>
-            </div>
-          </div>
-          
-          <!-- 事件日志和配置代码 -->
-          <div class="grid grid-cols-1 gap-6">
-            <!-- 事件日志 -->
-            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50">
-              <div class="p-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-t-2xl">
-                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
-                  {{ t('config.eventLog') }}
-                </h4>
-              </div>
-              <div class="p-4">
-                <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 max-h-32 overflow-y-auto">
-                  <div v-if="eventLog.length === 0" class="text-sm text-gray-500 italic text-center py-2">
-                    {{ t('config.noEvents') }}
-                  </div>
-                  <div v-else class="space-y-1">
-                    <div
-                      v-for="(event, index) in eventLog.slice(-5)"
-                      :key="index"
-                      class="text-xs font-mono text-gray-600 dark:text-gray-400 p-2 bg-white/50 dark:bg-gray-800/50 rounded"
-                    >
-                      <span class="text-blue-600 dark:text-blue-400">[{{ event.time }}]</span>
-                      <span class="text-green-600 dark:text-green-400 font-semibold">{{ event.type }}:</span>
-                      {{ event.data }}
-                    </div>
-                  </div>
+              <div class="p-6">
+                <!-- 弹窗模式预览 -->
+                <div v-if="!config.inlineMode" class="space-y-4">
+                  <button
+                    type="button"
+                    @click="showDialog = true"
+                    class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg transition-all duration-200 font-medium shadow-sm hover:shadow-md transform hover:scale-105"
+                  >
+                    {{ t('config.openDialog') }}
+                  </button>
+                  
+                  <VueMathjaxBeautiful
+                    v-model="showDialog"
+                    :theme="config.theme"
+                    :show-symbols="config.showSymbols"
+                    :show-preview="config.showPreview"
+                    :show-theme-toggle="config.showThemeToggle"
+                    :show-clear-button="config.showClearButton"
+                    :show-formula-examples="config.showFormulaExamples"
+                    :readonly="config.readonly"
+                    :auto-focus="config.autoFocus"
+                    :placeholder="config.placeholder"
+                    :max-length="config.maxLength"
+                    :rows="config.rows"
+                    :enabled-categories="computedEnabledCategories"
+                    :title="config.title"
+                    :subtitle="config.subtitle"
+                    :insert-button-text="config.insertButtonText"
+                    :cancel-button-text="config.cancelButtonText"
+                    :clear-button-text="config.clearButtonText"
+                    @insert="handleInsert"
+                    @change="handleChange"
+                    @clear="handleClear"
+                    @close="handleClose"
+                    @theme-change="handleThemeChange"
+                  />
+                </div>
+                
+                <!-- 内联模式预览 -->
+                <div v-else>
+                  <VueMathjaxBeautiful
+                    :inline-mode="true"
+                    :theme="config.theme"
+                    :show-symbols="config.showSymbols"
+                    :show-preview="config.showPreview"
+                    :show-theme-toggle="config.showThemeToggle"
+                    :show-clear-button="config.showClearButton"
+                    :show-formula-examples="config.showFormulaExamples"
+                    :readonly="config.readonly"
+                    :auto-focus="config.autoFocus"
+                    :placeholder="config.placeholder"
+                    :max-length="config.maxLength"
+                    :rows="config.rows"
+                    :enabled-categories="computedEnabledCategories"
+                    :insert-button-text="config.insertButtonText"
+                    :clear-button-text="config.clearButtonText"
+                    @insert="handleInsert"
+                    @change="handleChange"
+                    @clear="handleClear"
+                    @theme-change="handleThemeChange"
+                  />
                 </div>
               </div>
             </div>
             
-            <!-- 当前配置 -->
-            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50">
-              <div class="p-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-t-2xl">
-                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
-                  {{ t('config.currentConfig') }}
-                </h4>
+            <!-- 事件日志和配置代码 -->
+            <div class="grid grid-cols-1 gap-6">
+              <!-- 事件日志 -->
+              <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-700/50">
+                <div class="p-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-t-xl">
+                  <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    {{ t('config.eventLog') }}
+                  </h4>
+                </div>
+                <div class="p-4">
+                  <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 max-h-32 overflow-y-auto">
+                    <div v-if="eventLog.length === 0" class="text-sm text-gray-500 italic text-center py-2">
+                      {{ t('config.noEvents') }}
+                    </div>
+                    <div v-else class="space-y-1">
+                      <div
+                        v-for="(event, index) in eventLog.slice(-5)"
+                        :key="index"
+                        class="text-xs font-mono text-gray-600 dark:text-gray-400 p-2 bg-white/50 dark:bg-gray-800/50 rounded"
+                      >
+                        <span class="text-blue-600 dark:text-blue-400">[{{ event.time }}]</span>
+                        <span class="text-green-600 dark:text-green-400 font-semibold">{{ event.type }}:</span>
+                        {{ event.data }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="p-4">
-                <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm font-mono overflow-x-auto">{{ configCode }}</pre>
+              
+              <!-- 当前配置 -->
+              <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-700/50">
+                <div class="p-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-t-xl">
+                  <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    {{ t('config.currentConfig') }}
+                  </h4>
+                </div>
+                <div class="p-4">
+                  <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm font-mono overflow-x-auto">{{ configCode }}</pre>
+                </div>
               </div>
             </div>
           </div>
@@ -328,6 +546,17 @@ import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful';
 import { useI18n } from '../../composables/useI18n';
 
 const { t } = useI18n();
+
+// 当前激活的标签页
+const activeTab = ref('basic');
+
+// 配置标签页
+const configTabs = computed(() => [
+  { key: 'basic', label: t('config.tabs.basic') },
+  { key: 'display', label: t('config.tabs.display') },
+  { key: 'input', label: t('config.tabs.input') },
+  { key: 'behavior', label: t('config.tabs.behavior') },
+]);
 
 // 响应式配置
 const config = reactive({
@@ -352,12 +581,30 @@ const config = reactive({
 
 // 功能列表
 const featureList = computed(() => [
-  { key: 'showSymbols', label: t('config.showSymbols') },
-  { key: 'showPreview', label: t('config.showPreview') },
-  { key: 'showThemeToggle', label: t('config.showThemeToggle') },
-  { key: 'showClearButton', label: t('config.showClearButton') },
-  { key: 'readonly', label: t('config.readonly') },
-  { key: 'autoFocus', label: t('config.autoFocus') },
+  { 
+    key: 'showSymbols', 
+    label: t('config.showSymbols'), 
+    description: t('config.showSymbolsDesc'),
+    mode: null
+  },
+  { 
+    key: 'showPreview', 
+    label: t('config.showPreview'), 
+    description: t('config.showPreviewDesc'),
+    mode: null
+  },
+  { 
+    key: 'showThemeToggle', 
+    label: t('config.showThemeToggle'), 
+    description: t('config.showThemeToggleDesc'),
+    mode: 'dialog'
+  },
+  { 
+    key: 'showClearButton', 
+    label: t('config.showClearButton'), 
+    description: t('config.showClearButtonDesc'),
+    mode: null
+  },
 ]);
 
 // 符号分类选择

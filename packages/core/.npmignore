@@ -1,0 +1,24 @@
+# 开发文件
+src/
+vite.config.ts
+tsconfig.json
+*.config.js
+*.config.ts
+
+# 测试文件
+tests/
+*.test.*
+*.spec.*
+
+# 开发工具
+.eslintrc*
+.prettierrc*
+.gitignore
+
+# 构建工具
+node_modules/
+pnpm-lock.yaml
+
+# 其他
+.DS_Store
+*.log 
