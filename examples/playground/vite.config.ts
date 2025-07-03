@@ -36,7 +36,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['vue', 'vue-router'],
-          mathjax: ['mathjax']
+          ui: ['lucide-vue-next', 'vue-i18n']
         }
       }
     }
