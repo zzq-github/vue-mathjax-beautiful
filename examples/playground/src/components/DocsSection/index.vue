@@ -52,6 +52,9 @@
             <div class="ml-2 text-yellow-400 dark:text-yellow-300">
               import { VueMathjaxEditor } from 'vue-mathjax-beautiful'
             </div>
+            <div class="ml-2 text-yellow-400 dark:text-yellow-300">
+              import 'vue-mathjax-beautiful/dist/style.css'
+            </div>
             <div class="text-blue-400 dark:text-blue-300">&lt;/script&gt;</div>
           </div>
         </div>
@@ -433,6 +436,7 @@
               <div class="ml-2 text-purple-400">VueMathjaxEditor, VueMathjaxBeautiful,</div>
               <div class="ml-2 text-purple-400">initMathJax, convertLatexToSvg</div>
               <div class="text-purple-400">} from 'vue-mathjax-beautiful'</div>
+              <div class="text-purple-400">import 'vue-mathjax-beautiful/dist/style.css'</div>
               <br />
               <div class="text-gray-400">// 响应式数据</div>
               <div class="text-white">const content = ref('')</div>

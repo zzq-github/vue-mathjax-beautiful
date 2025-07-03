@@ -90,7 +90,7 @@
             <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur" />
           </button>
           
-          <button class="group inline-flex items-center justify-center rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm px-8 py-4 text-base font-semibold text-white hover:bg-white/20 hover:border-white/50 transition-all duration-300 hover:scale-105 min-w-[160px]">
+          <button @click="handleViewSource" class="group inline-flex items-center justify-center rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm px-8 py-4 text-base font-semibold text-white hover:bg-white/20 hover:border-white/50 transition-all duration-300 hover:scale-105 min-w-[160px]">
             <GithubIcon class="mr-2 h-5 w-5 transition-transform group-hover:rotate-12" />
             <span>{{ t('hero.viewSource') }}</span>
           </button>
@@ -126,6 +126,10 @@ const heroTechnologies = computed(() => {
   const enTech = ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX'];
   return currentLocale.value.code === 'zh-CN' ? zhTech : enTech;
 });
+
+const handleViewSource = () => {
+  window.open('https://github.com/zzq-github/vue-mathjax-beautiful', '_blank');
+};
 </script>
 
 <style scoped>

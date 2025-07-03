@@ -848,6 +848,6 @@ onMounted(async () => {
 });
 </script>
 
-<style>
+<style lang="scss">
 /* 所有样式已移至 packages/core/src/styles/index.scss 中统一管理 */
 </style>

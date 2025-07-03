@@ -58,19 +58,16 @@ ${t('sampleContent.clickFormula')}`;
 
 // 事件处理
 function handleRichTextChange(value: string) {
-  console.log('富文本内容变化:', value)
+
 }
 
 function handleFormulaInsert(latex: string) {
-  console.log('插入公式:', latex)
 }
 
 function handleFocus() {
-  console.log('编辑器获得焦点')
 }
 
 function handleBlur() {
-  console.log('编辑器失去焦点')
 }
 
 function clearContent() {

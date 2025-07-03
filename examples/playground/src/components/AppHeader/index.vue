@@ -13,7 +13,7 @@
           <h1
             class="text-xl font-bold text-gray-900 dark:text-white transition-colors duration-300"
           >
-            Vue MathJax
+            Vue MathJax Beautiful
           </h1>
           <p class="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-300">
             {{ t('page.subtitle') }}
@@ -32,7 +32,7 @@
           to="/demo"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/demo' }"
-        >{{ t('nav.editor') }}</router-link>
+        >{{ t('nav.onlineDemo') }}</router-link>
         <router-link
           to="/config"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"

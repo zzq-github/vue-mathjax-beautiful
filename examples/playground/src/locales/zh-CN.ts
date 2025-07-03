@@ -2,7 +2,7 @@ export default {
   // 导航
   nav: {
     home: '首页',
-    editor: '编辑器',
+    onlineDemo: '在线演示',
     config: '公式配置',
     editorConfig: '编辑器配置',
     features: '功能特性',
@@ -30,7 +30,7 @@ export default {
   // 页面标题
   page: {
     title: 'Vue MathJax Beautiful',
-    subtitle: '美观编辑器',
+    subtitle: '精美专业的数学公式编辑器',
   },
 
   // 英雄区域

@@ -2,7 +2,7 @@ export default {
   // Navigation
   nav: {
     home: 'Home',
-    editor: 'Editor',
+    onlineDemo: 'Online Demo',
     config: 'Formula Config',
     editorConfig: 'Editor Config',
     features: 'Features',
@@ -30,7 +30,7 @@ export default {
   // Page Title
   page: {
     title: 'Vue MathJax Beautiful',
-    subtitle: 'Beautiful Editor',
+    subtitle: 'Beautiful professional math formula editor',
   },
 
   // Hero Section

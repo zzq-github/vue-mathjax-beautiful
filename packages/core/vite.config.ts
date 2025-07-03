@@ -10,14 +10,17 @@ export default defineConfig({
       insertTypesEntry: true,
       outDir: 'dist',
       include: ['src/**/*'],
-      exclude: ['src/**/*.test.*', 'src/**/*.spec.*']
+      exclude: ['src/**/*.test.*', 'src/**/*.spec.*'],
+      entryRoot: 'src',
+      rollupTypes: true,
+      copyDtsFiles: false
     })
   ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'VueMathjaxBeautiful',
-      fileName: (format) => `vue-mathjax-beautiful.${format === 'es' ? 'js' : format === 'cjs' ? 'umd.cjs' : format}`
+      fileName: (format) => `vue-mathjax-beautiful.${format === 'es' ? 'js' : format === 'cjs' ? 'cjs' : 'umd'}`
     },
     rollupOptions: {
       external: ['vue'],

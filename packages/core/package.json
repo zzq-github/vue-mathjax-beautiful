@@ -21,7 +21,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "vue",
@@ -39,6 +40,14 @@
   ],
   "author": "不讲道理的柯里昂 <15096061897@163.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zzq-github/vue-mathjax-beautiful.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zzq-github/vue-mathjax-beautiful/issues"
+  },
+  "homepage": "https://github.com/zzq-github/vue-mathjax-beautiful#readme",
   "peerDependencies": {
     "vue": "^3.3.0"
   },
