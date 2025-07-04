@@ -1,117 +1,174 @@
 <template>
-  <footer class="bg-gray-900 text-white py-8 sm:py-12">
-    <div class="container mx-auto px-4">
-      <!-- 移动端优化的网格布局 -->
-      <div class="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+  <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white py-12 sm:py-16 relative overflow-hidden">
+    <!-- 装饰性背景 -->
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    <div class="absolute top-0 left-1/4 w-64 h-64 bg-blue-500/3 dark:bg-blue-500/8 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-1/4 w-48 h-48 bg-purple-500/3 dark:bg-purple-500/8 rounded-full blur-3xl"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+      <!-- 主要内容区域 -->
+      <div class="grid gap-8 sm:gap-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-12">
         <!-- 主要信息区域 -->
         <div class="sm:col-span-2 lg:col-span-2">
-          <div class="flex items-center space-x-3 mb-4">
-            <div
-              class="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex-shrink-0"
-            >
-              <CalculatorIcon class="h-4 w-4 sm:h-5 sm:w-5" />
+          <div class="flex items-center space-x-4 mb-6">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 shadow-lg">
+              <CalculatorIcon class="h-6 w-6 text-white" />
             </div>
-            <div class="min-w-0 flex-1">
-              <h3 class="text-base sm:text-lg font-bold">{{ t('page.title') }}</h3>
-              <p class="text-xs sm:text-sm text-gray-400">{{ t('page.subtitle') }}</p>
+            <div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ t('page.title') }}</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('page.subtitle') }}</p>
             </div>
           </div>
-          <p class="text-sm sm:text-base text-gray-400 max-w-md leading-relaxed">
+          <p class="text-gray-700 dark:text-gray-300 max-w-lg leading-relaxed mb-6">
             {{ t('footer.description') }}
           </p>
+          <!-- 技术栈标签 -->
+          <div class="flex flex-wrap gap-2">
+            <span v-for="tech in techStack" :key="tech" 
+                  class="px-3 py-1 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs text-gray-700 dark:text-gray-300 font-medium">
+              {{ tech }}
+            </span>
+          </div>
         </div>
 
         <!-- 资源链接 -->
-        <div class="order-1 sm:order-none">
-          <h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base flex items-center">
-            <div class="w-1 h-4 bg-blue-500 rounded mr-2"></div>
+        <div>
+          <h4 class="font-semibold mb-6 text-lg text-gray-900 dark:text-white flex items-center">
+            <div class="w-1 h-5 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full mr-3"></div>
             {{ t('footer.resources') }}
           </h4>
-          <ul class="space-y-2 text-xs sm:text-sm text-gray-400">
+          <ul class="space-y-3">
             <li>
-              <a href="#docs" class="hover:text-white transition-colors flex items-center py-1">
-                <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
-                {{ t('footer.documentation') }}
-              </a>
+              <router-link to="/docs" 
+                          class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
+                <div class="w-2 h-2 bg-blue-500/60 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></div>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">{{ t('footer.documentation') }}</span>
+              </router-link>
             </li>
             <li>
-              <a
-                href="#examples"
-                class="hover:text-white transition-colors flex items-center py-1"
-              >
-                <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
-                {{ t('footer.examples') }}
-              </a>
+              <router-link to="/demo" 
+                          class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
+                <div class="w-2 h-2 bg-blue-500/60 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></div>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">{{ t('footer.examples') }}</span>
+              </router-link>
             </li>
             <li>
-              <a href="#" class="hover:text-white transition-colors flex items-center py-1">
-                <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
-                {{ t('footer.apiReference') }}
-              </a>
+              <router-link to="/config" 
+                          class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
+                <div class="w-2 h-2 bg-blue-500/60 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></div>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">{{ t('footer.apiReference') }}</span>
+              </router-link>
             </li>
             <li>
-              <a href="#" class="hover:text-white transition-colors flex items-center py-1">
-                <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
-                {{ t('footer.changelog') }}
+              <a href="https://github.com/zzq-github/vue-mathjax-beautiful/releases" 
+                 target="_blank"
+                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
+                <div class="w-2 h-2 bg-blue-500/60 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></div>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">{{ t('footer.changelog') }}</span>
+                <svg class="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
               </a>
             </li>
           </ul>
         </div>
 
         <!-- 社区链接 -->
-        <div class="order-2 sm:order-none">
-          <h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base flex items-center">
-            <div class="w-1 h-4 bg-purple-500 rounded mr-2"></div>
+        <div>
+          <h4 class="font-semibold mb-6 text-lg text-gray-900 dark:text-white flex items-center">
+            <div class="w-1 h-5 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full mr-3"></div>
             {{ t('footer.community') }}
           </h4>
-          <ul class="space-y-2 text-xs sm:text-sm text-gray-400">
+          <ul class="space-y-3">
             <li>
-              <a href="#" class="hover:text-white transition-colors flex items-center py-1">
-                <GithubIcon class="w-3 h-3 mr-2 flex-shrink-0" />
-                {{ t('footer.github') }}
+              <a href="https://github.com/zzq-github/vue-mathjax-beautiful" 
+                 target="_blank"
+                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                <GithubIcon class="w-4 h-4 mr-3 group-hover:scale-110 transition-transform" />
+                <span class="group-hover:translate-x-1 transition-transform duration-200">{{ t('footer.github') }}</span>
+                <svg class="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
               </a>
             </li>
             <li>
-              <a href="#" class="hover:text-white transition-colors flex items-center py-1">
-                <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
-                {{ t('footer.issues') }}
+              <a href="https://github.com/zzq-github/vue-mathjax-beautiful/issues" 
+                 target="_blank"
+                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                <div class="w-2 h-2 bg-purple-500/60 rounded-full mr-3 group-hover:bg-purple-500 transition-colors"></div>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">{{ t('footer.issues') }}</span>
+                <svg class="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
               </a>
             </li>
             <li>
-              <a href="#" class="hover:text-white transition-colors flex items-center py-1">
-                <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
-                {{ t('footer.discussions') }}
+              <a href="https://github.com/zzq-github/vue-mathjax-beautiful/discussions" 
+                 target="_blank"
+                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                <div class="w-2 h-2 bg-purple-500/60 rounded-full mr-3 group-hover:bg-purple-500 transition-colors"></div>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">{{ t('footer.discussions') }}</span>
+                <svg class="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
               </a>
             </li>
             <li>
-              <a href="#" class="hover:text-white transition-colors flex items-center py-1">
-                <span class="w-1.5 h-1.5 bg-gray-600 rounded-full mr-2 flex-shrink-0"></span>
-                {{ t('footer.contributing') }}
+              <a href="https://github.com/zzq-github/vue-mathjax-beautiful/blob/main/CONTRIBUTING.md" 
+                 target="_blank"
+                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                <div class="w-2 h-2 bg-purple-500/60 rounded-full mr-3 group-hover:bg-purple-500 transition-colors"></div>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">{{ t('footer.contributing') }}</span>
+                <svg class="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
               </a>
             </li>
           </ul>
         </div>
       </div>
 
+      <!-- 分割线 -->
+      <div class="relative mb-8">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
+        </div>
+        <div class="relative flex justify-center">
+          <div class="bg-white dark:bg-gray-900 px-6">
+            <div class="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- 底部版权信息 -->
-      <div class="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8">
-        <div
-          class="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center sm:space-y-0"
-        >
-          <p class="text-xs sm:text-sm text-gray-400 text-center sm:text-left">
+      <div class="flex flex-col space-y-6 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
+        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-6">
+          <p class="text-gray-600 dark:text-gray-400 text-center sm:text-left">
             {{ t('footer.copyright') }}
           </p>
-          <div class="flex justify-center sm:justify-end space-x-4 sm:space-x-6">
-            <a
-              href="#"
-              class="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
-              >{{ t('footer.privacy') }}</a
-            >
-            <a
-              href="#"
-              class="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
-              >{{ t('footer.terms') }}</a
-            >
+          <div class="flex justify-center sm:justify-start space-x-1 text-xs text-gray-500 dark:text-gray-500">
+            <span>Made with</span>
+            <span class="text-red-500">♥</span>
+            <span>for the Vue.js community</span>
+          </div>
+        </div>
+        
+        <div class="flex justify-center sm:justify-end items-center space-x-6">
+          <a href="#" 
+             class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 hover:underline">
+            {{ t('footer.privacy') }}
+          </a>
+          <a href="#" 
+             class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 hover:underline">
+            {{ t('footer.terms') }}
+          </a>
+          <!-- 社交媒体链接 -->
+          <div class="flex space-x-3 ml-4">
+            <a href="https://github.com/zzq-github/vue-mathjax-beautiful" 
+               target="_blank"
+               class="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 group">
+              <GithubIcon class="w-4 h-4 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+            </a>
           </div>
         </div>
       </div>
@@ -125,4 +182,13 @@ import { useI18n } from '../../composables/useI18n';
 
 // 国际化功能
 const { t } = useI18n();
+
+// 技术栈标签
+const techStack = [
+  'Vue 3',
+  'TypeScript', 
+  'MathJax',
+  'LaTeX',
+  'Tailwind CSS'
+];
 </script> 

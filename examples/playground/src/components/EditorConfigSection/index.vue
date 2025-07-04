@@ -1,9 +1,14 @@
 <template>
-  <div id="editor-config" class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950 py-16">
+  <div id="editor-config" class="py-16">
     <div class="container mx-auto px-4">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border border-orange-200/50 dark:border-orange-700/50 mb-6">
+          <div class="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
+          <span class="text-sm font-medium text-orange-700 dark:text-orange-300">{{ t('editorConfig.title') }}</span>
+        </div>
+        
+        <h2 class="text-4xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent mb-4">
           {{ t('editorConfig.title') }}
         </h2>
         <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -14,28 +19,28 @@
       <div class="grid grid-cols-1 xl:grid-cols-5 gap-8">
         <!-- 配置面板 -->
         <div class="xl:col-span-2">
-          <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+          <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
             <!-- 编辑器类型指示器 -->
             <div class="px-6 pt-4 pb-2">
               <div class="flex items-center gap-2 text-sm">
                 <span class="text-gray-600 dark:text-gray-400">{{ t('editorConfig.modes.editorType') }}:</span>
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-orange-100/80 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300 backdrop-blur-sm border border-orange-200/50 dark:border-orange-700/50">
                   {{ t('editorConfig.modes.richTextEditor') }}
                 </span>
               </div>
             </div>
             
             <!-- 标签栏 -->
-            <div class="border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50">
+            <div class="border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur-sm">
               <nav class="flex space-x-1 py-2 px-3">
                 <button 
                   v-for="tab in configTabs"
                   :key="tab.key"
                   @click="activeTab = tab.key"
                   :class="[
-                    'px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
+                    'px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200',
                     activeTab === tab.key 
-                      ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm ring-1 ring-blue-600/10 dark:ring-blue-400/10' 
+                      ? 'bg-white/90 dark:bg-gray-800/90 text-orange-600 dark:text-orange-400 shadow-sm ring-1 ring-orange-600/10 dark:ring-orange-400/10 backdrop-blur-sm' 
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50'
                   ]"
                 >
@@ -53,7 +58,7 @@
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {{ t('editorConfig.basic.title') }}
                     </h4>
-                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 border border-gray-200/50 dark:border-gray-600/50">
                       {{ t('editorConfig.modes.universal') }}
                     </span>
                   </div>
@@ -66,7 +71,7 @@
                       <input 
                         v-model="config.placeholder" 
                         type="text" 
-                        class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                        class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
                       />
                     </div>
                     
@@ -79,7 +84,7 @@
                           v-model="config.minHeight" 
                           type="text" 
                           placeholder="300px" 
-                          class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                          class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
                         />
                       </div>
                       
@@ -91,7 +96,7 @@
                           v-model="config.width" 
                           type="text" 
                           placeholder="100%" 
-                          class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                          class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
                         />
                       </div>
                     </div>
@@ -100,14 +105,14 @@
                       <label class="text-sm text-gray-700 dark:text-gray-300">
                         {{ t('editorConfig.basic.theme') }}
                       </label>
-                      <div class="flex gap-2 p-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                      <div class="flex gap-2 p-1 bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-600/50">
                         <button
                           type="button"
                           @click="config.theme = 'light'"
                           :class="[
-                            'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
+                            'flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                             config.theme === 'light'
-                              ? 'bg-white dark:bg-gray-800 text-yellow-600 dark:text-yellow-400 shadow-sm'
+                              ? 'bg-white/90 dark:bg-gray-800/90 text-yellow-600 dark:text-yellow-400 shadow-sm backdrop-blur-sm'
                               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                           ]"
                         >
@@ -117,9 +122,9 @@
                           type="button"
                           @click="config.theme = 'dark'"
                           :class="[
-                            'flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200',
+                            'flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                             config.theme === 'dark'
-                              ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-sm'
+                              ? 'bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 shadow-sm backdrop-blur-sm'
                               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                           ]"
                         >
@@ -139,40 +144,40 @@
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {{ t('editorConfig.modes.toolbarSettings') }}
                     </h4>
-                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 border border-gray-200/50 dark:border-gray-600/50">
                       {{ t('editorConfig.modes.universal') }}
                     </span>
                   </div>
                   
-                  <div class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                  <div class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                     <div>
                       <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('editorConfig.toolbar.showToolbar') }}</span>
-                                             <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('editorConfig.modes.showToolbarDesc') }}</p>
+                      <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('editorConfig.modes.showToolbarDesc') }}</p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" v-model="config.showToolbar" class="sr-only peer">
-                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                      <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm"></div>
                     </label>
                   </div>
                 </div>
                 
                 <!-- 工具选择 -->
                 <div v-if="config.showToolbar" class="space-y-4">
-                                     <div class="flex items-center justify-between">
-                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                       {{ t('editorConfig.toolbar.enabledTools') }}
-                     </h4>
-                     <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
-                       {{ t('editorConfig.modes.universal') }}
-                     </span>
-                   </div>
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('editorConfig.toolbar.enabledTools') }}
+                    </h4>
+                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 border border-gray-200/50 dark:border-gray-600/50">
+                      {{ t('editorConfig.modes.universal') }}
+                    </span>
+                  </div>
                   
                   <div class="grid grid-cols-1 gap-3">
-                    <div v-for="tool in availableTools" :key="tool.value" class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                    <div v-for="tool in availableTools" :key="tool.value" class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div class="flex-1">
                         <div class="flex items-center gap-2">
                           <span class="text-sm font-medium text-gray-900 dark:text-white">{{ tool.label }}</span>
-                          <span v-if="tool.category" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                          <span v-if="tool.category" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium backdrop-blur-sm border"
                                 :class="getCategoryBadgeClass(tool.category)">
                             {{ t(`editorConfig.modes.categories.${tool.category}`) }}
                           </span>
@@ -186,7 +191,7 @@
                           v-model="config.enabledTools"
                           class="sr-only peer"
                         />
-                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm"></div>
                       </label>
                     </div>
                   </div>
@@ -197,24 +202,24 @@
               <div v-if="activeTab === 'features'" class="space-y-6">
                 <!-- 格式功能 -->
                 <div class="space-y-4">
-                                     <div class="flex items-center justify-between">
-                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                       {{ t('editorConfig.modes.formatFeatures') }}
-                     </h4>
-                     <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
-                       {{ t('editorConfig.modes.universal') }}
-                     </span>
-                   </div>
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('editorConfig.modes.formatFeatures') }}
+                    </h4>
+                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 border border-gray-200/50 dark:border-gray-600/50">
+                      {{ t('editorConfig.modes.universal') }}
+                    </span>
+                  </div>
                   
                   <div class="grid grid-cols-1 gap-3">
-                    <div v-for="feature in formatFeatures" :key="feature.key" class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                    <div v-for="feature in formatFeatures" :key="feature.key" class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ feature.title }}</span>
                         <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ feature.description }}</p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" v-model="config[feature.key as keyof typeof config]" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm"></div>
                       </label>
                     </div>
                   </div>
@@ -222,24 +227,24 @@
                 
                 <!-- 高级功能 -->
                 <div class="space-y-4">
-                                     <div class="flex items-center justify-between">
-                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                       {{ t('editorConfig.modes.advancedFeatures') }}
-                     </h4>
-                     <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
-                       {{ t('editorConfig.modes.universal') }}
-                     </span>
-                   </div>
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('editorConfig.modes.advancedFeatures') }}
+                    </h4>
+                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 border border-gray-200/50 dark:border-gray-600/50">
+                      {{ t('editorConfig.modes.universal') }}
+                    </span>
+                  </div>
                   
                   <div class="grid grid-cols-1 gap-3">
-                    <div v-for="feature in advancedFeatures" :key="feature.key" class="flex items-center justify-between p-3 bg-gray-50/50 dark:bg-gray-700/30 rounded-lg">
+                    <div v-for="feature in advancedFeatures" :key="feature.key" class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ feature.title }}</span>
                         <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ feature.description }}</p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" v-model="config[feature.key as keyof typeof config]" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm"></div>
                       </label>
                     </div>
                   </div>
@@ -249,14 +254,14 @@
               <!-- 限制配置 -->
               <div v-if="activeTab === 'limits'" class="space-y-6">
                 <div class="space-y-4">
-                                     <div class="flex items-center justify-between">
-                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                       {{ t('editorConfig.limits.title') }}
-                     </h4>
-                     <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
-                       {{ t('editorConfig.modes.universal') }}
-                     </span>
-                   </div>
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('editorConfig.limits.title') }}
+                    </h4>
+                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 border border-gray-200/50 dark:border-gray-600/50">
+                      {{ t('editorConfig.modes.universal') }}
+                    </span>
+                  </div>
                   
                   <div class="grid grid-cols-1 gap-4">
                     <div class="space-y-2">
@@ -267,7 +272,7 @@
                         v-model.number="config.maxLength" 
                         type="number"
                         min="0" 
-                        class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                        class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
                       />
                     </div>
                     
@@ -280,7 +285,7 @@
                         type="number"
                         min="0" 
                         step="0.1"
-                        class="w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 dark:text-gray-100"
+                        class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
                       />
                     </div>
                   </div>
@@ -299,9 +304,9 @@
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                   {{ t('editorConfig.preview.title') }}
                 </h3>
-                                 <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                   {{ t('editorConfig.modes.previewDescription') }}
-                 </p>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                  {{ t('editorConfig.modes.previewDescription') }}
+                </p>
               </div>
               
               <div class="p-6">
@@ -332,9 +337,9 @@
                 </div>
                 <div class="p-4">
                   <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 max-h-32 overflow-y-auto">
-                                         <div v-if="eventLog.length === 0" class="text-sm text-gray-500 italic text-center py-2">
-                       {{ t('editorConfig.modes.noEvents') }}
-                     </div>
+                    <div v-if="eventLog.length === 0" class="text-sm text-gray-500 italic text-center py-2">
+                      {{ t('editorConfig.modes.noEvents') }}
+                    </div>
                     <div v-else class="space-y-1">
                       <div 
                         v-for="(event, index) in eventLog.slice(-5)" 

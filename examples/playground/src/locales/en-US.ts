@@ -56,10 +56,17 @@ export default {
       description: 'Get started with Vue MathJax Beautiful and experience professional mathematical formula editing',
       tryDemo: 'Try Demo',
       viewDocs: 'View Documentation',
+      badge: 'Get Started Now',
+      supportedTech: 'Supported Technologies',
+      viewExamples: 'View Examples',
     },
     installation: {
       title: 'Quick Installation',
       quickExample: 'Quick Example',
+    },
+    sections: {
+      coreFeatures: 'Core Features',
+      getStarted: 'Get Started Now',
     },
   },
 
@@ -146,7 +153,7 @@ export default {
 
   // Examples
   examples: {
-    title: 'Formula Examples Library',
+    title: 'Formula Examples',
     description: 'Click examples to quickly load into the formula editor, experience different types of mathematical formulas',
     tryInteractive: 'Try Interactive Editor',
     categories: {
@@ -397,16 +404,33 @@ export default {
     title: 'Documentation',
     description: 'Complete usage guide and API documentation',
     
+    toc: {
+      title: 'Table of Contents',
+      quickLinks: 'Quick Links',
+    },
+    
     sections: {
       installation: {
         title: 'Installation',
         description: 'Or use yarn:',
         yarn: 'Or use yarn:',
         pnpm: 'Or use pnpm (recommended):',
+        packageManagers: 'Package Managers',
+        requirements: 'Requirements & Quick Import',
+        optional: '(optional)',
+        quickImport: 'Quick Import',
+        cdn: 'CDN Import',
       },
 
       basicUsage: {
         title: 'Basic Usage',
+        commonConfig: 'Common Configurations',
+        configs: {
+          minimalSetup: 'Minimal Setup',
+          customHeight: 'Custom Height',
+          readonlyMode: 'Readonly Mode',
+          inlineDialog: 'Inline Dialog',
+        },
       },
 
       coreComponents: {
@@ -524,6 +548,7 @@ export default {
       integrationExample: {
         title: 'Complete Integration Example',
         composition: 'Vue 3 Composition API',
+        scriptSetup: 'Script Setup Syntax',
         typescript: 'TypeScript Type Support',
         utilityFunctions: 'Utility Functions Usage',
       },
@@ -558,6 +583,17 @@ export default {
         issues: 'Issue Tracker',
         changelog: 'Changelog',
       },
+      
+      examples: {
+        title: 'Examples & Best Practices',
+        commonUsage: 'Common Usage',
+        bestPractices: 'Best Practices',
+        inlineUsage: 'Use inline mode',
+        dialogUsage: 'Use popup mode',
+        practice1: 'Choose appropriate mode between inline and popup',
+        practice2: 'Preset commonly used formula templates',
+        practice3: 'Enable real-time preview for better UX',
+      },
     },
   },
 
@@ -574,7 +610,7 @@ export default {
     issues: 'Issue Tracker',
     discussions: 'Discussions',
     contributing: 'Contributing',
-    copyright: '© 2024 Vue MathJax Beautiful. All rights reserved.',
+    copyright: '© 2025 Vue MathJax Beautiful. All rights reserved.',
     privacy: 'Privacy Policy',
     terms: 'Terms of Service',
   },

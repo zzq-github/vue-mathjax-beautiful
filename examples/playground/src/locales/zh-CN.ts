@@ -56,10 +56,17 @@ export default {
       description: '快速开始使用 Vue MathJax Beautiful，体验专业的数学公式编辑功能',
       tryDemo: '在线演示',
       viewDocs: '查看文档',
+      badge: '立即开始',
+      supportedTech: '支持的技术栈',
+      viewExamples: '查看示例',
     },
     installation: {
       title: '快速安装',
       quickExample: '快速示例',
+    },
+    sections: {
+      coreFeatures: '核心功能',
+      getStarted: '立即开始',
     },
   },
 
@@ -146,7 +153,7 @@ export default {
 
   // 示例展示
   examples: {
-    title: '公式示例库',
+    title: '公式示例',
     description: '点击示例快速加载到公式编辑器，体验不同类型的数学公式',
     tryInteractive: '体验交互式编辑器',
     categories: {
@@ -397,15 +404,32 @@ export default {
     title: '使用文档',
     description: '详细的组件使用指南和API文档',
     
+    toc: {
+      title: '目录',
+      quickLinks: '快速链接',
+    },
+    
     sections: {
       installation: {
         title: '安装',
         yarn: '使用 Yarn 安装：',
         pnpm: '使用 pnpm 安装：',
+        packageManagers: '包管理器',
+        requirements: '系统要求和快速导入',
+        optional: '(可选)',
+        quickImport: '快速导入',
+        cdn: 'CDN 引入',
       },
       
       basicUsage: {
         title: '基本使用',
+        commonConfig: '常用配置',
+        configs: {
+          minimalSetup: '最简配置',
+          customHeight: '自定义高度',
+          readonlyMode: '只读模式',
+          inlineDialog: '内联弹窗',
+        },
       },
       
       coreComponents: {
@@ -523,6 +547,7 @@ export default {
       integrationExample: {
         title: '集成示例',
         composition: 'Vue 3 组合式API',
+        scriptSetup: 'Script Setup 语法',
         typescript: 'TypeScript类型支持',
         utilityFunctions: '工具函数使用',
       },
@@ -557,6 +582,17 @@ export default {
         issues: '问题反馈',
         changelog: '更新日志',
       },
+      
+      examples: {
+        title: '示例和最佳实践',
+        commonUsage: '常见用法',
+        bestPractices: '最佳实践',
+        inlineUsage: '内联模式下使用',
+        dialogUsage: '弹窗模式下使用',
+        practice1: '合理选择内联模式和弹窗模式',
+        practice2: '预设常用公式模板',
+        practice3: '启用实时预览提升用户体验',
+      },
     },
   },
 
@@ -573,7 +609,7 @@ export default {
     issues: '问题反馈',
     discussions: '讨论区',
     contributing: '贡献指南',
-    copyright: '© 2024 Vue MathJax Beautiful. All rights reserved.',
+    copyright: '© 2025 Vue MathJax Beautiful. All rights reserved.',
     privacy: '隐私政策',
     terms: '使用条款',
   },
