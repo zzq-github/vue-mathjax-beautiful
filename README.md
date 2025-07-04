@@ -829,6 +829,7 @@ vue-mathjax-beautiful/
 
 [![Star History Chart](https://api.star-history.com/svg?repos=zzq-github/vue-mathjax-beautiful&type=Date)](https://star-history.com/#zzq-github/vue-mathjax-beautiful&Date)
 
+<!-- 
 ## 💖 赞赏支持
 
 如果这个项目对您有帮助，欢迎请作者喝杯咖啡 ☕️
@@ -850,6 +851,7 @@ vue-mathjax-beautiful/
     <small>赞赏金额不限，心意最重要 ❤️</small>
   </p>
 </div>
+-->
 
 ---
 
