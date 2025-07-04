@@ -9,13 +9,14 @@
         >
           <CalculatorIcon class="h-5 w-5" />
         </div>
-        <div>
+        <div class="min-w-0 flex-1">
           <h1
-            class="text-xl font-bold text-gray-900 dark:text-white transition-colors duration-300"
+            class="text-lg md:text-xl font-bold text-gray-900 dark:text-white transition-colors duration-300 truncate"
           >
-            Vue MathJax Beautiful
+            <span class="hidden sm:inline">Vue MathJax Beautiful</span>
+            <span class="sm:hidden">Vue MathJax</span>
           </h1>
-          <p class="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-300">
+          <p class="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-300 hidden sm:block">
             {{ t('page.subtitle') }}
           </p>
         </div>
@@ -257,48 +258,46 @@
         class="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transition-colors duration-300"
       >
         <div class="container mx-auto px-4 py-4 space-y-3">
-          <a
-            href="#editor"
+          <router-link
+            to="/"
             @click="$emit('closeMobileMenu')"
             class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/' }"
           >
-            {{ t('nav.editor') }}
-          </a>
-          <a
-            href="#config"
+            {{ t('nav.home') }}
+          </router-link>
+          <router-link
+            to="/demo"
             @click="$emit('closeMobileMenu')"
             class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/demo' }"
+          >
+            {{ t('nav.onlineDemo') }}
+          </router-link>
+          <router-link
+            to="/config"
+            @click="$emit('closeMobileMenu')"
+            class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/config' }"
           >
             {{ t('nav.config') }}
-          </a>
-          <a
-            href="#editor-config"
+          </router-link>
+          <router-link
+            to="/editor-config"
             @click="$emit('closeMobileMenu')"
             class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/editor-config' }"
           >
             {{ t('nav.editorConfig') }}
-          </a>
-          <a
-            href="#features"
-            @click="$emit('closeMobileMenu')"
-            class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-          >
-            {{ t('nav.features') }}
-          </a>
-          <router-link
-            to="/#examples"
-            @click="$emit('closeMobileMenu')"
-            class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-          >
-            {{ t('nav.examples') }}
           </router-link>
-          <a
-            href="#docs"
+          <router-link
+            to="/docs"
             @click="$emit('closeMobileMenu')"
             class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/docs' }"
           >
             {{ t('nav.docs') }}
-          </a>
+          </router-link>
         </div>
       </div>
     </Transition>
