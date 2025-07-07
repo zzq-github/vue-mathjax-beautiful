@@ -35,7 +35,7 @@
               ]"
             >
               <component :is="item.icon" class="h-3 w-3 flex-shrink-0" />
-              <span class="text-xs truncate">{{ item.title }}</span>
+              <span class="text-xs truncate">{{ t(`toc.${item.id}`) }}</span>
             </button>
           </div>
         </div>
@@ -43,10 +43,10 @@
 
       <div class="grid gap-8 lg:grid-cols-12 relative items-start">
         <!-- 文档内容 -->
-        <div class="lg:col-span-9 order-2 lg:order-1">
-      <div class="grid gap-8 lg:grid-cols-2">
+        <div class="col-span-12 order-2 lg:order-1 lg:pr-20">
+      <div class="grid gap-8 lg:grid-cols-1">
         <!-- 安装说明 -->
-            <div id="installation" class="lg:col-span-2 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50 transition-colors duration-300">
+            <div id="install" class="lg:col-span-2 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 shadow-xl border border-gray-200/50 dark:border-gray-700/50 transition-colors duration-300">
               <h3 class="flex items-center gap-3 text-lg font-semibold text-gray-900 dark:text-white mb-6 transition-colors duration-300">
                 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-sm">
                   <CodeIcon class="h-4 w-4" />
@@ -95,25 +95,7 @@
                 <!-- 系统要求和快速导入 -->
                 <div class="space-y-4">
                   <h4 class="font-semibold text-blue-800 dark:text-blue-300 text-base mb-4">{{ t('docs.sections.installation.requirements') }}</h4>
-                  
-                  <!-- 系统要求 -->
-                  <div class="p-4 bg-blue-50/80 dark:bg-blue-900/40 backdrop-blur-sm border border-blue-200/50 dark:border-blue-800/50 rounded-xl transition-colors duration-300">
-                    <div class="space-y-2 text-sm">
-                      <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span class="text-blue-900 dark:text-blue-200">Vue 3.x</span>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span class="text-blue-900 dark:text-blue-200">TypeScript {{ t('docs.sections.installation.optional') }}</span>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                        <span class="text-blue-900 dark:text-blue-200">Modern Browsers</span>
-                      </div>
-                    </div>
-                  </div>
-
+                
                   <!-- 快速导入 -->
                   <div>
                     <div class="flex items-center gap-2 mb-3">
@@ -141,7 +123,7 @@
           </div>
 
           <!-- 基本使用 -->
-          <div id="basic-usage" class="mt-8 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50 transition-colors duration-300">
+          <div id="basicUsage" class="lg:col-span-2 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50 transition-colors duration-300">
               <h3 class="flex items-center gap-3 text-lg font-semibold text-gray-900 dark:text-white mb-6 transition-colors duration-300">
                 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-sm">
                   <ZapIcon class="h-4 w-4" />
@@ -151,13 +133,13 @@
 
         <!-- 完整集成示例 -->
               <div class="space-y-6">
-          <!-- Vue 3 组合式API示例 -->
+        <!-- Vue 3 组合式API示例 -->
                 <div>
                   <h4 class="font-semibold text-green-800 dark:text-green-300 mb-3 text-base">{{ t('docs.sections.integrationExample.composition') }}</h4>
                   <div class="bg-gray-900/90 dark:bg-gray-950/90 backdrop-blur-sm text-gray-100 dark:text-gray-200 p-4 rounded-xl font-mono text-sm transition-colors duration-300 border border-gray-700/50 overflow-x-auto">
               <div class="text-blue-400">&lt;template&gt;</div>
               <div class="ml-2 text-green-400">&lt;div class="math-editor-container"&gt;</div>
-              <div class="ml-4 text-gray-400">&lt;!-- 富文本编辑器 --&gt;</div>
+              <div class="ml-4 text-gray-400">&lt;!-- Rich Text Editor --&gt;</div>
               <div class="ml-4 text-green-400">&lt;VueMathjaxEditor</div>
               <div class="ml-6 text-yellow-400">v-model="content"</div>
               <div class="ml-6 text-yellow-400">:min-height="'300px'"</div>
@@ -166,7 +148,7 @@
               <div class="ml-6 text-yellow-400">@change="handleContentChange"</div>
               <div class="ml-4 text-green-400">/&gt;</div>
               <br />
-              <div class="ml-4 text-gray-400">&lt;!-- 公式编辑器弹窗 --&gt;</div>
+              <div class="ml-4 text-gray-400">&lt;!-- Formula Editor Dialog --&gt;</div>
               <div class="ml-4 text-green-400">&lt;VueMathjaxBeautiful</div>
               <div class="ml-6 text-yellow-400">v-model="showFormulaDialog"</div>
               <div class="ml-6 text-yellow-400">:existing-latex="selectedFormula"</div>
@@ -298,7 +280,7 @@
           </div>
 
           <!-- 组件介绍 -->
-          <div id="core-components" class="mt-8 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-xl border border-gray-200/50 dark:border-gray-700/50 transition-colors duration-300">
+          <div id="coreComponents" class="mt-8 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 shadow-xl border border-gray-200/50 dark:border-gray-700/50 transition-colors duration-300">
               <h3 class="flex items-center gap-3 text-lg font-semibold text-gray-900 dark:text-white mb-6 transition-colors duration-300">
                 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-sm">
                   <CalculatorIcon class="h-4 w-4" />
@@ -332,7 +314,7 @@
         </div>
 
           <!-- VueMathjaxBeautiful API -->
-          <div id="beautiful-api" class="mt-8 rounded-2xl bg-gradient-to-br from-purple-50/80 to-blue-50/80 dark:from-purple-900/40 dark:to-blue-900/40 backdrop-blur-sm p-6 shadow-xl border border-purple-200/50 dark:border-purple-800/50 transition-colors duration-300">
+          <div id="beautifulApi" class="mt-8 rounded-2xl bg-gradient-to-br from-purple-50/80 to-blue-50/80 dark:from-purple-900/40 dark:to-blue-900/40 backdrop-blur-sm p-6 shadow-xl border border-purple-200/50 dark:border-purple-800/50 transition-colors duration-300">
             <h3 class="flex items-center gap-3 text-lg font-semibold text-purple-900 dark:text-purple-200 mb-6 transition-colors duration-300">
               <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-indigo-500 text-white shadow-sm">
                 <CalculatorIcon class="h-4 w-4" />
@@ -398,7 +380,7 @@
           </div>
 
           <!-- VueMathjaxEditor API -->
-          <div id="editor-api" class="mt-8 rounded-2xl bg-gradient-to-br from-green-50/80 to-teal-50/80 dark:from-green-900/40 dark:to-teal-900/40 backdrop-blur-sm p-6 shadow-xl border border-green-200/50 dark:border-green-800/50 transition-colors duration-300">
+          <div id="editorApi" class="mt-8 rounded-2xl bg-gradient-to-br from-green-50/80 to-teal-50/80 dark:from-green-900/40 dark:to-teal-900/40 backdrop-blur-sm p-6 shadow-xl border border-green-200/50 dark:border-green-800/50 transition-colors duration-300">
             <h3 class="flex items-center gap-3 text-lg font-semibold text-green-900 dark:text-green-200 mb-6 transition-colors duration-300">
               <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-teal-500 text-white shadow-sm">
                 <FileTextIcon class="h-4 w-4" />
@@ -512,58 +494,59 @@
         </div>
 
         <!-- 目录导航 - 右侧边栏 -->
-        <div class="lg:col-span-3 order-1 lg:order-2">
-          <div class="sticky top-24 z-10 hidden lg:block">
-            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 p-6 max-h-[calc(100vh-8rem)] overflow-y-auto">
-              <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                <div class="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                {{ t('docs.toc.title') }}
-          </h3>
-              <nav class="space-y-2">
-                <a
-                  v-for="item in tocItems"
-                  :key="item.id"
-                  :href="`#${item.id}`"
-                  @click.prevent="scrollToSection(item.id)"
-                  :class="[
-                    'block px-3 py-2 text-sm rounded-lg transition-all duration-200',
-                    activeSection === item.id
-                      ? 'bg-indigo-100/80 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 border-l-2 border-indigo-500'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50/50 dark:hover:bg-gray-700/30'
-                  ]"
-                >
-                  <div class="flex items-center gap-2">
-                    <component :is="item.icon" class="h-4 w-4 flex-shrink-0" />
-                    <span class="truncate">{{ item.title }}</span>
-                  </div>
-                </a>
-              </nav>
-              
-              <!-- 快速链接 -->
-              <div class="mt-6 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
-                <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{{ t('docs.toc.quickLinks') }}</h4>
-                <div class="space-y-2">
-                  <a
-                    href="https://github.com/zxpsuper/vue-mathjax-beautiful"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 rounded-lg transition-all duration-200"
-                  >
-                    <GithubIcon class="h-4 w-4" />
-                    <span>GitHub</span>
-                    <ExternalLinkIcon class="h-3 w-3 ml-auto" />
-            </a>
-            <a
-                    href="https://www.npmjs.com/package/vue-mathjax-beautiful"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 rounded-lg transition-all duration-200"
-                  >
-                    <PackageIcon class="h-4 w-4" />
-                    <span>NPM</span>
-                    <ExternalLinkIcon class="h-3 w-3 ml-auto" />
-                  </a>
+        <!-- 浮动右侧导航栏 -->
+        <div
+          class="hidden lg:block fixed z-30"
+          style="top: 6rem; right: 1rem; width: 16rem; max-height: 80vh;"
+        >
+          <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 p-4 overflow-y-auto">
+            <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <div class="w-2 h-2 bg-indigo-500 rounded-full"></div>
+              {{ t('docs.toc.title') }}
+            </h3>
+            <nav class="space-y-2">
+              <a
+                v-for="item in tocItems"
+                :key="item.id"
+                :href="`#${item.id}`"
+                @click.prevent="scrollToSection(item.id)"
+                :class="[
+                  'block px-3 py-2 text-sm rounded-lg transition-all duration-200',
+                  activeSection === item.id
+                    ? 'bg-indigo-100/80 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 border-l-2 border-indigo-500'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50/50 dark:hover:bg-gray-700/30'
+                ]"
+              >
+                <div class="flex items-center gap-2">
+                  <component :is="item.icon" class="h-4 w-4 flex-shrink-0" />
+                  <span class="truncate">{{ t(`docs.toc.${item.id}`) }}</span>
                 </div>
+              </a>
+            </nav>
+            <!-- 快速链接 -->
+            <div class="mt-6 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+              <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{{ t('docs.toc.quickLinks') }}</h4>
+              <div class="space-y-2">
+                <a
+                  href="https://github.com/zzq-github/vue-mathjax-beautiful"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 rounded-lg transition-all duration-200"
+                >
+                  <GithubIcon class="h-4 w-4" />
+                  <span>{{ t('docs.toc.github') }}</span>
+                  <ExternalLinkIcon class="h-3 w-3 ml-auto" />
+                </a>
+                <a
+                  href="https://www.npmjs.com/package/vue-mathjax-beautiful"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 rounded-lg transition-all duration-200"
+                >
+                  <PackageIcon class="h-4 w-4" />
+                  <span>{{ t('docs.toc.npm') }}</span>
+                  <ExternalLinkIcon class="h-3 w-3 ml-auto" />
+                </a>
               </div>
             </div>
           </div>
@@ -578,6 +561,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import {
   Code as CodeIcon,
   Zap as ZapIcon,
+  Cpu as CpuIcon,
   Calculator as CalculatorIcon,
   FileText as FileTextIcon,
   BookOpen as BookOpenIcon,
@@ -590,40 +574,16 @@ import { useI18n } from '../../composables/useI18n'
 const { t } = useI18n()
 
 // 当前活跃的部分
-const activeSection = ref('installation')
+const activeSection = ref('install')
 
 // 目录项
 const tocItems = ref([
-  {
-    id: 'installation',
-    title: t('docs.sections.installation.title'),
-    icon: CodeIcon
-  },
-  {
-    id: 'basic-usage',
-    title: t('docs.sections.basicUsage.title'),
-    icon: ZapIcon
-  },
-  {
-    id: 'core-components',
-    title: t('docs.sections.coreComponents.title'),
-    icon: CalculatorIcon
-  },
-  {
-    id: 'beautiful-api',
-    title: t('docs.sections.vueMathjaxBeautifulApi.title'),
-    icon: CalculatorIcon
-  },
-  {
-    id: 'editor-api',
-    title: t('docs.sections.vueMathjaxEditorApi.title'),
-    icon: FileTextIcon
-  },
-  {
-    id: 'examples',
-    title: t('docs.sections.examples.title'),
-    icon: BookOpenIcon
-  }
+  { id: 'install', icon: CodeIcon },
+  { id: 'basicUsage', icon: ZapIcon },
+  { id: 'coreComponents', icon: CpuIcon },
+  { id: 'beautifulApi', icon: CalculatorIcon },
+  { id: 'editorApi', icon: FileTextIcon },
+  { id: 'examples', icon: BookOpenIcon }
 ])
 
 // 滚动到指定部分

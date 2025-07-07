@@ -407,6 +407,14 @@ export default {
     toc: {
       title: 'Table of Contents',
       quickLinks: 'Quick Links',
+      github: 'GitHub',
+      npm: 'NPM',
+      install: 'Install',
+      basicUsage: 'Basic Usage',
+      coreComponents: 'Core Components',
+      beautifulApi: 'VueMathjaxBeautiful API',
+      editorApi: 'VueMathjaxEditor API',
+      examples: 'Examples & Best Practices',
     },
     
     sections: {

@@ -407,6 +407,14 @@ export default {
     toc: {
       title: '目录',
       quickLinks: '快速链接',
+      github: 'GitHub',
+      npm: 'NPM',
+      install: '安装',
+      basicUsage: '基本使用',
+      coreComponents: '核心组件',
+      beautifulApi: 'VueMathjaxBeautiful API',
+      editorApi: 'VueMathjaxEditor API',
+      examples: '示例和最佳实践',
     },
     
     sections: {
