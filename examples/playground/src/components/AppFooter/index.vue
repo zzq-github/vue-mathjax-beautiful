@@ -164,14 +164,14 @@
         <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
           <!-- 法律链接 -->
           <div class="flex space-x-6">
-            <a href="/privacy" 
+            <router-link to="/privacy" 
                class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 hover:underline">
               {{ t('footer.privacy') }}
-            </a>
-            <a href="/terms" 
+            </router-link>
+            <router-link to="/terms" 
                class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 hover:underline">
               {{ t('footer.terms') }}
-            </a>
+            </router-link>
           </div>
           
           <!-- 社交媒体链接 -->
