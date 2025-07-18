@@ -367,11 +367,11 @@ const features = [
     title: () => t('features.list.realTimePreview.title'),
     description: () => t('features.list.realTimePreview.description')
   },
-  {
-    icon: '📝',
-    title: () => t('features.list.richTextEditing.title'),
-    description: () => t('features.list.richTextEditing.description')
-  },
+  // {
+  //   icon: '📝',
+  //   title: () => t('features.list.richTextEditing.title'),
+  //   description: () => t('features.list.richTextEditing.description')
+  // },
   {
     icon: '📱',
     title: () => t('features.list.responsiveDesign.title'),
@@ -475,7 +475,6 @@ onMounted(async () => {
 .feature-delay-2 { animation-delay: 0.8s; }
 .feature-delay-3 { animation-delay: 0.9s; }
 .feature-delay-4 { animation-delay: 1.0s; }
-.feature-delay-5 { animation-delay: 1.1s; }
 
 /* 技术栈标签动画延迟 */
 .tech-delay-0 { animation-delay: 0.8s; }

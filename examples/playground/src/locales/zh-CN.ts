@@ -38,7 +38,7 @@ export default {
     badge: '专业数学公式编辑器',
     title: 'Vue 数学公式',
     titleHighlight: '编辑器',
-    description: '专业的数学公式编辑器组件库，提供 240+ 符号面板、38 个公式模板，支持富文本编辑和 LaTeX 语法',
+    description: '专业的数学公式编辑器组件库，提供 240+ 符号面板、38 个公式模板，支持 LaTeX 语法',
     technologies: ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX'],
     getStarted: '开始使用',
     viewSource: '查看源码',
@@ -73,9 +73,8 @@ export default {
   // 演示区域
   demo: {
     title: '在线演示',
-    description: '体验专业的数学公式编辑器和富文本编辑功能',
+    description: '体验专业的数学公式编辑器功能',
     professionalEditor: '专业公式编辑器',
-    richTextEditorLabel: '富文本编辑器',
     
     // 公式编辑器
     formulaEditor: {
@@ -264,8 +263,8 @@ export default {
 
   // 编辑器配置
   editorConfig: {
-    title: '富文本编辑器配置',
-    description: '通过实时配置面板体验 VueMathjaxEditor 组件的所有功能选项，左侧调整参数，右侧即时预览效果。',
+    title: '编辑器配置',
+    description: '配置数学公式编辑器的各种参数和选项，体验不同的功能和外观设置。',
     
     tabs: {
       basic: '基础配置',
@@ -413,7 +412,7 @@ export default {
       basicUsage: '基本使用',
       coreComponents: '核心组件',
       beautifulApi: 'VueMathjaxBeautiful API',
-      editorApi: 'VueMathjaxEditor API',
+      
       examples: '示例和最佳实践',
     },
     
@@ -434,8 +433,8 @@ export default {
         commonConfig: '常用配置',
         configs: {
           minimalSetup: '最简配置',
-          customHeight: '自定义高度',
-          readonlyMode: '只读模式',
+          customTheme: '自定义主题',
+          existingLatex: '预设公式',
           inlineDialog: '内联弹窗',
         },
       },
@@ -445,10 +444,6 @@ export default {
         beautiful: {
           title: 'VueMathjaxBeautiful',
           description: '专业的数学公式编辑器组件，提供240+符号和38个模板，支持弹窗和内联模式',
-        },
-        editor: {
-          title: 'VueMathjaxEditor',
-          description: '富文本编辑器组件，支持文本格式和数学公式的混合编辑',
         },
       },
       
@@ -472,29 +467,7 @@ export default {
         },
       },
       
-      vueMathjaxEditorApi: {
-        title: 'VueMathjaxEditor API',
-        basicProps: '基础属性',
-        featureProps: '功能属性',
-        events: '事件',
-        props: {
-          modelValue: '编辑器内容（HTML字符串）',
-          placeholder: '编辑器占位符文本',
-          minHeight: '编辑器最小高度（默认200px）',
-          width: '编辑器宽度（默认100%）',
-          readonly: '是否只读模式',
-          showToolbar: '是否显示工具栏',
-          theme: '编辑器主题（default | minimal）',
-          autoFocus: '是否自动聚焦',
-        },
-        eventDesc: {
-          change: '内容变化时触发，参数为新的HTML内容',
-          focus: '编辑器获得焦点时触发',
-          blur: '编辑器失去焦点时触发',
-          ready: '编辑器初始化完成时触发',
-          error: '发生错误时触发，参数为错误信息',
-        },
-      },
+
       
       events: {
         title: '事件处理',

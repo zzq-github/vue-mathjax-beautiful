@@ -39,11 +39,11 @@
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/config' }"
         >{{ t('nav.config') }}</router-link>
-        <router-link
+        <!-- <router-link
           to="/editor-config"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/editor-config' }"
-        >{{ t('nav.editorConfig') }}</router-link>
+        >{{ t('nav.editorConfig') }}</router-link> -->
         <router-link
           to="/docs"
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -282,14 +282,14 @@
           >
             {{ t('nav.config') }}
           </router-link>
-          <router-link
+          <!-- <router-link
             to="/editor-config"
             @click="$emit('closeMobileMenu')"
             class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/editor-config' }"
           >
             {{ t('nav.editorConfig') }}
-          </router-link>
+          </router-link> -->
           <router-link
             to="/docs"
             @click="$emit('closeMobileMenu')"

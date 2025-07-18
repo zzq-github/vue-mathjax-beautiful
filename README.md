@@ -6,7 +6,7 @@
 
 # Vue MathJax Beautiful
 
-一个基于 Vue 3 和 MathJax 的强大数学公式编辑器组件库，提供专业的数学公式编辑和富文本编辑功能。
+一个基于 Vue 3 和 MathJax 的强大数学公式编辑器组件库，提供专业的数学公式编辑功能。
 
 </div>
 
@@ -17,7 +17,7 @@
 - 🧮 **专业公式编辑** - 基于 MathJax 引擎，支持完整的 LaTeX 语法
 - 🎨 **丰富符号面板** - 240+ 数学符号和 38 个常用公式模板
 - 👀 **实时预览** - 所见即所得的公式编辑体验
-- 📝 **富文本编辑** - 支持粗体、斜体、下划线等文本格式
+
 - 🚀 **Vue 3 + TypeScript** - 现代化的技术栈
 - 📱 **响应式设计** - 完美适配桌面端和移动端
 - 🔧 **易于集成** - 简单的 API 设计，轻松集成到现有项目
@@ -111,66 +111,24 @@ const handleInsert = (latex) => {
 </script>
 ```
 
-### 富文本编辑器 (VueMathjaxEditor)
 
-支持数学公式的富文本编辑器，适合编写包含数学内容的文档。
-
-```vue
-<template>
-  <div>
-    <!-- 富文本编辑器 -->
-    <VueMathjaxEditor 
-      v-model="content"
-      placeholder="开始编写您的内容，支持数学公式..."
-      :min-height="'400px'"
-      @change="handleChange"
-    />
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-import { VueMathjaxEditor } from 'vue-mathjax-beautiful'
-
-const content = ref(`
-**欢迎使用 Vue MathJax Editor！**
-
-这里是一些数学公式示例：
-
-行内公式：质能方程 $E = mc^2$ 很有名。
-
-独立公式：
-$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
-
-二次方程求根公式：
-$$x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$$
-`)
-
-const handleChange = (value) => {
-  console.log('内容变化:', value)
-}
-</script>
-```
 
 ### 完整集成示例
 
 ```vue
 <template>
   <div class="editor-container">
-    <!-- 富文本编辑器 -->
-    <VueMathjaxEditor
-      v-model="content"
-      :min-height="'400px'"
-      placeholder="请输入内容，支持数学公式..."
-      @change="handleChange"
-      @focus="handleFocus"
-      @blur="handleBlur"
+    <!-- 公式编辑器 -->
+    <VueMathjaxBeautiful
+      :inline-mode="true"
+      :existing-latex="currentFormula"
+      @insert="handleFormulaInsert"
     />
     
     <!-- 工具栏 -->
     <div class="toolbar">
-      <button @click="showFormulaDialog">插入公式</button>
-      <button @click="clearContent">清空内容</button>
+      <button @click="showFormulaDialog">打开公式编辑器</button>
+      <button @click="clearFormula">清空公式</button>
     </div>
     
     <!-- 公式编辑器弹窗 -->
@@ -179,27 +137,30 @@ const handleChange = (value) => {
       :existing-latex="currentFormula"
       @insert="insertFormula"
     />
+    
+    <!-- 显示当前公式 -->
+    <div v-if="currentFormula" class="formula-display">
+      <h3>当前公式：</h3>
+      <div v-html="renderedFormula"></div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { VueMathjaxEditor, VueMathjaxBeautiful } from 'vue-mathjax-beautiful'
+import { ref, computed } from 'vue'
+import { VueMathjaxBeautiful, convertLatexToSvg } from 'vue-mathjax-beautiful'
 
-const content = ref('')
 const showDialog = ref(false)
-const currentFormula = ref('')
+const currentFormula = ref('E = mc^2')
 
-const handleChange = (value) => {
-  console.log('内容变化:', value)
-}
+const renderedFormula = computed(() => {
+  // 这里可以集成 MathJax 渲染
+  return `$${currentFormula.value}$`
+})
 
-const handleFocus = () => {
-  console.log('编辑器获得焦点')
-}
-
-const handleBlur = () => {
-  console.log('编辑器失去焦点')
+const handleFormulaInsert = (latex) => {
+  currentFormula.value = latex
+  console.log('应用公式:', latex)
 }
 
 const showFormulaDialog = () => {
@@ -207,15 +168,13 @@ const showFormulaDialog = () => {
 }
 
 const insertFormula = (latex) => {
-  // 将公式插入到编辑器中
-  const formulaText = `$$${latex}$$`
-  content.value += '\n' + formulaText + '\n'
   currentFormula.value = latex
+  showDialog.value = false
   console.log('插入公式:', latex)
 }
 
-const clearContent = () => {
-  content.value = ''
+const clearFormula = () => {
+  currentFormula.value = ''
 }
 </script>
 
@@ -244,6 +203,14 @@ const clearContent = () => {
 .toolbar button:hover {
   background: #f3f4f6;
   border-color: #9ca3af;
+}
+
+.formula-display {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
 }
 </style>
 ```
@@ -274,46 +241,18 @@ const clearContent = () => {
 - **智能插入**：点击符号自动插入到光标位置
 - **双模式支持**：支持弹窗模式和内联模式
 
-### VueMathjaxEditor 组件 (富文本编辑器)
 
-#### Props
-
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `v-model` | `string` | `''` | 绑定的内容值 |
-| `placeholder` | `string` | `''` | 占位符文本 |
-| `min-height` | `string` | `'200px'` | 编辑器最小高度 |
-| `readonly` | `boolean` | `false` | 是否为只读模式 |
-
-#### Events
-
-| 事件名 | 参数 | 说明 |
-|--------|------|------|
-| `change` | `(value: string)` | 内容变化时触发 |
-| `focus` | - | 编辑器获得焦点时触发 |
-| `blur` | - | 编辑器失去焦点时触发 |
-
-#### 功能特性
-
-- **富文本格式**：支持粗体、斜体、下划线、删除线等文本格式
-- **数学公式**：支持行内公式 `$...$` 和独立公式 `$$...$$`
-- **工具栏**：提供常用格式化按钮和公式插入功能
-- **快捷键**：支持常用的编辑快捷键
-- **自动保存**：可配置自动保存功能
 
 ## ⌨️ 快捷键
 
-### 富文本编辑器快捷键
+### 公式编辑器快捷键
 
 | 快捷键 | 功能 |
 |--------|------|
-| `Ctrl + B` | 粗体 |
-| `Ctrl + I` | 斜体 |
-| `Ctrl + U` | 下划线 |
-| `Ctrl + S` | 删除线 |
-| `Ctrl + Z` | 撤销 |
-| `Ctrl + Y` | 重做 |
-| `点击公式` | 编辑公式 |
+| `点击符号` | 插入符号到光标位置 |
+| `点击模板` | 插入公式模板 |
+| `Enter` | 确认插入公式 |
+| `Esc` | 取消编辑 |
 
 ### 公式语法快捷方式
 
@@ -397,6 +336,7 @@ x - y = 1
 - 🧮 **科学计算** - 数据分析报告、实验记录、计算说明
 - 📖 **知识管理** - 数学笔记、公式收集、学习资料
 - 🎓 **在线考试** - 数学试题编辑、答案解析、评分系统
+- 🔬 **科研工具** - 数学建模、公式推导、计算验证
 
 ## 🔧 高级配置
 
@@ -404,12 +344,6 @@ x - y = 1
 
 ```vue
 <template>
-  <VueMathjaxEditor
-    v-model="content"
-    class="custom-editor"
-    :min-height="'500px'"
-  />
-  
   <VueMathjaxBeautiful
     v-model="showDialog"
     class="custom-formula-editor"
@@ -418,20 +352,6 @@ x - y = 1
 </template>
 
 <style>
-/* 自定义编辑器样式 */
-.custom-editor {
-  border: 2px solid #3b82f6;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.custom-editor .editor-content {
-  font-family: 'Times New Roman', serif;
-  font-size: 16px;
-  line-height: 1.6;
-  padding: 20px;
-}
-
 /* 自定义公式编辑器样式 */
 .custom-formula-editor .latex-input {
   font-family: 'Monaco', 'Consolas', monospace;
@@ -447,6 +367,14 @@ x - y = 1
   transform: scale(1.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+
+.custom-formula-editor .formula-preview {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
 </style>
 ```
 
@@ -456,41 +384,30 @@ x - y = 1
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 
-const content = ref('')
+const currentFormula = ref('')
 const formulaHistory = ref([])
 
-// 监听内容变化
-watch(content, (newValue, oldValue) => {
-  console.log('内容从', oldValue, '变为', newValue)
+// 监听公式变化
+watch(currentFormula, (newValue, oldValue) => {
+  console.log('公式从', oldValue, '变为', newValue)
   
   // 自动保存到本地存储
-  localStorage.setItem('editor-content', newValue)
+  localStorage.setItem('current-formula', newValue)
   
-  // 提取公式并保存到历史记录
-  const formulas = extractFormulas(newValue)
-  if (formulas.length > 0) {
-    formulaHistory.value = [...new Set([...formulaHistory.value, ...formulas])]
+  // 保存到历史记录
+  if (newValue && newValue.trim().length > 0) {
+    formulaHistory.value = [...new Set([...formulaHistory.value, newValue])]
     localStorage.setItem('formula-history', JSON.stringify(formulaHistory.value))
   }
 })
 
-// 提取公式的函数
-const extractFormulas = (text) => {
-  const inlineFormulas = text.match(/\$([^$]+)\$/g) || []
-  const blockFormulas = text.match(/\$\$([^$]+)\$\$/g) || []
-  
-  return [...inlineFormulas, ...blockFormulas]
-    .map(formula => formula.replace(/\$+/g, ''))
-    .filter(formula => formula.trim().length > 0)
-}
-
-// 加载保存的内容
-const loadSavedContent = () => {
-  const savedContent = localStorage.getItem('editor-content')
+// 加载保存的公式
+const loadSavedFormula = () => {
+  const savedFormula = localStorage.getItem('current-formula')
   const savedHistory = localStorage.getItem('formula-history')
   
-  if (savedContent) {
-    content.value = savedContent
+  if (savedFormula) {
+    currentFormula.value = savedFormula
   }
   
   if (savedHistory) {
@@ -502,24 +419,30 @@ const loadSavedContent = () => {
   }
 }
 
-// 导出内容为不同格式
-const exportContent = (format) => {
+// 导出公式为不同格式
+const exportFormula = (format) => {
   switch (format) {
-    case 'markdown':
-      return content.value
-    case 'html':
-      // 这里可以集成 markdown 转 HTML 的库
-      return `<div>${content.value.replace(/\n/g, '<br>')}</div>`
     case 'latex':
-      // 提取所有公式
-      return formulaHistory.value.join('\n\n')
+      return currentFormula.value
+    case 'svg':
+      // 这里可以集成 LaTeX 转 SVG 的功能
+      return convertLatexToSvg(currentFormula.value)
+    case 'png':
+      // 这里可以集成 LaTeX 转 PNG 的功能
+      return convertLatexToPng(currentFormula.value)
     default:
-      return content.value
+      return currentFormula.value
   }
 }
 
+// 清空历史记录
+const clearHistory = () => {
+  formulaHistory.value = []
+  localStorage.removeItem('formula-history')
+}
+
 onMounted(() => {
-  loadSavedContent()
+  loadSavedFormula()
 })
 </script>
 ```
@@ -535,13 +458,13 @@ const handleInsert = async (latex) => {
   try {
     // 验证 LaTeX 语法
     if (await validateLatex(latex)) {
-      content.value += `$$${latex}$$\n`
-      ElMessage.success('公式插入成功')
+      currentFormula.value = latex
+      ElMessage.success('公式应用成功')
     } else {
       ElMessage.error('LaTeX 语法错误')
     }
   } catch (error) {
-    ElMessage.error('插入失败: ' + error.message)
+    ElMessage.error('应用失败: ' + error.message)
   }
 }
 
@@ -560,6 +483,8 @@ const showFormulaHelp = () => {
           <li>根号：\\sqrt{内容}</li>
           <li>上标：x^{上标}</li>
           <li>下标：x_{下标}</li>
+          <li>积分：\\int_{a}^{b}</li>
+          <li>求和：\\sum_{i=1}^{n}</li>
         </ul>
       </div>
     `
@@ -573,10 +498,11 @@ const showFormulaHelp = () => {
 ### Q: 如何插入复杂的数学公式？
 
 A: 有多种方式：
-1. **使用公式编辑器**：点击工具栏的"fx"按钮或使用 `VueMathjaxBeautiful` 组件
-2. **直接输入 LaTeX**：在编辑器中使用 `$公式$`（行内）或 `$$公式$$`（独立）
+1. **使用公式编辑器**：使用 `VueMathjaxBeautiful` 组件，支持弹窗和内联模式
+2. **直接输入 LaTeX**：在公式编辑器中直接输入 LaTeX 代码
 3. **使用符号面板**：公式编辑器提供 240+ 个符号和 38 个公式模板
 4. **复制粘贴**：从其他 LaTeX 编辑器复制公式代码
+5. **预设模板**：使用内置的常用公式模板快速开始
 
 ### Q: 支持哪些 LaTeX 语法？
 
@@ -600,33 +526,39 @@ A: 支持完整的 MathJax LaTeX 语法，包括：
 - 方程组：`\begin{cases}...\end{cases}`
 - 多行公式：`\begin{align}...\end{align}`
 
-### Q: 如何自定义编辑器样式？
+### Q: 如何自定义公式编辑器样式？
 
 A: 可以通过以下方式自定义：
 
 1. **CSS 类名覆盖**：
 ```css
-.vue-mathjax-editor .editor-content {
-  font-family: 'Times New Roman', serif;
-  font-size: 16px;
-  line-height: 1.8;
+.vue-mathjax-beautiful .latex-input {
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 14px;
+  border: 2px solid #3b82f6;
+}
+
+.vue-mathjax-beautiful .symbol-button {
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 ```
 
 2. **Props 属性**：
 ```vue
-<VueMathjaxEditor
-  :min-height="'500px'"
-  class="custom-editor"
+<VueMathjaxBeautiful
+  v-model="showDialog"
+  class="custom-formula-editor"
+  @insert="handleInsert"
 />
 ```
 
 3. **主题定制**：
 ```css
 :root {
-  --editor-border-color: #3b82f6;
-  --editor-focus-color: #1d4ed8;
-  --formula-bg-color: #f8fafc;
+  --formula-border-color: #3b82f6;
+  --formula-focus-color: #1d4ed8;
+  --symbol-bg-color: #f8fafc;
 }
 ```
 
@@ -637,6 +569,7 @@ A: 完全支持！组件特性：
 - **触摸优化**：支持触摸操作和手势
 - **移动端键盘**：优化移动设备输入体验
 - **性能优化**：针对移动设备进行了性能优化
+- **符号面板适配**：移动端符号面板布局优化
 
 ### Q: 如何处理大量数学公式的性能问题？
 
@@ -645,44 +578,53 @@ A: 组件内部已经做了多项优化：
 1. **异步渲染**：公式渲染采用异步处理，不阻塞 UI
 2. **渲染缓存**：相同公式会被缓存，避免重复渲染
 3. **按需加载**：MathJax 资源按需加载
-4. **虚拟滚动**：对于大量公式的场景，建议结合虚拟滚动
-5. **分页处理**：超长文档建议分页处理
+4. **符号分类**：符号按类别组织，提高查找效率
+5. **模板缓存**：常用公式模板预加载
 
 **性能优化建议**：
 ```javascript
-// 批量插入公式时，使用防抖
+// 批量处理公式时，使用防抖
 import { debounce } from 'lodash-es'
 
-const debouncedUpdate = debounce((content) => {
-  // 更新内容
+const debouncedRender = debounce((formula) => {
+  // 渲染公式
 }, 300)
 ```
 
-### Q: 如何导出包含公式的内容？
+### Q: 如何导出数学公式？
 
 A: 支持多种导出格式：
 
-1. **Markdown 格式**：
+1. **LaTeX 格式**：
 ```javascript
-const exportMarkdown = () => {
-  return content.value // 直接返回 Markdown 内容
+const exportLatex = () => {
+  return currentFormula.value // 直接返回 LaTeX 代码
 }
 ```
 
-2. **HTML 格式**：
+2. **SVG 格式**：
 ```javascript
-const exportHTML = async () => {
+const exportSVG = async () => {
   // 使用 MathJax 将公式转换为 SVG
-  const html = await convertMathToSVG(content.value)
-  return html
+  const svg = await convertLatexToSvg(currentFormula.value)
+  return svg
 }
 ```
 
-3. **PDF 格式**：
+3. **PNG 格式**：
+```javascript
+const exportPNG = async () => {
+  // 将公式转换为 PNG 图片
+  const png = await convertLatexToPng(currentFormula.value)
+  return png
+}
+```
+
+4. **PDF 格式**：
 ```javascript
 // 结合 jsPDF 或 Puppeteer
 const exportPDF = async () => {
-  const html = await exportHTML()
+  const svg = await exportSVG()
   // 转换为 PDF
 }
 ```
@@ -699,16 +641,15 @@ pnpm add vue-mathjax-beautiful
 2. **全局注册**（可选）：
 ```javascript
 // main.js
-import { VueMathjaxEditor, VueMathjaxBeautiful } from 'vue-mathjax-beautiful'
+import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful'
 
-app.component('VueMathjaxEditor', VueMathjaxEditor)
 app.component('VueMathjaxBeautiful', VueMathjaxBeautiful)
 ```
 
 3. **按需引入**：
 ```vue
 <script setup>
-import { VueMathjaxEditor, VueMathjaxBeautiful } from 'vue-mathjax-beautiful'
+import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful'
 </script>
 ```
 
@@ -756,8 +697,6 @@ vue-mathjax-beautiful/
 │   └── core/                 # 核心组件包
 │       ├── src/
 │       │   ├── components/   # Vue 组件
-│       │   │   ├── VueMathjaxEditor/         # 富文本编辑器
-│       │   │   │   └── index.vue
 │       │   │   └── VueMathjaxBeautiful/      # 公式编辑器
 │       │   │       └── index.vue
 │       │   ├── data/         # 数据文件

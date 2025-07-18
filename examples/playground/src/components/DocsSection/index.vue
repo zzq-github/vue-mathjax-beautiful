@@ -103,7 +103,7 @@
                       <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('docs.sections.installation.quickImport') }}</span>
                     </div>
                     <div class="bg-gray-900/90 dark:bg-gray-950/90 backdrop-blur-sm text-gray-100 dark:text-gray-200 p-3 rounded-lg font-mono text-xs transition-colors duration-300 border border-gray-700/50">
-                      <div class="text-purple-400">import { VueMathjaxEditor } from 'vue-mathjax-beautiful'</div>
+                      <div class="text-purple-400">import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful'</div>
                       <div class="text-purple-400">import 'vue-mathjax-beautiful/dist/style.css'</div>
                     </div>
                   </div>
@@ -139,16 +139,7 @@
                   <div class="bg-gray-900/90 dark:bg-gray-950/90 backdrop-blur-sm text-gray-100 dark:text-gray-200 p-4 rounded-xl font-mono text-sm transition-colors duration-300 border border-gray-700/50 overflow-x-auto">
               <div class="text-blue-400">&lt;template&gt;</div>
               <div class="ml-2 text-green-400">&lt;div class="math-editor-container"&gt;</div>
-              <div class="ml-4 text-gray-400">&lt;!-- Rich Text Editor --&gt;</div>
-              <div class="ml-4 text-green-400">&lt;VueMathjaxEditor</div>
-              <div class="ml-6 text-yellow-400">v-model="content"</div>
-              <div class="ml-6 text-yellow-400">:min-height="'300px'"</div>
-              <div class="ml-6 text-yellow-400">:readonly="isReadonly"</div>
-              <div class="ml-6 text-yellow-400">placeholder="开始编写您的数学内容..."</div>
-              <div class="ml-6 text-yellow-400">@change="handleContentChange"</div>
-              <div class="ml-4 text-green-400">/&gt;</div>
-              <br />
-              <div class="ml-4 text-gray-400">&lt;!-- Formula Editor Dialog --&gt;</div>
+              <div class="ml-4 text-gray-400">&lt;!-- Formula Editor --&gt;</div>
               <div class="ml-4 text-green-400">&lt;VueMathjaxBeautiful</div>
               <div class="ml-6 text-yellow-400">v-model="showFormulaDialog"</div>
               <div class="ml-6 text-yellow-400">:existing-latex="selectedFormula"</div>
@@ -168,16 +159,14 @@
               <div class="text-blue-400">&lt;script setup lang="ts"&gt;</div>
               <div class="text-purple-400">import { ref, onMounted } from 'vue'</div>
               <div class="text-purple-400">import {</div>
-              <div class="ml-2 text-purple-400">VueMathjaxEditor, VueMathjaxBeautiful,</div>
+              <div class="ml-2 text-purple-400">VueMathjaxBeautiful,</div>
                     <div class="ml-2 text-purple-400">initMathJax</div>
               <div class="text-purple-400">} from 'vue-mathjax-beautiful'</div>
               <div class="text-purple-400">import 'vue-mathjax-beautiful/dist/style.css'</div>
               <br />
               <div class="text-gray-400">// 响应式数据</div>
-              <div class="text-white">const content = ref('')</div>
               <div class="text-white">const showFormulaDialog = ref(false)</div>
               <div class="text-white">const selectedFormula = ref('')</div>
-              <div class="text-white">const isReadonly = ref(false)</div>
               <br />
               <div class="text-gray-400">// 初始化MathJax</div>
               <div class="text-yellow-400">onMounted(async () => {</div>
@@ -185,12 +174,8 @@
               <div class="text-yellow-400">})</div>
               <br />
               <div class="text-gray-400">// 事件处理函数</div>
-              <div class="text-yellow-400">const handleContentChange = (value: string) => {</div>
-                    <div class="ml-2 text-white">console.log('内容变化:', value)</div>
-              <div class="text-yellow-400">}</div>
-              <br />
               <div class="text-yellow-400">const handleFormulaInsert = (latex: string) => {</div>
-              <div class="ml-2 text-white">content.value += `$${latex}$`</div>
+              <div class="ml-2 text-white">console.log('插入公式:', latex)</div>
                     <div class="ml-2 text-white">showFormulaDialog.value = false</div>
                     <div class="text-yellow-400">}</div>
                     <br />
@@ -235,7 +220,7 @@
                         <div>
                           <strong class="text-emerald-900 dark:text-emerald-200 transition-colors duration-300">{{ t('docs.sections.basicUsage.configs.minimalSetup') }}</strong>
                           <p class="text-emerald-700 dark:text-emerald-300 mt-1 transition-colors duration-300 font-mono text-xs">
-                            &lt;VueMathjaxEditor v-model="content" /&gt;
+                            &lt;VueMathjaxBeautiful :inline-mode="true" /&gt;
                           </p>
                         </div>
                       </div>
@@ -244,9 +229,9 @@
                       <div class="flex items-start gap-3">
                         <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                         <div>
-                          <strong class="text-blue-900 dark:text-blue-200 transition-colors duration-300">{{ t('docs.sections.basicUsage.configs.customHeight') }}</strong>
+                          <strong class="text-blue-900 dark:text-blue-200 transition-colors duration-300">{{ t('docs.sections.basicUsage.configs.customTheme') }}</strong>
                           <p class="text-blue-700 dark:text-blue-300 mt-1 transition-colors duration-300 font-mono text-xs">
-                            :min-height="'400px'"
+                            :theme="'dark'"
                           </p>
                         </div>
                       </div>
@@ -255,9 +240,9 @@
                       <div class="flex items-start gap-3">
                         <div class="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
                         <div>
-                          <strong class="text-purple-900 dark:text-purple-200 transition-colors duration-300">{{ t('docs.sections.basicUsage.configs.readonlyMode') }}</strong>
+                          <strong class="text-purple-900 dark:text-purple-200 transition-colors duration-300">{{ t('docs.sections.basicUsage.configs.existingLatex') }}</strong>
                           <p class="text-purple-700 dark:text-purple-300 mt-1 transition-colors duration-300 font-mono text-xs">
-                            :readonly="true"
+                            :existing-latex="'E=mc^2'"
                           </p>
                         </div>
                       </div>
@@ -299,7 +284,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 bg-blue-50/80 dark:bg-blue-900/40 backdrop-blur-sm border border-blue-200/50 dark:border-blue-800/50 rounded-xl transition-colors duration-300">
+                <!-- <div class="p-4 bg-blue-50/80 dark:bg-blue-900/40 backdrop-blur-sm border border-blue-200/50 dark:border-blue-800/50 rounded-xl transition-colors duration-300">
                   <div class="flex items-start gap-3">
                     <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div>
@@ -309,7 +294,7 @@
                       </p>
                     </div>
                   </div>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -379,79 +364,10 @@
             </div>
           </div>
 
-          <!-- VueMathjaxEditor API -->
-          <div id="editorApi" class="mt-8 rounded-2xl bg-gradient-to-br from-green-50/80 to-teal-50/80 dark:from-green-900/40 dark:to-teal-900/40 backdrop-blur-sm p-6 shadow-xl border border-green-200/50 dark:border-green-800/50 transition-colors duration-300">
-            <h3 class="flex items-center gap-3 text-lg font-semibold text-green-900 dark:text-green-200 mb-6 transition-colors duration-300">
-              <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-teal-500 text-white shadow-sm">
-                <FileTextIcon class="h-4 w-4" />
-              </div>
-              {{ t('docs.sections.vueMathjaxEditorApi.title') }}
-            </h3>
-            <div class="grid md:grid-cols-2 gap-6 text-sm">
-              <!-- 基础属性 -->
-            <div class="space-y-4">
-                <h4 class="font-semibold text-green-800 dark:text-green-300 text-base">{{ t('docs.sections.vueMathjaxEditorApi.basicProps') }}</h4>
-                <div class="space-y-3">
-                  <div class="border-l-4 border-blue-500 pl-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-r-lg">
-                    <div class="font-mono font-semibold text-gray-900 dark:text-white">v-model (string)</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">{{ t('docs.sections.vueMathjaxEditorApi.props.modelValue') }}</div>
-                  </div>
-                  <div class="border-l-4 border-green-500 pl-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-r-lg">
-                    <div class="font-mono font-semibold text-gray-900 dark:text-white">placeholder (string)</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">{{ t('docs.sections.vueMathjaxEditorApi.props.placeholder') }}</div>
-                  </div>
-                  <div class="border-l-4 border-purple-500 pl-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-r-lg">
-                    <div class="font-mono font-semibold text-gray-900 dark:text-white">min-height (string)</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">{{ t('docs.sections.vueMathjaxEditorApi.props.minHeight') }}</div>
-                  </div>
-                  <div class="border-l-4 border-orange-500 pl-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-r-lg">
-                    <div class="font-mono font-semibold text-gray-900 dark:text-white">width (string)</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">{{ t('docs.sections.vueMathjaxEditorApi.props.width') }}</div>
-                  </div>
-                </div>
-              </div>
-              <!-- 功能属性 -->
-              <div class="space-y-4">
-                <h4 class="font-semibold text-green-800 dark:text-green-300 text-base">{{ t('docs.sections.vueMathjaxEditorApi.featureProps') }}</h4>
-                <div class="space-y-3">
-                  <div class="border-l-4 border-red-500 pl-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-r-lg">
-                    <div class="font-mono font-semibold text-gray-900 dark:text-white">readonly (boolean)</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">{{ t('docs.sections.vueMathjaxEditorApi.props.readonly') }}</div>
-                  </div>
-                  <div class="border-l-4 border-indigo-500 pl-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-r-lg">
-                    <div class="font-mono font-semibold text-gray-900 dark:text-white">show-toolbar (boolean)</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">{{ t('docs.sections.vueMathjaxEditorApi.props.showToolbar') }}</div>
-                  </div>
-                  <div class="border-l-4 border-pink-500 pl-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-r-lg">
-                    <div class="font-mono font-semibold text-gray-900 dark:text-white">theme (string)</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">{{ t('docs.sections.vueMathjaxEditorApi.props.theme') }}</div>
-                  </div>
-                  <div class="border-l-4 border-yellow-500 pl-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-r-lg">
-                    <div class="font-mono font-semibold text-gray-900 dark:text-white">auto-focus (boolean)</div>
-                    <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">{{ t('docs.sections.vueMathjaxEditorApi.props.autoFocus') }}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- 事件 -->
-            <div class="mt-8 pt-6 border-t border-green-200/50 dark:border-green-700/50">
-              <h4 class="font-semibold text-green-800 dark:text-green-300 mb-4 text-base">{{ t('docs.sections.vueMathjaxEditorApi.events') }}</h4>
-              <div class="grid md:grid-cols-3 gap-3 text-sm">
-                <div class="border-l-4 border-blue-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900 dark:text-white">@change</div>
-                  <div class="text-gray-600 dark:text-gray-400">{{ t('docs.sections.vueMathjaxEditorApi.eventDesc.change') }}</div>
-                </div>
-                <div class="border-l-4 border-green-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900 dark:text-white">@focus</div>
-                  <div class="text-gray-600 dark:text-gray-400">{{ t('docs.sections.vueMathjaxEditorApi.eventDesc.focus') }}</div>
-                </div>
-                <div class="border-l-4 border-orange-500 pl-3">
-                  <div class="font-mono font-semibold text-gray-900 dark:text-white">@blur</div>
-                  <div class="text-gray-600 dark:text-gray-400">{{ t('docs.sections.vueMathjaxEditorApi.eventDesc.blur') }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <!-- VueMathjaxEditor API - 暂时隐藏 -->
+          <!-- <div id="editorApi" class="mt-8 rounded-2xl bg-gradient-to-br from-green-50/80 to-teal-50/80 dark:from-green-900/40 dark:to-teal-900/40 backdrop-blur-sm p-6 shadow-xl border border-green-200/50 dark:border-green-800/50 transition-colors duration-300">
+            ... VueMathjaxEditor API 内容 ...
+          </div> -->
 
           <!-- 示例和最佳实践 -->
           <div id="examples" class="mt-8 rounded-2xl bg-gradient-to-br from-amber-50/80 to-orange-50/80 dark:from-amber-900/40 dark:to-orange-900/40 backdrop-blur-sm p-6 shadow-xl border border-amber-200/50 dark:border-amber-800/50 transition-colors duration-300">
@@ -563,7 +479,6 @@ import {
   Zap as ZapIcon,
   Cpu as CpuIcon,
   Calculator as CalculatorIcon,
-  FileText as FileTextIcon,
   BookOpen as BookOpenIcon,
   Github as GithubIcon,
   Package as PackageIcon,
@@ -582,7 +497,6 @@ const tocItems = ref([
   { id: 'basicUsage', icon: ZapIcon },
   { id: 'coreComponents', icon: CpuIcon },
   { id: 'beautifulApi', icon: CalculatorIcon },
-  { id: 'editorApi', icon: FileTextIcon },
   { id: 'examples', icon: BookOpenIcon }
 ])
 

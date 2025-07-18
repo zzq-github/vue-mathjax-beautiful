@@ -38,7 +38,7 @@ export default {
     badge: 'Professional Math Formula Editor',
     title: 'Vue Math Formula',
     titleHighlight: 'Editor',
-    description: 'Professional math formula editor component library, provides 240+ symbol panels, 38 formula templates, supports rich text editing and LaTeX syntax',
+    description: 'Professional math formula editor component library, provides 240+ symbol panels, 38 formula templates, supports LaTeX syntax',
     technologies: ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX'],
     getStarted: 'Get Started',
     viewSource: 'View Source',
@@ -73,9 +73,8 @@ export default {
   // Demo Section
   demo: {
     title: 'Online Demo',
-    description: 'Experience professional math formula editor and rich text editing features',
+    description: 'Experience professional math formula editor features',
     professionalEditor: 'Professional Formula Editor',
-    richTextEditorLabel: 'Rich Text Editor',
     
     // Formula Editor
     formulaEditor: {
@@ -264,8 +263,8 @@ export default {
 
   // Editor Configuration
   editorConfig: {
-    title: 'Rich Text Editor Configuration',
-    description: 'Experience all configuration options of VueMathjaxEditor component through the real-time configuration panel. Adjust parameters on the left and preview effects on the right.',
+    title: 'Editor Configuration',
+    description: 'Configure various parameters and options for the math formula editor, experience different features and appearance settings.',
     
     tabs: {
       basic: 'Basic',
@@ -413,7 +412,7 @@ export default {
       basicUsage: 'Basic Usage',
       coreComponents: 'Core Components',
       beautifulApi: 'VueMathjaxBeautiful API',
-      editorApi: 'VueMathjaxEditor API',
+      
       examples: 'Examples & Best Practices',
     },
     
@@ -435,8 +434,8 @@ export default {
         commonConfig: 'Common Configurations',
         configs: {
           minimalSetup: 'Minimal Setup',
-          customHeight: 'Custom Height',
-          readonlyMode: 'Readonly Mode',
+          customTheme: 'Custom Theme',
+          existingLatex: 'Existing LaTeX',
           inlineDialog: 'Inline Dialog',
         },
       },
@@ -447,10 +446,7 @@ export default {
           title: 'VueMathjaxBeautiful',
           description: 'Professional formula editor, provides 240+ symbol panels and 38 formula templates, supports both inline and popup modes',
         },
-        editor: {
-          title: 'VueMathjaxEditor',
-          description: 'Rich text editor, supports mixed editing of text formatting and mathematical formulas, suitable for academic writing',
-        },
+
       },
 
       vueMathjaxBeautifulApi: {
@@ -473,29 +469,7 @@ export default {
         },
       },
 
-      vueMathjaxEditorApi: {
-        title: 'VueMathjaxEditor API Documentation',
-        basicProps: 'Basic Properties',
-        featureProps: 'Feature Properties',
-        events: 'Events',
-        props: {
-          modelValue: 'Bound content value (string)',
-          placeholder: 'Placeholder text (string)',
-          minHeight: 'Minimum height (string, default: "200px")',
-          width: 'Editor width (string, default: "100%")',
-          readonly: 'Read-only mode (boolean, default: false)',
-          showToolbar: 'Show toolbar (boolean, default: true)',
-          theme: 'Theme name (string, options: "default", "minimal")',
-          autoFocus: 'Auto focus (boolean, default: false)',
-        },
-        eventDesc: {
-          change: 'Triggered when content changes (value: string)',
-          focus: 'Triggered when editor gains focus',
-          blur: 'Triggered when editor loses focus',
-          ready: 'Triggered when editor is ready',
-          error: 'Triggered when error occurs (error: any)',
-        },
-      },
+
 
       latexApiUtils: {
         title: 'LaTeX Utility Functions API',

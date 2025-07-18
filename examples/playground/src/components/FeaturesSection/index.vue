@@ -90,12 +90,12 @@ const features = computed(() => [
     description: t('features.list.realTimePreview.description'),
     color: 'bg-green-500',
   },
-  {
-    icon: Edit3Icon,
-    title: t('features.list.richTextEditing.title'),
-    description: t('features.list.richTextEditing.description'),
-    color: 'bg-blue-500',
-  },
+  // {
+  //   icon: Edit3Icon,
+  //   title: t('features.list.richTextEditing.title'),
+  //   description: t('features.list.richTextEditing.description'),
+  //   color: 'bg-blue-500',
+  // },
   {
     icon: SmartphoneIcon,
     title: t('features.list.responsiveDesign.title'),

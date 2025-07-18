@@ -20,9 +20,21 @@
       <div class="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
     </div>
 
-    <!-- 配置内容 -->
+    <!-- 配置内容 - 暂时隐藏 -->
     <div class="relative z-10 container mx-auto px-4 py-8">
-      <EditorConfigSection />
+      <div class="text-center py-20">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          {{ t('editorConfig.title') }}
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-300">
+          {{ t('editorConfig.description') }}
+        </p>
+        <div class="mt-8 p-6 bg-amber-50/80 dark:bg-amber-900/40 backdrop-blur-sm border border-amber-200/50 dark:border-amber-800/50 rounded-xl">
+          <p class="text-amber-800 dark:text-amber-200">
+            🚧 富文本编辑器配置功能暂时隐藏，专注于数学公式编辑器功能
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>

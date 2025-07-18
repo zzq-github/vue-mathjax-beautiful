@@ -482,6 +482,8 @@
 
   .symbols-section {
     padding: 16px 20px 20px;
+    max-height: 400px;
+    overflow-y: auto;
 
     .category-tabs {
       display: flex;
@@ -566,6 +568,7 @@
         grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
         gap: 8px;
         margin-bottom: 20px;
+        // 移除独立滚动，使用父容器的滚动
 
         .symbol-button {
           aspect-ratio: 1;
@@ -615,6 +618,7 @@
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
           gap: 12px;
+          // 移除独立滚动，使用父容器的滚动
 
           .example-button {
             padding: 12px;
@@ -1367,6 +1371,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    max-height: 500px;
 
     .category-tabs {
       display: flex;
@@ -1402,21 +1407,55 @@
           font-size: 16px;
         }
       }
+
+      // 大小写切换按钮样式
+      .case-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        border: 1px solid var(--math-editor-border);
+        background: var(--math-editor-bg);
+        color: var(--math-editor-text-muted);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.2s;
+        margin-left: 8px;
+
+        &:hover {
+          background: var(--math-editor-primary);
+          color: white;
+          border-color: var(--math-editor-primary);
+        }
+
+        &.uppercase {
+          background: var(--math-editor-primary);
+          color: white;
+          border-color: var(--math-editor-primary);
+        }
+
+        .case-icon {
+          font-family: 'Courier New', monospace;
+          font-weight: bold;
+        }
+      }
     }
 
     .symbols-content {
       flex: 1;
       overflow-y: auto;
       padding: 16px;
+      max-height: calc(500px - 60px); // 减去标签栏的高度
 
       .symbols-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
         gap: 8px;
         margin-bottom: 20px;
-        max-height: 400px;
-        overflow-y: auto;
         padding: 4px;
+        // 移除独立滚动，使用父容器的滚动
 
         .symbol-button {
           display: flex;
@@ -1506,8 +1545,7 @@
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
           gap: 12px;
-          max-height: 300px;
-          overflow-y: auto;
+          // 移除独立滚动，使用父容器的滚动
 
           .example-button {
             display: flex;
