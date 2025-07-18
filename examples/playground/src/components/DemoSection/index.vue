@@ -53,6 +53,7 @@
           <VueMathjaxBeautiful
             :inline-mode="true"
             :theme="isDark ? 'dark' : 'light'"
+            :theme-config="config?.themeConfig"
             @insert="$emit('formulaInsert', $event)"
           />
           <div class="mt-6 p-4 bg-blue-50/80 dark:bg-blue-900/40 backdrop-blur-sm border border-blue-200/50 dark:border-blue-800/50 rounded-xl transition-colors duration-300">
@@ -105,6 +106,32 @@ const { t } = useI18n();
 // Props
 defineProps<{
   isDark: boolean;
+  config?: {
+    themeConfig?: {
+      light?: {
+        primary?: string;
+        secondary?: string;
+        accent?: string;
+        button?: string;
+        buttonHover?: string;
+        buttonText?: string;
+        dialogBackground?: string;
+        inputBackground?: string;
+        inputBorder?: string;
+      };
+      dark?: {
+        primary?: string;
+        secondary?: string;
+        accent?: string;
+        button?: string;
+        buttonHover?: string;
+        buttonText?: string;
+        dialogBackground?: string;
+        inputBackground?: string;
+        inputBorder?: string;
+      };
+    };
+  };
 }>();
 
 // Emits

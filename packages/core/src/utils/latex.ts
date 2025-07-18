@@ -394,16 +394,13 @@ export async function initMathJax(config?: any): Promise<void> {
         fontCache: 'global', // or 'global' or 'none',
         displayAlign: 'left',
         scale: 1.0, // 增加整体缩放
-        minScale: 0.5, // 最小缩放
         mtextInheritFont: true, // 继承字体
         merrorInheritFont: true, // 错误信息继承字体
         mathmlSpacing: false, // 使用TeX间距
         displayIndent: '0', // 显示缩进
-        matchFontHeight: true, // 匹配字体高度
       },
       chtml: {
         scale: 1.0, // CHTML输出的缩放
-        minScale: 0.5,
         mtextInheritFont: true,
         merrorInheritFont: true
       }

@@ -187,6 +187,7 @@ export default {
     
     tabs: {
       basic: 'Basic',
+      theme: 'Theme',
       display: 'Display',
       input: 'Input',
       behavior: 'Behavior',
@@ -219,6 +220,22 @@ export default {
     showPreviewDesc: 'Show live preview',
     showThemeToggleDesc: 'Show theme toggle button',
     showClearButtonDesc: 'Show clear button',
+    showLanguageToggleDesc: 'Show language toggle button',
+    
+    // Theme configuration
+    themeColors: 'Theme Colors',
+    primaryColor: 'Primary Color',
+    secondaryColor: 'Secondary Color',
+    accentColor: 'Accent Color',
+    presetThemes: 'Preset Themes',
+    buttonStyles: 'Button Styles',
+    buttonColor: 'Button Color',
+    buttonHoverColor: 'Button Hover Color',
+    buttonTextColor: 'Button Text Color',
+    dialogStyles: 'Dialog Styles',
+    dialogBackgroundColor: 'Dialog Background Color',
+    inputBackgroundColor: 'Input Background Color',
+    inputBorderColor: 'Input Border Color',
     
     mode: 'Display Mode',
     dialogMode: 'Dialog Mode',
@@ -231,6 +248,7 @@ export default {
     showPreview: 'Show Live Preview',
     showThemeToggle: 'Show Theme Toggle',
     showClearButton: 'Show Clear Button',
+    showLanguageToggle: 'Show Language Toggle',
     readonly: 'Read-only Mode',
     autoFocus: 'Auto Focus',
     inputSettings: 'Input Settings',

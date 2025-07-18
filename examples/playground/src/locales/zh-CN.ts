@@ -187,6 +187,7 @@ export default {
     
     tabs: {
       basic: '基础',
+      theme: '主题',
       display: '显示',
       input: '输入',
       behavior: '行为',
@@ -219,6 +220,22 @@ export default {
     showPreviewDesc: '显示实时预览',
     showThemeToggleDesc: '显示主题切换按钮',
     showClearButtonDesc: '显示清空按钮',
+    showLanguageToggleDesc: '显示语言切换按钮',
+    
+    // 主题配置
+    themeColors: '主题色彩',
+    primaryColor: '主色调',
+    secondaryColor: '次要色',
+    accentColor: '强调色',
+    presetThemes: '预设主题',
+    buttonStyles: '按钮样式',
+    buttonColor: '按钮颜色',
+    buttonHoverColor: '按钮悬停颜色',
+    buttonTextColor: '按钮文字颜色',
+    dialogStyles: '弹窗样式',
+    dialogBackgroundColor: '弹窗背景色',
+    inputBackgroundColor: '输入框背景色',
+    inputBorderColor: '输入框边框色',
     
     mode: '显示模式',
     dialogMode: '弹窗模式',
@@ -231,6 +248,7 @@ export default {
     showPreview: '显示实时预览',
     showThemeToggle: '显示主题切换',
     showClearButton: '显示清空按钮',
+    showLanguageToggle: '显示语言切换',
     readonly: '只读模式',
     autoFocus: '自动聚焦',
     inputSettings: '输入设置',

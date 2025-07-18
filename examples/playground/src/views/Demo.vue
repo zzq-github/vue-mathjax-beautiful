@@ -24,6 +24,7 @@
     <div class="relative z-10 container mx-auto px-4 py-8">
       <DemoSection
         :is-dark="isDark"
+        :config="demoConfig"
         @formula-insert="handleFormulaInsert"
       />
     </div>
@@ -40,6 +41,34 @@ const { t } = useI18n()
 
 // 主题状态
 const isDark = ref(false)
+
+// 演示配置
+const demoConfig = ref({
+  themeConfig: {
+    light: {
+      primary: '#3b82f6',
+      secondary: '#6b7280',
+      accent: '#10b981',
+      button: '#3b82f6',
+      buttonHover: '#2563eb',
+      buttonText: '#ffffff',
+      dialogBackground: '#ffffff',
+      inputBackground: '#ffffff',
+      inputBorder: '#e5e7eb',
+    },
+    dark: {
+      primary: '#60a5fa',
+      secondary: '#9ca3af',
+      accent: '#34d399',
+      button: '#60a5fa',
+      buttonHover: '#3b82f6',
+      buttonText: '#ffffff',
+      dialogBackground: '#1f2937',
+      inputBackground: '#374151',
+      inputBorder: '#4b5563',
+    },
+  },
+})
 
 // 事件处理
 function handleFormulaInsert(latex: string) {

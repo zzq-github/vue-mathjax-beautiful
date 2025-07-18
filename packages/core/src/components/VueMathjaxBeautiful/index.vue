@@ -4,6 +4,7 @@
     v-if="inlineMode"
     class="vue-mathjax-beautiful-inline"
     :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light' }"
+    :style="customThemeVars"
   >
     <!-- 编辑器内容 -->
     <div class="editor-container">
@@ -16,7 +17,7 @@
           </div>
           <div class="input-actions">
             <button 
-              v-if="availableLocales.length > 1"
+              v-if="availableLocales.length > 1 && showLanguageToggle"
               class="action-btn" 
               @click="toggleLanguage" 
               :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
@@ -90,7 +91,7 @@
           </button>
           
                       <!-- 大小写切换按钮（仅在基础分类时显示） -->
-            <button
+            <!-- <button
               v-if="activeCategory === 'basic'"
               class="case-toggle-btn"
               :class="{ 'uppercase': isUppercase }"
@@ -98,7 +99,7 @@
               :title="isUppercase ? t.beautiful.caseToggle.lowercase : t.beautiful.caseToggle.uppercase"
             >
               <span class="case-icon">{{ isUppercase ? 'Aa' : 'aA' }}</span>
-            </button>
+            </button> -->
         </div>
 
         <!-- 符号内容 -->
@@ -161,18 +162,21 @@
 
   <!-- 弹窗模式 -->
   <Teleport to="body">
-  <div
-      v-if="visible"
-    class="vue-mathjax-beautiful-overlay"
-    :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light' }"
-    @click="handleOverlayClick"
-  >
+  <Transition name="overlay" appear>
     <div
-      class="vue-mathjax-beautiful-dialog"
-      :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light' }"
-      :style="dialogStyle"
-      @click.stop
+      v-if="visible"
+      class="vue-mathjax-beautiful-overlay"
+      :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light', 'show': visible }"
+      @click="handleOverlayClick"
     >
+      <Transition name="dialog" appear>
+        <div
+          v-if="visible"
+          class="vue-mathjax-beautiful-dialog"
+          :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light', 'show': visible }"
+          :style="{ ...dialogStyle, ...customThemeVars }"
+          @click.stop
+        >
       <!-- 头部 -->
       <div class="dialog-header">
         <div class="header-content">
@@ -203,7 +207,7 @@
             </div>
             <div class="input-actions">
               <button 
-                v-if="availableLocales.length > 1"
+                v-if="availableLocales.length > 1 && showLanguageToggle"
                 class="action-btn" 
                 @click="toggleLanguage" 
                 :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
@@ -277,7 +281,7 @@
             </button>
             
             <!-- 大小写切换按钮（仅在基础分类时显示） -->
-            <button
+            <!-- <button
               v-if="activeCategory === 'basic'"
               class="case-toggle-btn"
               :class="{ 'uppercase': isUppercase }"
@@ -285,7 +289,7 @@
               :title="isUppercase ? t.beautiful.caseToggle.lowercase : t.beautiful.caseToggle.uppercase"
             >
               <span class="case-icon">{{ isUppercase ? 'Aa' : 'aA' }}</span>
-            </button>
+            </button> -->
           </div>
 
           <!-- 符号内容 -->
@@ -327,19 +331,21 @@
         </div>
       </div>
 
-      <!-- 底部操作（弹窗模式） -->
-      <div class="dialog-footer">
-        <button class="btn btn-secondary" @click="handleClose">{{ t.beautiful.cancelButton }}</button>
-        <button 
-          class="btn btn-primary" 
-          @click="handleInsert" 
-          :disabled="!latexInput || readonly"
-        >
-          {{ t.beautiful.insertButton }}
-        </button>
+        <!-- 底部操作（弹窗模式） -->
+        <div class="dialog-footer">
+          <button class="btn btn-secondary" @click="handleClose">{{ t.beautiful.cancelButton }}</button>
+          <button 
+            class="btn btn-primary" 
+            @click="handleInsert" 
+            :disabled="!latexInput || readonly"
+          >
+            {{ t.beautiful.insertButton }}
+          </button>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
+  </Transition>
   </Teleport>
 </template>
 
@@ -359,6 +365,32 @@ import {
   getCategoryName,
 } from '../../data';
 
+// 定义主题配置类型
+type ThemeConfig = {
+  light?: {
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+    button?: string;
+    buttonHover?: string;
+    buttonText?: string;
+    dialogBackground?: string;
+    inputBackground?: string;
+    inputBorder?: string;
+  };
+  dark?: {
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+    button?: string;
+    buttonHover?: string;
+    buttonText?: string;
+    dialogBackground?: string;
+    inputBackground?: string;
+    inputBorder?: string;
+  };
+};
+
 const props = withDefaults(
   defineProps<{
     // 基础控制
@@ -368,6 +400,7 @@ const props = withDefaults(
     
     // 主题和样式
     theme?: string;
+    themeConfig?: ThemeConfig;
     width?: string;
     height?: string;
     scale?: number;
@@ -379,6 +412,7 @@ const props = withDefaults(
     showPreview?: boolean;
     showThemeToggle?: boolean;
     showClearButton?: boolean;
+    showLanguageToggle?: boolean;
     showFormulaExamples?: boolean;
     autoFocus?: boolean;
     
@@ -405,6 +439,30 @@ const props = withDefaults(
     existingLatex: '',
     inlineMode: false,
     theme: 'light',
+    themeConfig: (): ThemeConfig => ({
+      light: {
+        primary: '#3b82f6',
+        secondary: '#6b7280',
+        accent: '#10b981',
+        button: '#3b82f6',
+        buttonHover: '#2563eb',
+        buttonText: '#ffffff',
+        dialogBackground: '#ffffff',
+        inputBackground: '#ffffff',
+        inputBorder: '#e5e7eb',
+      },
+      dark: {
+        primary: '#60a5fa',
+        secondary: '#9ca3af',
+        accent: '#34d399',
+        button: '#60a5fa',
+        buttonHover: '#3b82f6',
+        buttonText: '#ffffff',
+        dialogBackground: '#1f2937',
+        inputBackground: '#374151',
+        inputBorder: '#4b5563',
+      },
+    }),
     width: 'auto',
     height: 'auto',
     scale: 1.2,
@@ -414,11 +472,12 @@ const props = withDefaults(
     showPreview: true,
     showThemeToggle: true,
     showClearButton: true,
+    showLanguageToggle: true,
     showFormulaExamples: true,
     autoFocus: true,
     placeholder: '',
     maxLength: 1000,
-    rows: 3,
+    rows: 2,
     enabledCategories: () => ['basic', 'greek', 'advanced'],
     defaultCategory: 'basic',
     insertButtonText: '插入公式',
@@ -514,6 +573,25 @@ const themeButtonTitle = computed(() => {
 // 计算化的placeholder
 const computedPlaceholder = computed(() => {
   return props.placeholder || t.value.beautiful.inputPlaceholder;
+});
+
+// 自定义主题色CSS变量
+const customThemeVars = computed(() => {
+  const currentTheme = internalTheme.value;
+  const themeSettings = props.themeConfig?.[currentTheme as keyof typeof props.themeConfig] || {};
+  
+  return {
+    '--math-editor-primary': themeSettings.primary,
+    '--math-editor-primary-hover': themeSettings.buttonHover,
+    '--math-editor-secondary': themeSettings.secondary,
+    '--math-editor-accent': themeSettings.accent,
+    '--math-editor-button-bg': themeSettings.button,
+    '--math-editor-button-hover-bg': themeSettings.buttonHover,
+    '--math-editor-button-text': themeSettings.buttonText,
+    '--math-editor-dialog-bg': themeSettings.dialogBackground,
+    '--math-editor-input-bg': themeSettings.inputBackground,
+    '--math-editor-input-border': themeSettings.inputBorder,
+  };
 });
 
 // 监听器
@@ -688,7 +766,7 @@ const updatePreview = async () => {
 
     const result = await window.MathJax.tex2svgPromise(latexInput.value, {
       display: false,
-      scale: props.scale,
+      scale: props.scale * 1.5, // 增加缩放比例让公式更大
     });
 
 
@@ -696,6 +774,10 @@ const updatePreview = async () => {
     if (svg) {
       svg.style.fontSize = props.fontSize;
       svg.style.verticalAlign = 'middle';
+      svg.style.maxWidth = '100%';
+      svg.style.height = 'auto';
+      svg.style.display = 'block';
+      svg.style.margin = '0 auto';
       renderedFormula.value = svg.outerHTML;
     } else {
       console.warn('未获取到SVG元素');

@@ -170,6 +170,243 @@
                 </div>
               </div>
 
+              <!-- 主题配置 -->
+              <div v-if="activeTab === 'theme'" class="space-y-6">
+                <!-- 主题色选择 -->
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.themeColors') }}
+                    </h4>
+                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-600 dark:text-gray-400 border border-gray-200/50 dark:border-gray-600/50">
+                      {{ t('config.modes.universal') }}
+                    </span>
+                  </div>
+                  
+                                     <div class="grid grid-cols-1 gap-4">
+                     <div class="space-y-2">
+                       <label class="text-sm text-gray-700 dark:text-gray-300">
+                         {{ t('config.primaryColor') }}
+                       </label>
+                       <div class="flex gap-2">
+                         <input
+                           v-model="config.themeConfig.light.primary"
+                           type="color"
+                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                         />
+                         <input
+                           v-model="config.themeConfig.light.primary"
+                           type="text"
+                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                           placeholder="#3b82f6"
+                         />
+                       </div>
+                     </div>
+                     
+                     <div class="space-y-2">
+                       <label class="text-sm text-gray-700 dark:text-gray-300">
+                         {{ t('config.secondaryColor') }}
+                       </label>
+                       <div class="flex gap-2">
+                         <input
+                           v-model="config.themeConfig.light.secondary"
+                           type="color"
+                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                         />
+                         <input
+                           v-model="config.themeConfig.light.secondary"
+                           type="text"
+                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                           placeholder="#6b7280"
+                         />
+                       </div>
+                     </div>
+                     
+                     <div class="space-y-2">
+                       <label class="text-sm text-gray-700 dark:text-gray-300">
+                         {{ t('config.accentColor') }}
+                       </label>
+                       <div class="flex gap-2">
+                         <input
+                           v-model="config.themeConfig.light.accent"
+                           type="color"
+                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                         />
+                         <input
+                           v-model="config.themeConfig.light.accent"
+                           type="text"
+                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                           placeholder="#10b981"
+                         />
+                       </div>
+                     </div>
+                   </div>
+                 
+                 <!-- 按钮样式 -->
+                 <div class="space-y-4">
+                   <div class="flex items-center justify-between">
+                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                       {{ t('config.buttonStyles') }}
+                     </h4>
+                   </div>
+                   
+                   <div class="grid grid-cols-1 gap-4">
+                     <div class="space-y-2">
+                       <label class="text-sm text-gray-700 dark:text-gray-300">
+                         {{ t('config.buttonColor') }}
+                       </label>
+                       <div class="flex gap-2">
+                         <input
+                           v-model="config.themeConfig.light.button"
+                           type="color"
+                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                         />
+                         <input
+                           v-model="config.themeConfig.light.button"
+                           type="text"
+                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                           placeholder="#3b82f6"
+                         />
+                       </div>
+                     </div>
+                     
+                     <div class="space-y-2">
+                       <label class="text-sm text-gray-700 dark:text-gray-300">
+                         {{ t('config.buttonHoverColor') }}
+                       </label>
+                       <div class="flex gap-2">
+                         <input
+                           v-model="config.themeConfig.light.buttonHover"
+                           type="color"
+                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                         />
+                         <input
+                           v-model="config.themeConfig.light.buttonHover"
+                           type="text"
+                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                           placeholder="#2563eb"
+                         />
+                       </div>
+                     </div>
+                     
+                     <div class="space-y-2">
+                       <label class="text-sm text-gray-700 dark:text-gray-300">
+                         {{ t('config.buttonTextColor') }}
+                       </label>
+                       <div class="flex gap-2">
+                         <input
+                           v-model="config.themeConfig.light.buttonText"
+                           type="color"
+                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                         />
+                         <input
+                           v-model="config.themeConfig.light.buttonText"
+                           type="text"
+                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                           placeholder="#ffffff"
+                         />
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <!-- 弹窗样式 -->
+                 <div class="space-y-4">
+                   <div class="flex items-center justify-between">
+                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                       {{ t('config.dialogStyles') }}
+                     </h4>
+                   </div>
+                   
+                   <div class="grid grid-cols-1 gap-4">
+                     <div class="space-y-2">
+                       <label class="text-sm text-gray-700 dark:text-gray-300">
+                         {{ t('config.dialogBackgroundColor') }}
+                       </label>
+                       <div class="flex gap-2">
+                         <input
+                           v-model="config.themeConfig.light.dialogBackground"
+                           type="color"
+                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                         />
+                         <input
+                           v-model="config.themeConfig.light.dialogBackground"
+                           type="text"
+                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                           placeholder="留空使用默认"
+                         />
+                       </div>
+                     </div>
+                     
+                     <div class="space-y-2">
+                       <label class="text-sm text-gray-700 dark:text-gray-300">
+                         {{ t('config.inputBackgroundColor') }}
+                       </label>
+                       <div class="flex gap-2">
+                         <input
+                           v-model="config.themeConfig.light.inputBackground"
+                           type="color"
+                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                         />
+                         <input
+                           v-model="config.themeConfig.light.inputBackground"
+                           type="text"
+                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                           placeholder="留空使用默认"
+                         />
+                       </div>
+                     </div>
+                     
+                     <div class="space-y-2">
+                       <label class="text-sm text-gray-700 dark:text-gray-300">
+                         {{ t('config.inputBorderColor') }}
+                       </label>
+                       <div class="flex gap-2">
+                         <input
+                           v-model="config.themeConfig.light.inputBorder"
+                           type="color"
+                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                         />
+                         <input
+                           v-model="config.themeConfig.light.inputBorder"
+                           type="text"
+                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                           placeholder="留空使用默认"
+                         />
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               <!-- 预设主题 -->
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('config.presetThemes') }}
+                    </h4>
+                  </div>
+                  
+                  <div class="grid grid-cols-2 gap-3">
+                    <button
+                      v-for="preset in presetThemes"
+                      :key="preset.name"
+                      @click="applyPresetTheme(preset)"
+                      class="p-4 border border-gray-200/50 dark:border-gray-600/50 rounded-xl hover:border-emerald-500/50 transition-all"
+                    >
+                      <div class="flex items-center gap-3">
+                        <div class="flex gap-1">
+                          <div class="w-4 h-4 rounded" :style="{ backgroundColor: preset.primary }"></div>
+                          <div class="w-4 h-4 rounded" :style="{ backgroundColor: preset.secondary }"></div>
+                          <div class="w-4 h-4 rounded" :style="{ backgroundColor: preset.accent }"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ preset.name }}</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <!-- 显示选项 -->
               <div v-if="activeTab === 'display'" class="space-y-6">
                 <!-- 界面功能开关 -->
@@ -446,10 +683,12 @@
                   <VueMathjaxBeautiful
                     v-model="showDialog"
                     :theme="config.theme"
+                    :theme-config="config.themeConfig"
                     :show-symbols="config.showSymbols"
                     :show-preview="config.showPreview"
                     :show-theme-toggle="config.showThemeToggle"
                     :show-clear-button="config.showClearButton"
+                    :show-language-toggle="config.showLanguageToggle"
                     :show-formula-examples="config.showFormulaExamples"
                     :readonly="config.readonly"
                     :auto-focus="config.autoFocus"
@@ -475,10 +714,12 @@
                   <VueMathjaxBeautiful
                     :inline-mode="true"
                     :theme="config.theme"
+                    :theme-config="config.themeConfig"
                     :show-symbols="config.showSymbols"
                     :show-preview="config.showPreview"
                     :show-theme-toggle="config.showThemeToggle"
                     :show-clear-button="config.showClearButton"
+                    :show-language-toggle="config.showLanguageToggle"
                     :show-formula-examples="config.showFormulaExamples"
                     :readonly="config.readonly"
                     :auto-focus="config.autoFocus"
@@ -558,6 +799,7 @@ const activeTab = ref('basic');
 // 配置标签页
 const configTabs = computed(() => [
   { key: 'basic', label: t('config.tabs.basic') },
+  { key: 'theme', label: t('config.tabs.theme') },
   { key: 'display', label: t('config.tabs.display') },
   { key: 'input', label: t('config.tabs.input') },
   { key: 'behavior', label: t('config.tabs.behavior') },
@@ -567,10 +809,35 @@ const configTabs = computed(() => [
 const config = reactive({
   inlineMode: false,
   theme: 'light',
+  themeConfig: {
+    light: {
+      primary: '#3b82f6',
+      secondary: '#6b7280',
+      accent: '#10b981',
+      button: '#3b82f6',
+      buttonHover: '#2563eb',
+      buttonText: '#ffffff',
+      dialogBackground: '#ffffff',
+      inputBackground: '#ffffff',
+      inputBorder: '#e5e7eb',
+    },
+    dark: {
+      primary: '#60a5fa',
+      secondary: '#9ca3af',
+      accent: '#34d399',
+      button: '#60a5fa',
+      buttonHover: '#3b82f6',
+      buttonText: '#ffffff',
+      dialogBackground: '#1f2937',
+      inputBackground: '#374151',
+      inputBorder: '#4b5563',
+    },
+  },
   showSymbols: true,
   showPreview: true,
   showThemeToggle: true,
   showClearButton: true,
+  showLanguageToggle: true,
   readonly: false,
   autoFocus: false,
   showFormulaExamples: true,
@@ -596,6 +863,12 @@ const featureList = computed(() => [
     key: 'showPreview', 
     label: t('config.showPreview'), 
     description: t('config.showPreviewDesc'),
+    mode: null
+  },
+  { 
+    key: 'showLanguageToggle', 
+    label: t('config.showLanguageToggle'), 
+    description: t('config.showLanguageToggleDesc'),
     mode: null
   },
   { 
@@ -632,6 +905,82 @@ const showDialog = ref(false);
 // 事件日志
 const eventLog = ref<Array<{ time: string; type: string; data: string }>>([]);
 
+// 预设主题
+const presetThemes = [
+  {
+    name: '默认蓝',
+    primary: '#3b82f6',
+    secondary: '#6b7280',
+    accent: '#10b981',
+    button: '#3b82f6',
+    buttonHover: '#2563eb',
+    buttonText: '#ffffff'
+  },
+  {
+    name: '紫色',
+    primary: '#8b5cf6',
+    secondary: '#6b7280',
+    accent: '#f59e0b',
+    button: '#8b5cf6',
+    buttonHover: '#7c3aed',
+    buttonText: '#ffffff'
+  },
+  {
+    name: '绿色',
+    primary: '#10b981',
+    secondary: '#6b7280',
+    accent: '#3b82f6',
+    button: '#10b981',
+    buttonHover: '#059669',
+    buttonText: '#ffffff'
+  },
+  {
+    name: '红色',
+    primary: '#ef4444',
+    secondary: '#6b7280',
+    accent: '#f59e0b',
+    button: '#ef4444',
+    buttonHover: '#dc2626',
+    buttonText: '#ffffff'
+  },
+  {
+    name: '橙色',
+    primary: '#f97316',
+    secondary: '#6b7280',
+    accent: '#10b981',
+    button: '#f97316',
+    buttonHover: '#ea580c',
+    buttonText: '#ffffff'
+  },
+  {
+    name: '粉色',
+    primary: '#ec4899',
+    secondary: '#6b7280',
+    accent: '#8b5cf6',
+    button: '#ec4899',
+    buttonHover: '#db2777',
+    buttonText: '#ffffff'
+  }
+];
+
+// 应用预设主题
+const applyPresetTheme = (preset: typeof presetThemes[0]) => {
+  config.themeConfig.light.primary = preset.primary;
+  config.themeConfig.light.secondary = preset.secondary;
+  config.themeConfig.light.accent = preset.accent;
+  config.themeConfig.light.button = preset.button;
+  config.themeConfig.light.buttonHover = preset.buttonHover;
+  config.themeConfig.light.buttonText = preset.buttonText;
+  
+  // 暗色主题使用稍深的颜色
+  config.themeConfig.dark.primary = preset.primary;
+  config.themeConfig.dark.secondary = preset.secondary;
+  config.themeConfig.dark.accent = preset.accent;
+  config.themeConfig.dark.button = preset.button;
+  config.themeConfig.dark.buttonHover = preset.buttonHover;
+  config.themeConfig.dark.buttonText = preset.buttonText;
+};
+
 // 添加事件到日志
 const addEvent = (type: string, data: any) => {
   const time = new Date().toLocaleTimeString();
@@ -658,10 +1007,12 @@ const configCode = computed(() => {
   return `<VueMathjaxBeautiful
   ${config.inlineMode ? ':inline-mode="true"' : 'v-model="showDialog"'}
   theme="${config.theme}"
+  :theme-config="${JSON.stringify(config.themeConfig, null, 2)}"
   :show-symbols="${config.showSymbols}"
   :show-preview="${config.showPreview}"
   :show-theme-toggle="${config.showThemeToggle}"
   :show-clear-button="${config.showClearButton}"
+  :show-language-toggle="${config.showLanguageToggle}"
   :show-formula-examples="${config.showFormulaExamples}"
   :readonly="${config.readonly}"
   :auto-focus="${config.autoFocus}"
