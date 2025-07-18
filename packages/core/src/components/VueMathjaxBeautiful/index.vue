@@ -88,6 +88,17 @@
             <span class="tab-icon">{{ category.icon }}</span>
             <span class="tab-name">{{ getCategoryName(category, locale) }}</span>
           </button>
+          
+                      <!-- 大小写切换按钮（仅在基础分类时显示） -->
+            <button
+              v-if="activeCategory === 'basic'"
+              class="case-toggle-btn"
+              :class="{ 'uppercase': isUppercase }"
+              @click="toggleCase"
+              :title="isUppercase ? t.beautiful.caseToggle.lowercase : t.beautiful.caseToggle.uppercase"
+            >
+              <span class="case-icon">{{ isUppercase ? 'Aa' : 'aA' }}</span>
+            </button>
         </div>
 
         <!-- 符号内容 -->
@@ -264,6 +275,17 @@
               <span class="tab-icon">{{ category.icon }}</span>
               <span class="tab-name">{{ getCategoryName(category, locale) }}</span>
             </button>
+            
+            <!-- 大小写切换按钮（仅在基础分类时显示） -->
+            <button
+              v-if="activeCategory === 'basic'"
+              class="case-toggle-btn"
+              :class="{ 'uppercase': isUppercase }"
+              @click="toggleCase"
+              :title="isUppercase ? t.beautiful.caseToggle.lowercase : t.beautiful.caseToggle.uppercase"
+            >
+              <span class="case-icon">{{ isUppercase ? 'Aa' : 'aA' }}</span>
+            </button>
           </div>
 
           <!-- 符号内容 -->
@@ -425,6 +447,7 @@ const latexInput = ref('');
 const activeCategory = ref(props.defaultCategory);
 const renderedFormula = ref('');
 const symbolDisplayCache = new Map<string, string>();
+const isUppercase = ref(false);
 
 // 组件内部主题状态（独立于外部传入的theme）
 const internalTheme = ref(props.theme || 'light');
@@ -447,7 +470,23 @@ const currentSymbols = computed(() => {
     case 'advanced':
       return reactiveAdvancedSymbols.value;
     default:
-      return reactiveBasicSymbols.value;
+      // 基础分类时，始终显示所有符号，大小写切换只影响字母
+      const allBasicSymbols = reactiveBasicSymbols.value;
+      return allBasicSymbols.filter(symbol => {
+        if (symbol.latex.length === 1) {
+          // 单字符：根据大小写状态显示字母，或显示所有非字母字符
+          if (symbol.latex.match(/[a-zA-Z]/)) {
+            // 字母：根据大小写状态显示
+            return isUppercase.value ? symbol.latex.match(/[A-Z]/) : symbol.latex.match(/[a-z]/);
+          } else {
+            // 非字母字符（包括数字和其他符号）：始终显示
+            return true;
+          }
+        } else {
+          // 多字符：始终显示所有符号
+          return true;
+        }
+      });
   }
 });
 
@@ -483,9 +522,23 @@ watch(
   (newVal) => {
     visible.value = newVal;
     if (newVal) {
+      // 保存当前滚动位置
+      const scrollY = window.scrollY;
+      
+      // 阻止页面滚动
+      document.body.style.overflow = 'hidden';
+      
       latexInput.value = props.existingLatex || '';
       updatePreview();
       focusInput();
+      
+      // 防止页面滚动到弹窗位置
+      nextTick(() => {
+        window.scrollTo(0, scrollY);
+      });
+    } else {
+      // 弹窗关闭时恢复页面滚动
+      document.body.style.overflow = '';
     }
   }
 );
@@ -678,6 +731,15 @@ const toggleLanguage = () => {
   setLocale(newLocale);
 };
 
+// 大小写切换方法
+const toggleCase = () => {
+  isUppercase.value = !isUppercase.value;
+  // 重新渲染基础符号以应用大小写变化
+  nextTick(async () => {
+    await renderSymbols(reactiveBasicSymbols.value);
+  });
+};
+
 // 处理输入变化
 const handleInput = (event: Event) => {
   if (props.readonly) {
@@ -704,7 +766,15 @@ const focusInput = () => {
     nextTick(() => {
       const textarea = document.querySelector('.latex-input') as HTMLTextAreaElement;
       if (textarea) {
+        // 保存当前滚动位置
+        const scrollY = window.scrollY;
+        
         textarea.focus();
+        
+        // 防止聚焦时页面滚动
+        setTimeout(() => {
+          window.scrollTo(0, scrollY);
+        }, 0);
       }
     });
   }

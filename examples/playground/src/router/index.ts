@@ -35,6 +35,18 @@ const router = createRouter({
       name: 'Docs',
       component: () => import('../views/Docs.vue'),
       meta: { title: 'Documentation - Vue MathJax Beautiful' }
+    },
+    {
+      path: '/privacy',
+      name: 'Privacy',
+      component: () => import('../views/Privacy.vue'),
+      meta: { title: 'Privacy Policy - Vue MathJax Beautiful' }
+    },
+    {
+      path: '/terms',
+      name: 'Terms',
+      component: () => import('../views/Terms.vue'),
+      meta: { title: 'Terms of Service - Vue MathJax Beautiful' }
     }
   ],
   scrollBehavior(to, from, savedPosition) {

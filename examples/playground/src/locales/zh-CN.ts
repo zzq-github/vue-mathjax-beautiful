@@ -618,6 +618,9 @@ export default {
     discussions: '讨论区',
     contributing: '贡献指南',
     copyright: '© 2025 Vue MathJax Beautiful. All rights reserved.',
+    author: '由 不讲道理的柯里昂 开发维护',
+    madeWith: 'Made with',
+    forVueCommunity: 'for the Vue.js community',
     privacy: '隐私政策',
     terms: '使用条款',
   },
@@ -657,6 +660,7 @@ export default {
     viewMore: '查看更多',
     learnMore: '了解更多',
     getStarted: '开始使用',
+    back: '返回',
     close: '关闭',
     open: '打开',
     save: '保存',
@@ -667,5 +671,229 @@ export default {
     success: '成功',
     warning: '警告',
     info: '信息',
+  },
+
+  // 隐私政策页面
+  privacy: {
+    title: '隐私政策',
+    subtitle: '我们致力于保护您的隐私，本政策详细说明了我们如何收集、使用和保护您的个人信息',
+    badge: '隐私保护',
+    lastUpdated: '最后更新时间：2025年1月',
+    sections: {
+      overview: {
+        title: '1. 概述',
+        subtitle: '隐私保护承诺',
+        content: 'Vue MathJax Beautiful（以下简称"本产品"）致力于保护用户隐私。本隐私政策说明了我们如何收集、使用和保护您的个人信息。使用本产品即表示您同意本隐私政策中描述的数据处理方式。'
+      },
+      dataCollection: {
+        title: '2. 信息收集',
+        subtitle: '数据收集范围',
+        autoCollected: {
+          title: '2.1 自动收集的信息',
+          items: [
+            '浏览器类型和版本',
+            '操作系统信息',
+            '访问时间和日期',
+            'IP地址（用于安全目的）',
+            '页面访问统计'
+          ]
+        },
+        userProvided: {
+          title: '2.2 用户提供的信息',
+          items: [
+            'GitHub Issues 和 Discussions 中的反馈信息',
+            '通过邮件或其他方式提供的技术支持请求'
+          ]
+        }
+      },
+      dataUsage: {
+        title: '3. 信息使用',
+        subtitle: '数据使用目的',
+        description: '我们收集的信息将用于以下目的：',
+        purposes: [
+          '提供和改进产品功能',
+          '分析使用模式以优化用户体验',
+          '提供技术支持和客户服务',
+          '检测和防止安全威胁',
+          '遵守法律法规要求'
+        ]
+      },
+      dataSharing: {
+        title: '4. 信息共享',
+        subtitle: '数据共享政策',
+        description: '我们不会出售、交易或转让您的个人信息给第三方，除非：',
+        exceptions: [
+          '获得您的明确同意',
+          '为提供服务而需要与可信赖的第三方合作',
+          '遵守法律法规或政府要求',
+          '保护我们的权利、财产或安全'
+        ]
+      },
+      dataSecurity: {
+        title: '5. 数据安全',
+        subtitle: '安全保护措施',
+        content: '我们采用适当的技术和组织措施来保护您的个人信息，防止未经授权的访问、使用或披露。然而，请注意互联网传输无法保证100%安全，我们无法完全保证信息传输的绝对安全。'
+      },
+      cookies: {
+        title: '6. Cookie 使用',
+        subtitle: 'Cookie 政策',
+        content: '本产品可能使用 Cookie 来改善用户体验。您可以通过浏览器设置控制 Cookie 的使用。禁用 Cookie 可能影响某些功能的正常使用。'
+      },
+      thirdParty: {
+        title: '7. 第三方服务',
+        subtitle: '第三方集成',
+        description: '本产品可能使用以下第三方服务：',
+        services: [
+          'GitHub（代码托管和问题跟踪）',
+          'Google Analytics（网站分析，如果使用）',
+          '其他必要的技术服务提供商'
+        ],
+        note: '这些第三方服务有自己的隐私政策，我们建议您查看相关条款。'
+      },
+      childrenPrivacy: {
+        title: '8. 儿童隐私',
+        subtitle: '儿童保护',
+        content: '本产品不专门针对13岁以下儿童。我们不会故意收集13岁以下儿童的个人信息。如果您认为我们可能收集了儿童的个人信息，请立即联系我们。'
+      },
+      policyUpdates: {
+        title: '9. 隐私政策更新',
+        subtitle: '政策变更',
+        content: '我们可能会不时更新本隐私政策。重大变更将在网站上发布通知。继续使用本产品即表示您接受更新后的隐私政策。'
+      },
+      contact: {
+        title: '10. 联系我们',
+        subtitle: '联系方式',
+        description: '如果您对本隐私政策有任何疑问或建议，请通过以下方式联系我们：',
+        developer: '开发者',
+        github: 'GitHub',
+        issues: 'Issues'
+      }
+    }
+  },
+
+  // 使用条款页面
+  terms: {
+    title: '使用条款',
+    subtitle: '本条款规定了您使用 Vue MathJax Beautiful 的条件和规则，请仔细阅读',
+    badge: '使用条款',
+    lastUpdated: '最后更新时间：2025年1月',
+    sections: {
+      overview: {
+        title: '1. 概述',
+        subtitle: '条款说明',
+        content: '欢迎使用 Vue MathJax Beautiful（以下简称"本产品"）。本使用条款（以下简称"条款"）规定了您使用本产品的条件和规则。使用本产品即表示您同意遵守这些条款。如果您不同意这些条款，请不要使用本产品。'
+      },
+      productDescription: {
+        title: '2. 产品描述',
+        subtitle: '功能特性',
+        description: 'Vue MathJax Beautiful 是一个基于 Vue 3 的数学公式编辑器组件库，提供以下功能：',
+        features: [
+          '专业的数学公式编辑功能',
+          '240+ 数学符号面板',
+          '38 个常用公式模板',
+          '实时预览功能',
+          'LaTeX 语法支持',
+          '富文本编辑功能',
+          '响应式设计'
+        ]
+      },
+      licensing: {
+        title: '3. 许可条款',
+        subtitle: '开源许可',
+        openSource: {
+          title: '3.1 开源许可',
+          content: '本产品采用 MIT 许可证发布。您可以在遵守 MIT 许可证条款的前提下自由使用、修改和分发本产品。'
+        },
+        permissions: {
+          title: '3.2 使用权限',
+          description: '在遵守本条款的前提下，我们授予您非独占、不可转让、可撤销的许可，允许您：',
+          items: [
+            '在您的项目中集成和使用本产品',
+            '根据您的需求修改和定制本产品',
+            '在商业和非商业项目中使用本产品'
+          ]
+        }
+      },
+      userResponsibilities: {
+        title: '4. 用户责任',
+        subtitle: '用户义务',
+        description: '使用本产品时，您同意：',
+        responsibilities: [
+          '遵守所有适用的法律法规',
+          '不将本产品用于非法或有害目的',
+          '不侵犯他人的知识产权',
+          '不传播恶意代码或病毒',
+          '尊重其他用户的权利',
+          '提供准确和真实的信息'
+        ]
+      },
+      prohibitedActions: {
+        title: '5. 禁止行为',
+        subtitle: '禁止事项',
+        description: '使用本产品时，您不得：',
+        prohibitions: [
+          '违反任何适用的法律法规',
+          '侵犯他人的知识产权或隐私权',
+          '传播虚假、误导或有害信息',
+          '干扰或破坏本产品的正常运行',
+          '尝试未经授权访问本产品的系统',
+          '使用本产品进行商业间谍活动',
+          '传播恶意软件或病毒'
+        ]
+      },
+      intellectualProperty: {
+        title: '6. 知识产权',
+        subtitle: '版权保护',
+        productIP: {
+          title: '6.1 产品知识产权',
+          content: '本产品的源代码、设计、文档等知识产权归开发者"不讲道理的柯里昂"所有。根据 MIT 许可证，您可以自由使用和修改这些内容。'
+        },
+        thirdParty: {
+          title: '6.2 第三方组件',
+          content: '本产品可能包含第三方开源组件，这些组件受其各自的许可证保护。我们建议您查看相关组件的许可证条款。'
+        }
+      },
+      disclaimer: {
+        title: '7. 免责声明',
+        subtitle: '免责条款',
+        description: '本产品按"现状"提供，不提供任何明示或暗示的保证，包括但不限于：',
+        disclaimers: [
+          '适销性保证',
+          '特定用途适用性保证',
+          '无侵权保证',
+          '无错误或无中断保证',
+          '安全性保证'
+        ],
+        note: '我们不对因使用本产品而产生的任何直接、间接、偶然、特殊或后果性损害承担责任。'
+      },
+      liabilityLimitation: {
+        title: '8. 责任限制',
+        subtitle: '责任范围',
+        content: '在法律允许的最大范围内，我们的总责任不超过您为使用本产品支付的费用（如果有的话）。某些司法管辖区不允许责任限制，因此这些限制可能不适用于您。'
+      },
+      serviceChanges: {
+        title: '9. 服务变更',
+        subtitle: '服务调整',
+        content: '我们保留随时修改、暂停或终止本产品或其任何功能的权利，恕不另行通知。我们不对任何服务变更造成的损失承担责任。'
+      },
+      termsUpdates: {
+        title: '10. 条款更新',
+        subtitle: '条款变更',
+        content: '我们可能会不时更新这些使用条款。重大变更将在网站上发布通知。继续使用本产品即表示您接受更新后的条款。如果您不同意更新后的条款，请停止使用本产品。'
+      },
+      applicableLaw: {
+        title: '11. 适用法律',
+        subtitle: '法律管辖',
+        content: '本条款受中华人民共和国法律管辖。任何争议应通过友好协商解决，协商不成的，应提交有管辖权的人民法院解决。'
+      },
+      contact: {
+        title: '12. 联系我们',
+        subtitle: '联系方式',
+        description: '如果您对本使用条款有任何疑问或建议，请通过以下方式联系我们：',
+        developer: '开发者',
+        github: 'GitHub',
+        issues: 'Issues'
+      }
+    }
   },
 }; 

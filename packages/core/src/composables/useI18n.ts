@@ -26,6 +26,10 @@ export interface Messages {
       advanced: string;
       formulas: string;
     };
+    caseToggle: {
+      uppercase: string;
+      lowercase: string;
+    };
     examples: {
       quadratic: string;
       integral: string;
@@ -95,6 +99,10 @@ const zhCN: Messages = {
       advanced: '高级符号',
       formulas: '常用公式',
     },
+    caseToggle: {
+      uppercase: '切换到大写',
+      lowercase: '切换到小写',
+    },
     examples: {
       quadratic: '二次方程解',
       integral: '定积分',
@@ -162,6 +170,10 @@ const enUS: Messages = {
       greek: 'Greek Letters',
       advanced: 'Advanced Symbols',
       formulas: 'Common Formulas',
+    },
+    caseToggle: {
+      uppercase: 'Switch to Uppercase',
+      lowercase: 'Switch to Lowercase',
     },
     examples: {
       quadratic: 'Quadratic Formula',

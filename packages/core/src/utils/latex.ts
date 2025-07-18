@@ -151,10 +151,12 @@ export async function convertLatexToSvg(content: string): Promise<string> {
 
         const svg = await window.MathJax.tex2svgPromise(match.content, {
           display: !match.isInline,
-          scale: 1.2, // 增加缩放比例
+          scale: 10, // 增加缩放比例
           em: 16, // 设置em单位大小
           ex: 8, // 设置ex单位大小
           containerWidth: 1200, // 设置容器宽度
+          minScale: 0.5,
+          matchFontHeight: true
         });
 
         // 检查返回的SVG对象
@@ -171,6 +173,9 @@ export async function convertLatexToSvg(content: string): Promise<string> {
         }
 
         const svgElement = svgElements[0];
+
+        // 修复SVG显示问题，特别是数学符号的显示
+        fixSvgDisplay(svgElement, match.content);
 
         // 添加原始LaTeX公式作为属性
         svgElement.setAttribute('data-latex', match.content);
@@ -207,6 +212,47 @@ export async function convertLatexToSvg(content: string): Promise<string> {
   } catch (error) {
     console.error('convert latex error:', error);
     return content;
+  }
+}
+
+/**
+ * 修复SVG显示问题，特别是数学符号的显示
+ * @param {SVGElement} svgElement - SVG元素
+ * @param {string} latexContent - LaTeX内容
+ */
+function fixSvgDisplay(svgElement: SVGSVGElement, latexContent: string) {
+  if (!svgElement || !latexContent) return;
+  
+  // 检查是否是数学比较符号
+  const mathSymbols = ['\\geq', '\\leq', '\\ne', '\\approx', '\\equiv', '\\sim'];
+  const isMathSymbol = mathSymbols.some(symbol => latexContent.includes(symbol));
+  
+  if (isMathSymbol) {
+    // 获取当前的viewBox
+    const viewBox = svgElement.getAttribute('viewBox');
+    if (viewBox) {
+      const parts = viewBox.split(' ');
+      if (parts.length === 4) {
+        const [, , width, height] = parts;
+        const numHeight = parseFloat(height);
+        
+        // 对于数学符号，确保有足够的显示空间
+        if (numHeight < 800) {
+          const newHeight = Math.max(800, numHeight * 1.2);
+          const newViewBox = `${parts[0]} ${parts[1]} ${width} ${newHeight}`;
+          svgElement.setAttribute('viewBox', newViewBox);
+        }
+      }
+    }
+    
+    // 调整SVG的高度属性
+    const currentHeight = svgElement.getAttribute('height');
+    if (currentHeight) {
+      const heightValue = parseFloat(currentHeight);
+      if (heightValue < 2.5) {
+        svgElement.setAttribute('height', '2.5ex');
+      }
+    }
   }
 }
 
@@ -335,14 +381,32 @@ export async function initMathJax(config?: any): Promise<void> {
           ['\\(', '\\)'],
         ],
         displayMath: [
+          // start/end delimiter pairs for display math
           ['$$', '$$'],
           ['\\[', '\\]'],
         ],
-        processEscapes: true,
+      },
+      'HTML-CSS': {
+        availableFonts: ['STIX', 'TeX'], //可选字体
+        showMathMenu: false, //关闭右击菜单显示
       },
       svg: {
-        fontCache: 'global',
+        fontCache: 'global', // or 'global' or 'none',
+        displayAlign: 'left',
+        scale: 1.0, // 增加整体缩放
+        minScale: 0.5, // 最小缩放
+        mtextInheritFont: true, // 继承字体
+        merrorInheritFont: true, // 错误信息继承字体
+        mathmlSpacing: false, // 使用TeX间距
+        displayIndent: '0', // 显示缩进
+        matchFontHeight: true, // 匹配字体高度
       },
+      chtml: {
+        scale: 1.0, // CHTML输出的缩放
+        minScale: 0.5,
+        mtextInheritFont: true,
+        merrorInheritFont: true
+      }
     };
 
     // 合并用户配置

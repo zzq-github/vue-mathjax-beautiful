@@ -619,6 +619,9 @@ export default {
     discussions: 'Discussions',
     contributing: 'Contributing',
     copyright: '© 2025 Vue MathJax Beautiful. All rights reserved.',
+    author: 'Developed and maintained by 不讲道理的柯里昂',
+    madeWith: 'Made with',
+    forVueCommunity: 'for the Vue.js community',
     privacy: 'Privacy Policy',
     terms: 'Terms of Service',
   },
@@ -658,6 +661,7 @@ export default {
     viewMore: 'View More',
     learnMore: 'Learn More',
     getStarted: 'Get Started',
+    back: 'Back',
     close: 'Close',
     open: 'Open',
     save: 'Save',
@@ -668,5 +672,229 @@ export default {
     success: 'Success',
     warning: 'Warning',
     info: 'Information',
+  },
+
+  // Privacy Policy Page
+  privacy: {
+    title: 'Privacy Policy',
+    subtitle: 'We are committed to protecting your privacy. This policy details how we collect, use, and protect your personal information',
+    badge: 'Privacy Protection',
+    lastUpdated: 'Last Updated: January 2025',
+    sections: {
+      overview: {
+        title: '1. Overview',
+        subtitle: 'Privacy Protection Commitment',
+        content: 'Vue MathJax Beautiful (hereinafter referred to as "this product") is committed to protecting user privacy. This privacy policy explains how we collect, use, and protect your personal information. Using this product indicates your agreement to the data processing methods described in this privacy policy.'
+      },
+      dataCollection: {
+        title: '2. Information Collection',
+        subtitle: 'Data Collection Scope',
+        autoCollected: {
+          title: '2.1 Automatically Collected Information',
+          items: [
+            'Browser type and version',
+            'Operating system information',
+            'Access time and date',
+            'IP address (for security purposes)',
+            'Page access statistics'
+          ]
+        },
+        userProvided: {
+          title: '2.2 User-Provided Information',
+          items: [
+            'Feedback information in GitHub Issues and Discussions',
+            'Technical support requests provided via email or other means'
+          ]
+        }
+      },
+      dataUsage: {
+        title: '3. Information Usage',
+        subtitle: 'Data Usage Purposes',
+        description: 'The information we collect will be used for the following purposes:',
+        purposes: [
+          'Provide and improve product functionality',
+          'Analyze usage patterns to optimize user experience',
+          'Provide technical support and customer service',
+          'Detect and prevent security threats',
+          'Comply with legal and regulatory requirements'
+        ]
+      },
+      dataSharing: {
+        title: '4. Information Sharing',
+        subtitle: 'Data Sharing Policy',
+        description: 'We will not sell, trade, or transfer your personal information to third parties unless:',
+        exceptions: [
+          'We obtain your explicit consent',
+          'It is necessary to cooperate with trusted third parties to provide services',
+          'To comply with legal and regulatory requirements or government requests',
+          'To protect our rights, property, or safety'
+        ]
+      },
+      dataSecurity: {
+        title: '5. Data Security',
+        subtitle: 'Security Protection Measures',
+        content: 'We adopt appropriate technical and organizational measures to protect your personal information from unauthorized access, use, or disclosure. However, please note that internet transmission cannot guarantee 100% security, and we cannot completely guarantee the absolute security of information transmission.'
+      },
+      cookies: {
+        title: '6. Cookie Usage',
+        subtitle: 'Cookie Policy',
+        content: 'This product may use cookies to improve user experience. You can control cookie usage through browser settings. Disabling cookies may affect the normal use of certain features.'
+      },
+      thirdParty: {
+        title: '7. Third-Party Services',
+        subtitle: 'Third-Party Integration',
+        description: 'This product may use the following third-party services:',
+        services: [
+          'GitHub (code hosting and issue tracking)',
+          'Google Analytics (website analytics, if used)',
+          'Other necessary technical service providers'
+        ],
+        note: 'These third-party services have their own privacy policies, and we recommend you review the relevant terms.'
+      },
+      childrenPrivacy: {
+        title: '8. Children\'s Privacy',
+        subtitle: 'Children Protection',
+        content: 'This product is not specifically targeted at children under 13. We do not knowingly collect personal information from children under 13. If you believe we may have collected personal information from a child, please contact us immediately.'
+      },
+      policyUpdates: {
+        title: '9. Privacy Policy Updates',
+        subtitle: 'Policy Changes',
+        content: 'We may update this privacy policy from time to time. Significant changes will be notified on the website. Continued use of this product indicates your acceptance of the updated privacy policy.'
+      },
+      contact: {
+        title: '10. Contact Us',
+        subtitle: 'Contact Information',
+        description: 'If you have any questions or suggestions about this privacy policy, please contact us through the following methods:',
+        developer: 'Developer',
+        github: 'GitHub',
+        issues: 'Issues'
+      }
+    }
+  },
+
+  // Terms of Service Page
+  terms: {
+    title: 'Terms of Service',
+    subtitle: 'These terms govern your use of Vue MathJax Beautiful. Please read them carefully',
+    badge: 'Terms of Service',
+    lastUpdated: 'Last Updated: January 2025',
+    sections: {
+      overview: {
+        title: '1. Overview',
+        subtitle: 'Terms Description',
+        content: 'Welcome to Vue MathJax Beautiful (hereinafter referred to as "this product"). These Terms of Service (hereinafter referred to as "terms") set forth the conditions and rules for your use of this product. Using this product indicates your agreement to comply with these terms. If you do not agree to these terms, please do not use this product.'
+      },
+      productDescription: {
+        title: '2. Product Description',
+        subtitle: 'Features',
+        description: 'Vue MathJax Beautiful is a Vue 3-based mathematical formula editor component library that provides the following features:',
+        features: [
+          'Professional mathematical formula editing functionality',
+          '240+ mathematical symbol panels',
+          '38 common formula templates',
+          'Real-time preview functionality',
+          'LaTeX syntax support',
+          'Rich text editing functionality',
+          'Responsive design'
+        ]
+      },
+      licensing: {
+        title: '3. Licensing Terms',
+        subtitle: 'Open Source License',
+        openSource: {
+          title: '3.1 Open Source License',
+          content: 'This product is released under the MIT License. You may freely use, modify, and distribute this product in compliance with the MIT License terms.'
+        },
+        permissions: {
+          title: '3.2 Usage Permissions',
+          description: 'Subject to compliance with these terms, we grant you a non-exclusive, non-transferable, revocable license to:',
+          items: [
+            'Integrate and use this product in your projects',
+            'Modify and customize this product according to your needs',
+            'Use this product in commercial and non-commercial projects'
+          ]
+        }
+      },
+      userResponsibilities: {
+        title: '4. User Responsibilities',
+        subtitle: 'User Obligations',
+        description: 'When using this product, you agree to:',
+        responsibilities: [
+          'Comply with all applicable laws and regulations',
+          'Not use this product for illegal or harmful purposes',
+          'Not infringe on others\' intellectual property rights',
+          'Not spread malicious code or viruses',
+          'Respect the rights of other users',
+          'Provide accurate and truthful information'
+        ]
+      },
+      prohibitedActions: {
+        title: '5. Prohibited Actions',
+        subtitle: 'Prohibited Items',
+        description: 'When using this product, you must not:',
+        prohibitions: [
+          'Violate any applicable laws and regulations',
+          'Infringe on others\' intellectual property or privacy rights',
+          'Spread false, misleading, or harmful information',
+          'Interfere with or disrupt the normal operation of this product',
+          'Attempt unauthorized access to this product\'s systems',
+          'Use this product for commercial espionage activities',
+          'Spread malicious software or viruses'
+        ]
+      },
+      intellectualProperty: {
+        title: '6. Intellectual Property',
+        subtitle: 'Copyright Protection',
+        productIP: {
+          title: '6.1 Product Intellectual Property',
+          content: 'The source code, design, documentation, and other intellectual property of this product are owned by the developer "不讲道理的柯里昂". Under the MIT License, you may freely use and modify this content.'
+        },
+        thirdParty: {
+          title: '6.2 Third-Party Components',
+          content: 'This product may contain third-party open-source components that are protected by their respective licenses. We recommend you review the license terms of related components.'
+        }
+      },
+      disclaimer: {
+        title: '7. Disclaimer',
+        subtitle: 'Disclaimer Terms',
+        description: 'This product is provided "as is" without any express or implied warranties, including but not limited to:',
+        disclaimers: [
+          'Merchantability warranty',
+          'Fitness for a particular purpose warranty',
+          'Non-infringement warranty',
+          'Error-free or uninterrupted warranty',
+          'Security warranty'
+        ],
+        note: 'We are not responsible for any direct, indirect, incidental, special, or consequential damages arising from the use of this product.'
+      },
+      liabilityLimitation: {
+        title: '8. Liability Limitation',
+        subtitle: 'Liability Scope',
+        content: 'To the maximum extent permitted by law, our total liability shall not exceed the fees you paid for using this product (if any). Some jurisdictions do not allow liability limitations, so these limitations may not apply to you.'
+      },
+      serviceChanges: {
+        title: '9. Service Changes',
+        subtitle: 'Service Adjustments',
+        content: 'We reserve the right to modify, suspend, or terminate this product or any of its features at any time without prior notice. We are not responsible for any losses caused by service changes.'
+      },
+      termsUpdates: {
+        title: '10. Terms Updates',
+        subtitle: 'Terms Changes',
+        content: 'We may update these Terms of Service from time to time. Significant changes will be notified on the website. Continued use of this product indicates your acceptance of the updated terms. If you do not agree to the updated terms, please stop using this product.'
+      },
+      applicableLaw: {
+        title: '11. Applicable Law',
+        subtitle: 'Legal Jurisdiction',
+        content: 'These terms are governed by the laws of the People\'s Republic of China. Any disputes shall be resolved through friendly negotiation, and if negotiation fails, they shall be submitted to the competent people\'s court for resolution.'
+      },
+      contact: {
+        title: '12. Contact Us',
+        subtitle: 'Contact Information',
+        description: 'If you have any questions or suggestions about these Terms of Service, please contact us through the following methods:',
+        developer: 'Developer',
+        github: 'GitHub',
+        issues: 'Issues'
+      }
+    }
   },
 }; 

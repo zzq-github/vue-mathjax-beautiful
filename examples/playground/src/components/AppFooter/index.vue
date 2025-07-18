@@ -142,31 +142,44 @@
 
       <!-- 底部版权信息 -->
       <div class="flex flex-col space-y-6 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
-        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-6">
-          <p class="text-gray-600 dark:text-gray-400 text-center sm:text-left">
-            {{ t('footer.copyright') }}
-          </p>
-          <div class="flex justify-center sm:justify-start space-x-1 text-xs text-gray-500 dark:text-gray-500">
-            <span>Made with</span>
-            <span class="text-red-500">♥</span>
-            <span>for the Vue.js community</span>
+        <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-8">
+          <!-- 版权信息 -->
+          <div class="flex flex-col space-y-2">
+            <p class="text-gray-600 dark:text-gray-400 text-center sm:text-left text-sm">
+              {{ t('footer.copyright') }}
+            </p>
+            <p class="text-gray-500 dark:text-gray-500 text-center sm:text-left text-xs">
+              {{ t('footer.author') }}
+            </p>
+          </div>
+          
+          <!-- 爱心信息 -->
+          <div class="flex justify-center sm:justify-start items-center space-x-1 text-xs text-gray-500 dark:text-gray-500">
+            <span>{{ t('footer.madeWith') }}</span>
+            <span class="text-red-500 animate-pulse">♥</span>
+            <span>{{ t('footer.forVueCommunity') }}</span>
           </div>
         </div>
         
-        <div class="flex justify-center sm:justify-end items-center space-x-6">
-          <a href="#" 
-             class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 hover:underline">
-            {{ t('footer.privacy') }}
-          </a>
-          <a href="#" 
-             class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 hover:underline">
-            {{ t('footer.terms') }}
-          </a>
+        <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
+          <!-- 法律链接 -->
+          <div class="flex space-x-6">
+            <a href="/privacy" 
+               class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 hover:underline">
+              {{ t('footer.privacy') }}
+            </a>
+            <a href="/terms" 
+               class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 hover:underline">
+              {{ t('footer.terms') }}
+            </a>
+          </div>
+          
           <!-- 社交媒体链接 -->
-          <div class="flex space-x-3 ml-4">
+          <div class="flex space-x-3">
             <a href="https://github.com/zzq-github/vue-mathjax-beautiful" 
                target="_blank"
-               class="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 group">
+               class="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 group"
+               title="GitHub">
               <GithubIcon class="w-4 h-4 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
             </a>
           </div>
