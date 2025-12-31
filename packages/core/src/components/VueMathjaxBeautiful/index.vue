@@ -433,6 +433,9 @@ const props = withDefaults(
     // 标题自定义
     title?: string;
     subtitle?: string;
+    
+    // 公式包裹控制
+    wrapFormula?: boolean;
   }>(),
   {
     modelValue: false,
@@ -485,6 +488,7 @@ const props = withDefaults(
     clearButtonText: '清空',
     title: '数学公式编辑器',
     subtitle: '使用下方按钮或直接输入 LaTeX 代码',
+    wrapFormula: true,
   }
 );
 
@@ -792,7 +796,22 @@ const updatePreview = async () => {
 
 const handleInsert = () => {
   if (latexInput.value.trim()) {
-    emit('insert', latexInput.value.trim());
+    console.log('latexInput.value.trim()', latexInput.value.trim());
+    let latex = latexInput.value.trim();
+    
+    // 如果启用了公式包裹，添加相应的包裹符
+    if (props.wrapFormula) {
+      // 检查是否已经有包裹符
+      const hasInlineWrapper = latex.startsWith('$') && latex.endsWith('$') && !latex.startsWith('$$');
+      const hasDisplayWrapper = latex.startsWith('$$') && latex.endsWith('$$');
+      
+      // 如果没有包裹符，根据 inlineMode 添加
+      if (!hasInlineWrapper && !hasDisplayWrapper) {
+        latex = props.inlineMode ? `$${latex}$` : `$$${latex}$$`;
+      }
+    }
+    
+    emit('insert', latex);
     if (!props.inlineMode) {
       handleClose();
     }

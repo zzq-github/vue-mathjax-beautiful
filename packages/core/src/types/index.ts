@@ -48,6 +48,8 @@ export interface VueMathjaxBeautifulProps {
   showPreview?: boolean;
   showThemeToggle?: boolean;
   showClearButton?: boolean;
+  showLanguageToggle?: boolean;
+  showFormulaExamples?: boolean;
   autoFocus?: boolean;
   
   // 输入控制
@@ -67,6 +69,9 @@ export interface VueMathjaxBeautifulProps {
   // 标题自定义
   title?: string;
   subtitle?: string;
+  
+  // 公式包裹控制
+  wrapFormula?: boolean;
 }
 
 // VueMathjaxBeautiful组件事件接口

@@ -216,6 +216,8 @@ export default {
     showFormulaExamplesDesc: 'Show formula examples',
     readonlyDesc: 'Read-only mode, disable editing functions',
     autoFocusDesc: 'Auto focus to input field',
+    wrapFormula: 'Wrap Formula',
+    wrapFormulaDesc: 'Automatically wrap formula with $ or $$ delimiters (inline mode uses $, dialog mode uses $$)',
     showSymbolsDesc: 'Show symbol panel',
     showPreviewDesc: 'Show live preview',
     showThemeToggleDesc: 'Show theme toggle button',

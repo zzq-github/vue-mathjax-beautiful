@@ -216,6 +216,8 @@ export default {
     showFormulaExamplesDesc: '显示公式示例',
     readonlyDesc: '只读模式，禁用编辑功能',
     autoFocusDesc: '自动聚焦到输入框',
+    wrapFormula: '自动包裹公式',
+    wrapFormulaDesc: '自动在公式前后添加 $ 或 $$ 包裹符（内联模式用 $，弹窗模式用 $$）',
     showSymbolsDesc: '显示符号面板',
     showPreviewDesc: '显示实时预览',
     showThemeToggleDesc: '显示主题切换按钮',
