@@ -60,6 +60,13 @@
               </router-link>
             </li>
             <li>
+              <router-link to="/updates"
+                          class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
+                <div class="w-2 h-2 bg-blue-500/60 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></div>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">{{ t('footer.updates') }}</span>
+              </router-link>
+            </li>
+            <li>
               <a href="https://github.com/zzq-github/vue-mathjax-beautiful/releases" 
                  target="_blank"
                  class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
@@ -70,6 +77,7 @@
                 </svg>
               </a>
             </li>
+
           </ul>
         </div>
 

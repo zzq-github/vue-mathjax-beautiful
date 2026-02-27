@@ -49,6 +49,12 @@
           class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/docs' }"
         >{{ t('nav.docs') }}</router-link>
+        <router-link
+          to="/updates"
+          class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/updates' }"
+        >{{ t('nav.updates') }}</router-link>
+
 
         <!-- 语言切换器 -->
         <div class="relative" data-language-menu>
@@ -298,6 +304,15 @@
           >
             {{ t('nav.docs') }}
           </router-link>
+          <router-link
+            to="/updates"
+            @click="$emit('closeMobileMenu')"
+            class="block py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            :class="{ '!text-blue-600 dark:!text-blue-400': $route.path === '/updates' }"
+          >
+            {{ t('nav.updates') }}
+          </router-link>
+
         </div>
       </div>
     </Transition>

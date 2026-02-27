@@ -8,6 +8,7 @@ export default {
     features: '功能特性',
     examples: '示例',
     docs: '文档',
+    updates: '更新说明',
     toggleTheme: '切换主题',
     openMenu: '打开菜单',
     language: '语言',
@@ -422,7 +423,6 @@ export default {
   docs: {
     title: '使用文档',
     description: '详细的组件使用指南和API文档',
-    
     toc: {
       title: '目录',
       quickLinks: '快速链接',
@@ -597,6 +597,51 @@ export default {
     },
   },
 
+  // 更新说明
+  updates: {
+    title: '更新说明',
+    subtitle: '记录每次功能更新与问题修复，便于回溯与验证',
+    badge: '更新记录',
+    lastUpdated: '最后更新时间：2026年2月',
+    empty: '暂无更新记录。',
+    entries: [
+      {
+        version: '1.2.3',
+        date: '2026-02-27',
+        typeLabel: '优化',
+        title: '更新说明时间轴与文档同步',
+        summary: '更新说明页面改为时间轴展示，并同步 README 更新记录。',
+        items: [
+          '更新说明页面使用时间轴样式展示条目。',
+          '补充 README 更新说明。'
+        ]
+      },
+      {
+        version: '1.0.1',
+        date: '2025-02-26',
+        typeLabel: '修复',
+        title: '本地 MathJax 加载稳定性优化',
+        summary: '优先使用本地静态资源，内网与大陆环境加载更稳定。',
+        items: [
+          '本地优先加载 /mathjax/tex-svg.js 与 /mathjax/es5/tex-svg.js。',
+          '加载失败自动回退到 CDN。',
+          '新增本地资源说明与验证方式。'
+        ]
+      },
+      {
+        version: '1.0.0',
+        date: '2025-01-15',
+        typeLabel: '新增',
+        title: '演示与文档结构优化',
+        summary: '完善演示页面结构，提升浏览和使用体验。',
+        items: [
+          '首页与演示页布局优化。',
+          '文档导航与内容组织调整。'
+        ]
+      }
+    ]
+  },
+
   // 页脚
   footer: {
     description: '为 Vue 3 应用提供强大的数学公式编辑功能，支持 LaTeX 语法和实时预览。',
@@ -605,6 +650,7 @@ export default {
     documentation: '文档',
     examples: '示例',
     apiReference: 'API 参考',
+    updates: '更新说明',
     changelog: '更新日志',
     github: 'GitHub',
     issues: '问题反馈',
@@ -889,4 +935,4 @@ export default {
       }
     }
   },
-}; 
+};

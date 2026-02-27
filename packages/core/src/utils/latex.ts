@@ -447,6 +447,11 @@ export async function initMathJax(config?: any): Promise<void> {
 }
 
 /**
+ * 本地MathJax默认路径（将 node_modules/mathjax/es5 复制到 public/mathjax）
+ */
+const MATHJAX_LOCAL_URLS = ['/mathjax/tex-svg.js', '/mathjax/es5/tex-svg.js'];
+
+/**
  * 可用的MathJax CDN列表
  */
 const MATHJAX_CDNS = [
@@ -491,7 +496,7 @@ function loadMathJaxFromUrl(url: string): Promise<void> {
  * @returns Promise
  */
 export async function loadMathJax(
-  urls: string[] = ['https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js']
+  urls: string[] = MATHJAX_LOCAL_URLS
 ): Promise<void> {
   if (typeof window === 'undefined') {
     throw new Error('MathJax can only be loaded in browser environment');
@@ -516,9 +521,8 @@ export async function loadMathJax(
   // 添加默认的备用CDN
   const allUrls = [
     ...urlList,
-    'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js',
-    'https://unpkg.com/mathjax@3/es5/tex-svg.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js',
+    ...MATHJAX_LOCAL_URLS,
+    ...MATHJAX_CDNS,
   ];
 
   // 去重

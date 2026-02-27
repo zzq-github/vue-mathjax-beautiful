@@ -8,6 +8,7 @@ export default {
     features: 'Features',
     examples: 'Examples',
     docs: 'Documentation',
+    updates: 'Updates',
     toggleTheme: 'Toggle Theme',
     openMenu: 'Open Menu',
     language: 'Language',
@@ -422,7 +423,6 @@ export default {
   docs: {
     title: 'Documentation',
     description: 'Complete usage guide and API documentation',
-    
     toc: {
       title: 'Table of Contents',
       quickLinks: 'Quick Links',
@@ -599,6 +599,51 @@ export default {
     },
   },
 
+  // Updates
+  updates: {
+    title: 'Updates',
+    subtitle: 'Track each release and fix for easier review and verification',
+    badge: 'Release Notes',
+    lastUpdated: 'Last Updated: Feb 2026',
+    empty: 'No updates yet.',
+    entries: [
+      {
+        version: '1.2.3',
+        date: '2026-02-27',
+        typeLabel: 'Enhancement',
+        title: 'Timeline updates and README sync',
+        summary: 'Switched the updates page to a timeline layout and synced README notes.',
+        items: [
+          'Timeline-style layout for update entries.',
+          'Added update notes in README.'
+        ]
+      },
+      {
+        version: '1.0.1',
+        date: '2025-02-26',
+        typeLabel: 'Fix',
+        title: 'Stable local MathJax loading',
+        summary: 'Prefer local static assets to improve reliability in restricted networks.',
+        items: [
+          'Prefer local /mathjax/tex-svg.js and /mathjax/es5/tex-svg.js paths.',
+          'Fallback to CDN automatically when local files are unavailable.',
+          'Added local assets guide and verification tips.'
+        ]
+      },
+      {
+        version: '1.0.0',
+        date: '2025-01-15',
+        typeLabel: 'New',
+        title: 'Demo and docs layout refresh',
+        summary: 'Improved demo navigation and documentation structure.',
+        items: [
+          'Refined landing and demo layouts.',
+          'Adjusted documentation navigation and sections.'
+        ]
+      }
+    ]
+  },
+
   // Footer
   footer: {
     description: 'Provides powerful mathematical formula editing capabilities for Vue 3 applications, supports LaTeX syntax and real-time preview.',
@@ -607,6 +652,7 @@ export default {
     documentation: 'Documentation',
     examples: 'Examples',
     apiReference: 'API Reference',
+    updates: 'Updates',
     changelog: 'Changelog',
     github: 'GitHub',
     issues: 'Issue Tracker',

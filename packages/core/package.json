@@ -1,6 +1,6 @@
 {
   "name": "vue-mathjax-beautiful",
-  "version": "1.1.0",
+  "version": "1.2.3",
   "description": "🚀 精简、高效的 Vue 3 数学公式编辑器组件库",
   "type": "module",
   "files": [
@@ -64,4 +64,4 @@
     "vue": "^3.3.11",
     "vue-tsc": "^1.8.25"
   }
-} 
+}

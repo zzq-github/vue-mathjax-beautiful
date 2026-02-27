@@ -5,6 +5,7 @@ import { availableLocales } from '../locales';
 
 interface UseI18nReturn {
   t: (key: string) => string;
+  tm: (key: string) => unknown;
   locale: Ref<string>;
   currentLocale: ComputedRef<{ code: string; name: string; flag: string }>;
   availableLocales: typeof availableLocales;
@@ -14,7 +15,7 @@ interface UseI18nReturn {
 }
 
 export function useI18n(): UseI18nReturn {
-  const { locale, t } = useVueI18n();
+  const { locale, t, tm } = useVueI18n();
 
   // 当前语言信息
   const currentLocale = computed(() => {
@@ -50,6 +51,7 @@ export function useI18n(): UseI18nReturn {
 
   return {
     t,
+    tm,
     locale,
     currentLocale,
     availableLocales,

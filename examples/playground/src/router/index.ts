@@ -37,6 +37,12 @@ const router = createRouter({
       meta: { title: 'Documentation - Vue MathJax Beautiful' }
     },
     {
+      path: '/updates',
+      name: 'Updates',
+      component: () => import('../views/Updates.vue'),
+      meta: { title: 'Updates - Vue MathJax Beautiful' }
+    },
+    {
       path: '/privacy',
       name: 'Privacy',
       component: () => import('../views/Privacy.vue'),
