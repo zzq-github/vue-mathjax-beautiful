@@ -118,6 +118,26 @@
                       <div class="text-green-400">&lt;script src="https://unpkg.com/vue-mathjax-beautiful"&gt;&lt;/script&gt;</div>
                     </div>
                   </div>
+
+                  <!-- 本地 MathJax 引入 -->
+                  <div>
+                    <div class="flex items-center gap-2 mb-3">
+                      <div class="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('docs.sections.installation.localMathjaxTitle') }}</span>
+                    </div>
+                    <div class="bg-white/80 dark:bg-gray-900/40 backdrop-blur-sm text-gray-700 dark:text-gray-200 p-4 rounded-lg text-xs transition-colors duration-300 border border-gray-200/60 dark:border-gray-700/60 space-y-2">
+                      <p class="text-gray-600 dark:text-gray-300">{{ t('docs.sections.installation.localMathjaxDesc') }}</p>
+                      <ol class="list-decimal list-inside space-y-1 text-gray-700 dark:text-gray-200">
+                        <li>{{ t('docs.sections.installation.localMathjaxStep1') }}</li>
+                        <li>{{ t('docs.sections.installation.localMathjaxStep2') }}</li>
+                        <li>{{ t('docs.sections.installation.localMathjaxStep3') }}</li>
+                      </ol>
+                      <div class="bg-gray-900/90 dark:bg-gray-950/90 text-gray-100 dark:text-gray-200 p-2 rounded font-mono text-[11px] border border-gray-700/50">
+                        &lt;script src="/mathjax/tex-svg.js"&gt;&lt;/script&gt;
+                      </div>
+                      <p class="text-[11px] text-amber-600 dark:text-amber-300">{{ t('docs.sections.installation.localMathjaxTip') }}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
           </div>

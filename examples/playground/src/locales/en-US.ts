@@ -447,6 +447,12 @@ export default {
         optional: '(optional)',
         quickImport: 'Quick Import',
         cdn: 'CDN Import',
+        localMathjaxTitle: 'Local MathJax (Recommended)',
+        localMathjaxDesc: 'Fixes “Failed to initialize MathJax” in restricted networks, intranet, or offline setups.',
+        localMathjaxStep1: 'pnpm add mathjax',
+        localMathjaxStep2: 'Copy node_modules/mathjax/es5 to public/mathjax',
+        localMathjaxStep3: 'Include /mathjax/es5/tex-svg.js in your page',
+        localMathjaxTip: 'If it still fails, check the script path and ensure network requests return 200.',
       },
 
       basicUsage: {
@@ -610,17 +616,6 @@ export default {
       {
         version: '1.2.3',
         date: '2026-02-27',
-        typeLabel: 'Enhancement',
-        title: 'Timeline updates and README sync',
-        summary: 'Switched the updates page to a timeline layout and synced README notes.',
-        items: [
-          'Timeline-style layout for update entries.',
-          'Added update notes in README.'
-        ]
-      },
-      {
-        version: '1.0.1',
-        date: '2025-02-26',
         typeLabel: 'Fix',
         title: 'Stable local MathJax loading',
         summary: 'Prefer local static assets to improve reliability in restricted networks.',
@@ -631,8 +626,8 @@ export default {
         ]
       },
       {
-        version: '1.0.0',
-        date: '2025-01-15',
+        version: '1.2.3',
+        date: '2026-02-27',
         typeLabel: 'New',
         title: 'Demo and docs layout refresh',
         summary: 'Improved demo navigation and documentation structure.',

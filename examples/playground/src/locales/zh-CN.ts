@@ -446,6 +446,12 @@ export default {
         optional: '(可选)',
         quickImport: '快速导入',
         cdn: 'CDN 引入',
+        localMathjaxTitle: '本地 MathJax 引入（推荐）',
+        localMathjaxDesc: '解决 Failed to initialize MathJax 等问题，适用于国内网络、公司内网与离线部署。',
+        localMathjaxStep1: 'pnpm add mathjax',
+        localMathjaxStep2: '将 node_modules/mathjax/es5 复制到 public/mathjax',
+        localMathjaxStep3: '在页面中引入 /mathjax/es5/tex-svg.js',
+        localMathjaxTip: '若仍报错，请确认本地脚本路径可访问，或检查 console/network 请求是否 200。',
       },
       
       basicUsage: {
@@ -608,17 +614,6 @@ export default {
       {
         version: '1.2.3',
         date: '2026-02-27',
-        typeLabel: '优化',
-        title: '更新说明时间轴与文档同步',
-        summary: '更新说明页面改为时间轴展示，并同步 README 更新记录。',
-        items: [
-          '更新说明页面使用时间轴样式展示条目。',
-          '补充 README 更新说明。'
-        ]
-      },
-      {
-        version: '1.0.1',
-        date: '2025-02-26',
         typeLabel: '修复',
         title: '本地 MathJax 加载稳定性优化',
         summary: '优先使用本地静态资源，内网与大陆环境加载更稳定。',
@@ -629,8 +624,8 @@ export default {
         ]
       },
       {
-        version: '1.0.0',
-        date: '2025-01-15',
+        version: '1.2.3',
+        date: '2026-02-27',
         typeLabel: '新增',
         title: '演示与文档结构优化',
         summary: '完善演示页面结构，提升浏览和使用体验。',
