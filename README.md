@@ -13,15 +13,32 @@
 - 📖 演示地址: [在线地址](https://zzq-github.github.io/vue-mathjax-beautiful)
 
 ## 🧾 更新说明
-- **2026-02-27**：更新说明页面改为时间轴展示，并在 `README.md` 补充更新记录（演示页：`/updates`）。
+
+### v1.3.0 (2026-03-20)
+
+**LaTeX 工具函数全面升级**
+
+- 扩展公式匹配：支持 `equation*`、`align*`、`gather`、`displaymath` 等 10 种 LaTeX 格式
+- 智能货币识别：自动区分 `$100`（货币）与 `$x^2$`（公式），避免误解析
+- Unicode 符号预处理：`√(x)` 自动转为 `$\sqrt{x}$`，支持 `∞`、`≤`、`≥` 等符号
+- 转义字符修复：解决 `\times`、`\frac` 等被 JavaScript 错误解析的问题
+- 公式保护系统：防止 Markdown 解析器破坏矩阵等包含 `\\` 的公式
+- LaTeX 文档转换：支持 AI 生成的完整 LaTeX 文档转换为 Markdown
+- 纯 LaTeX 自动包裹：检测无分隔符的 LaTeX 代码并自动添加 `$...$`
+- 填空题下划线：连续 3+ 下划线自动转为实线下划线样式
+- 代码块智能处理：识别并正确处理包含 LaTeX 的假代码块
+
+### v1.2.3 (2026-02-27)
+
+- 本地 MathJax 加载稳定性优化，优先使用本地静态资源
+- 演示与文档结构优化
+- 更新说明页面改为时间轴展示
 
 ## ✨ 特性
-
 
 - 🧮 **专业公式编辑** - 基于 MathJax 引擎，支持完整的 LaTeX 语法
 - 🎨 **丰富符号面板** - 240+ 数学符号和 38 个常用公式模板
 - 👀 **实时预览** - 所见即所得的公式编辑体验
-
 - 🚀 **Vue 3 + TypeScript** - 现代化的技术栈
 - 📱 **响应式设计** - 完美适配桌面端和移动端
 - 🔧 **易于集成** - 简单的 API 设计，轻松集成到现有项目
@@ -29,16 +46,19 @@
 ## 📦 安装
 
 使用 npm：
+
 ```bash
 npm install vue-mathjax-beautiful
 ```
 
 使用 yarn：
+
 ```bash
 yarn add vue-mathjax-beautiful
 ```
 
 使用 pnpm：
+
 ```bash
 pnpm add vue-mathjax-beautiful
 ```
@@ -114,8 +134,6 @@ const handleInsert = (latex) => {
 }
 </script>
 ```
-
-
 
 ### 完整集成示例
 
@@ -225,16 +243,16 @@ const clearFormula = () => {
 
 #### Props
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `v-model` | `boolean` | `false` | 控制弹窗显示/隐藏（弹窗模式） |
-| `existing-latex` | `string` | `''` | 已有的 LaTeX 公式代码 |
-| `inline-mode` | `boolean` | `false` | 是否启用内联模式 |
+| 属性               | 类型        | 默认值     | 说明              |
+| ---------------- | --------- | ------- | --------------- |
+| `v-model`        | `boolean` | `false` | 控制弹窗显示/隐藏（弹窗模式） |
+| `existing-latex` | `string`  | `''`    | 已有的 LaTeX 公式代码  |
+| `inline-mode`    | `boolean` | `false` | 是否启用内联模式        |
 
 #### Events
 
-| 事件名 | 参数 | 说明 |
-|--------|------|------|
+| 事件名      | 参数                | 说明         |
+| -------- | ----------------- | ---------- |
 | `insert` | `(latex: string)` | 插入/应用公式时触发 |
 
 #### 功能特性
@@ -245,53 +263,51 @@ const clearFormula = () => {
 - **智能插入**：点击符号自动插入到光标位置
 - **双模式支持**：支持弹窗模式和内联模式
 
-
-
 ## ⌨️ 快捷键
 
 ### 公式编辑器快捷键
 
-| 快捷键 | 功能 |
-|--------|------|
-| `点击符号` | 插入符号到光标位置 |
-| `点击模板` | 插入公式模板 |
-| `Enter` | 确认插入公式 |
-| `Esc` | 取消编辑 |
+| 快捷键     | 功能        |
+| ------- | --------- |
+| `点击符号`  | 插入符号到光标位置 |
+| `点击模板`  | 插入公式模板    |
+| `Enter` | 确认插入公式    |
+| `Esc`   | 取消编辑      |
 
 ### 公式语法快捷方式
 
-| 语法 | 功能 |
-|------|------|
-| `$公式$` | 行内公式 |
-| `$$公式$$` | 独立公式（居中显示）|
-| `\frac{a}{b}` | 分数 |
-| `x^{上标}` | 上标 |
-| `x_{下标}` | 下标 |
-| `\sqrt{内容}` | 根号 |
+| 语法            | 功能         |
+| ------------- | ---------- |
+| `$公式$`        | 行内公式       |
+| `$$公式$$`      | 独立公式（居中显示） |
+| `\frac{a}{b}` | 分数         |
+| `x^{上标}`      | 上标         |
+| `x_{下标}`      | 下标         |
+| `\sqrt{内容}`   | 根号         |
 
 ## 📖 LaTeX 语法参考
 
 ### 基础语法
 
-| 语法 | 效果 | 说明 |
-|------|------|------|
-| `$E = mc^2$` | $E = mc^2$ | 行内公式 |
-| `$$\int_0^1 x^2 dx$$` | $$\int_0^1 x^2 dx$$ | 独立公式 |
-| `\frac{a}{b}` | $\frac{a}{b}$ | 分数 |
-| `\sqrt{x}` | $\sqrt{x}$ | 根号 |
-| `x^2` | $x^2$ | 上标 |
-| `x_i` | $x_i$ | 下标 |
+| 语法                    | 效果                   | 说明   |
+| --------------------- | -------------------- | ---- |
+| `$E = mc^2$`          | $E = mc^2$           | 行内公式 |
+| `$$\int_0^1 x^2 dx$$` | $$\int\_0^1 x^2 dx$$ | 独立公式 |
+| `\frac{a}{b}`         | $\frac{a}{b}$        | 分数   |
+| `\sqrt{x}`            | $\sqrt{x}$           | 根号   |
+| `x^2`                 | $x^2$                | 上标   |
+| `x_i`                 | $x\_i$               | 下标   |
 
 ### 高级语法
 
-| 语法 | 效果 | 说明 |
-|------|------|------|
-| `\sum_{i=1}^n` | $\sum_{i=1}^n$ | 求和 |
-| `\int_{a}^{b}` | $\int_{a}^{b}$ | 积分 |
-| `\lim_{x \to 0}` | $\lim_{x \to 0}$ | 极限 |
+| 语法                    | 效果                    | 说明   |
+| --------------------- | --------------------- | ---- |
+| `\sum_{i=1}^n`        | $\sum\_{i=1}^n$       | 求和   |
+| `\int_{a}^{b}`        | $\int\_{a}^{b}$       | 积分   |
+| `\lim_{x \to 0}`      | $\lim\_{x \to 0}$     | 极限   |
 | `\alpha \beta \gamma` | $\alpha \beta \gamma$ | 希腊字母 |
-| `\sin \cos \tan` | $\sin \cos \tan$ | 三角函数 |
-| `\infty \pm \neq` | $\infty \pm \neq$ | 特殊符号 |
+| `\sin \cos \tan`      | $\sin \cos \tan$      | 三角函数 |
+| `\infty \pm \neq`     | $\infty \pm \neq$     | 特殊符号 |
 
 ### 矩阵和方程组
 
@@ -318,16 +334,19 @@ x - y = 1
 ### 常用公式模板
 
 #### 代数
+
 - 二次方程：`ax^2 + bx + c = 0`
 - 求根公式：`x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}`
 - 因式分解：`(a+b)^2 = a^2 + 2ab + b^2`
 
 #### 几何
+
 - 圆的面积：`S = \pi r^2`
 - 球的体积：`V = \frac{4}{3}\pi r^3`
 - 勾股定理：`a^2 + b^2 = c^2`
 
 #### 微积分
+
 - 导数定义：`f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}`
 - 积分：`\int_a^b f(x) dx`
 - 牛顿-莱布尼茨公式：`\int_a^b f'(x) dx = f(b) - f(a)`
@@ -502,6 +521,7 @@ const showFormulaHelp = () => {
 ### Q: 如何插入复杂的数学公式？
 
 A: 有多种方式：
+
 1. **使用公式编辑器**：使用 `VueMathjaxBeautiful` 组件，支持弹窗和内联模式
 2. **直接输入 LaTeX**：在公式编辑器中直接输入 LaTeX 代码
 3. **使用符号面板**：公式编辑器提供 240+ 个符号和 38 个公式模板
@@ -513,12 +533,14 @@ A: 有多种方式：
 A: 支持完整的 MathJax LaTeX 语法，包括：
 
 **基础语法**：
+
 - 四则运算：`+`, `-`, `\times`, `\div`
 - 分数：`\frac{a}{b}`
 - 根号：`\sqrt{x}`, `\sqrt[n]{x}`
 - 上下标：`x^2`, `x_i`, `x_i^j`
 
 **高级语法**：
+
 - 积分：`\int`, `\iint`, `\iiint`, `\oint`
 - 求和：`\sum`, `\prod`
 - 极限：`\lim`, `\limsup`, `\liminf`
@@ -526,6 +548,7 @@ A: 支持完整的 MathJax LaTeX 语法，包括：
 - 特殊符号：`\infty`, `\partial`, `\nabla` 等
 
 **结构化内容**：
+
 - 矩阵：`\begin{matrix}...\end{matrix}`
 - 方程组：`\begin{cases}...\end{cases}`
 - 多行公式：`\begin{align}...\end{align}`
@@ -535,6 +558,7 @@ A: 支持完整的 MathJax LaTeX 语法，包括：
 A: 可以通过以下方式自定义：
 
 1. **CSS 类名覆盖**：
+
 ```css
 .vue-mathjax-beautiful .latex-input {
   font-family: 'Monaco', 'Consolas', monospace;
@@ -548,7 +572,8 @@ A: 可以通过以下方式自定义：
 }
 ```
 
-2. **Props 属性**：
+1. **Props 属性**：
+
 ```vue
 <VueMathjaxBeautiful
   v-model="showDialog"
@@ -557,7 +582,8 @@ A: 可以通过以下方式自定义：
 />
 ```
 
-3. **主题定制**：
+1. **主题定制**：
+
 ```css
 :root {
   --formula-border-color: #3b82f6;
@@ -569,6 +595,7 @@ A: 可以通过以下方式自定义：
 ### Q: 是否支持移动端？
 
 A: 完全支持！组件特性：
+
 - **响应式设计**：自动适配不同屏幕尺寸
 - **触摸优化**：支持触摸操作和手势
 - **移动端键盘**：优化移动设备输入体验
@@ -586,6 +613,7 @@ A: 组件内部已经做了多项优化：
 5. **模板缓存**：常用公式模板预加载
 
 **性能优化建议**：
+
 ```javascript
 // 批量处理公式时，使用防抖
 import { debounce } from 'lodash-es'
@@ -600,13 +628,15 @@ const debouncedRender = debounce((formula) => {
 A: 支持多种导出格式：
 
 1. **LaTeX 格式**：
+
 ```javascript
 const exportLatex = () => {
   return currentFormula.value // 直接返回 LaTeX 代码
 }
 ```
 
-2. **SVG 格式**：
+1. **SVG 格式**：
+
 ```javascript
 const exportSVG = async () => {
   // 使用 MathJax 将公式转换为 SVG
@@ -615,7 +645,8 @@ const exportSVG = async () => {
 }
 ```
 
-3. **PNG 格式**：
+1. **PNG 格式**：
+
 ```javascript
 const exportPNG = async () => {
   // 将公式转换为 PNG 图片
@@ -624,7 +655,8 @@ const exportPNG = async () => {
 }
 ```
 
-4. **PDF 格式**：
+1. **PDF 格式**：
+
 ```javascript
 // 结合 jsPDF 或 Puppeteer
 const exportPDF = async () => {
@@ -638,11 +670,13 @@ const exportPDF = async () => {
 A: 集成步骤：
 
 1. **安装依赖**：
+
 ```bash
 pnpm add vue-mathjax-beautiful
 ```
 
-2. **全局注册**（可选）：
+1. **全局注册**（可选）：
+
 ```javascript
 // main.js
 import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful'
@@ -650,14 +684,16 @@ import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful'
 app.component('VueMathjaxBeautiful', VueMathjaxBeautiful)
 ```
 
-3. **按需引入**：
+1. **按需引入**：
+
 ```vue
 <script setup>
 import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful'
 </script>
 ```
 
-4. **样式引入**：
+1. **样式引入**：
+
 ```javascript
 // 如果需要自定义样式
 import 'vue-mathjax-beautiful/dist/style.css'
@@ -731,11 +767,13 @@ vue-mathjax-beautiful/
 我们欢迎所有形式的贡献！
 
 #### 报告问题
+
 - 使用 [GitHub Issues](https://github.com/zzq-github/vue-mathjax-beautiful/issues) 报告 bug
 - 提供详细的复现步骤和环境信息
 - 如果可能，请提供最小复现示例
 
 #### 提交代码
+
 1. Fork 本项目
 2. 创建特性分支：`git checkout -b feature/amazing-feature`
 3. 提交更改：`git commit -m 'Add some amazing feature'`
@@ -743,6 +781,7 @@ vue-mathjax-beautiful/
 5. 打开 Pull Request
 
 #### 开发规范
+
 - 使用 TypeScript 编写代码
 - 遵循 ESLint 规则
 - 编写单元测试
@@ -761,7 +800,7 @@ vue-mathjax-beautiful/
 
 ## 📮 联系我们
 
-- 📧 Email: your-email@example.com
+- 📧 Email: <your-email@example.com>
 - 🐛 Issues: [GitHub Issues](https://github.com/zzq-github/vue-mathjax-beautiful/issues)
 - 💬 Discussions: [GitHub Discussions](https://github.com/zzq-github/vue-mathjax-beautiful/discussions)
 - 📖 文档: [在线文档](https://zzq-github.github.io/vue-mathjax-beautiful)
@@ -770,7 +809,7 @@ vue-mathjax-beautiful/
 
 如果这个项目对您有帮助，请给我们一个 ⭐️！
 
-[![Star History Chart](https://api.star-history.com/svg?repos=zzq-github/vue-mathjax-beautiful&type=Date)](https://star-history.com/#zzq-github/vue-mathjax-beautiful&Date)
+[!\[Star History Chart\](https://api.star-history.com/svg?repos=zzq-github/vue-mathjax-beautiful\&type=Date null)](https://star-history.com/#zzq-github/vue-mathjax-beautiful\&Date)
 
 <!-- 
 ## 💖 赞赏支持
@@ -796,6 +835,6 @@ vue-mathjax-beautiful/
 </div>
 -->
 
----
+***
 
 **Vue MathJax Beautiful** - 让数学公式编辑变得简单而美好！

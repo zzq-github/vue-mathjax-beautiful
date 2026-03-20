@@ -610,9 +610,27 @@ export default {
     title: 'Updates',
     subtitle: 'Track each release and fix for easier review and verification',
     badge: 'Release Notes',
-    lastUpdated: 'Last Updated: Feb 2026',
+    lastUpdated: 'Last Updated: Mar 2026',
     empty: 'No updates yet.',
     entries: [
+      {
+        version: '1.3.0',
+        date: '2026-03-20',
+        typeLabel: 'Major',
+        title: 'LaTeX Utilities Comprehensive Upgrade',
+        summary: 'latex.ts core module adds smart recognition, format conversion, content protection and more features.',
+        items: [
+          'Extended formula matching: Supports equation*, align*, gather, displaymath and 10 LaTeX formats.',
+          'Smart currency recognition: Distinguishes $100 (currency) from $x^2$ (formula) automatically.',
+          'Unicode symbol preprocessing: √(x) auto-converts to $\\sqrt{x}$, supports ∞, ≤, ≥ etc.',
+          'Escape character fix: Resolves JavaScript misinterpretation of \\times, \\frac etc.',
+          'Formula protection system: Prevents Markdown parsers from breaking formulas with \\\\ like matrices.',
+          'LaTeX document conversion: Supports AI-generated complete LaTeX documents to Markdown.',
+          'Pure LaTeX auto-wrap: Detects LaTeX code without delimiters and auto-adds $...$.',
+          'Fill-in-the-blank underlines: 3+ consecutive underlines auto-convert to solid underline style.',
+          'Smart code block handling: Identifies and correctly processes fake code blocks containing LaTeX.'
+        ]
+      },
       {
         version: '1.2.3',
         date: '2026-02-27',

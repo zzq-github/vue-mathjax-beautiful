@@ -608,9 +608,27 @@ export default {
     title: '更新说明',
     subtitle: '记录每次功能更新与问题修复，便于回溯与验证',
     badge: '更新记录',
-    lastUpdated: '最后更新时间：2026年2月',
+    lastUpdated: '最后更新时间：2026年3月',
     empty: '暂无更新记录。',
     entries: [
+      {
+        version: '1.3.0',
+        date: '2026-03-20',
+        typeLabel: '重大更新',
+        title: 'LaTeX 工具函数全面升级',
+        summary: 'latex.ts 核心模块新增智能识别、格式转换、内容保护等多项功能。',
+        items: [
+          '扩展公式匹配：支持 equation*、align*、gather、displaymath 等 10 种 LaTeX 格式。',
+          '智能货币识别：自动区分 $100（货币）与 $x^2$（公式），避免误解析。',
+          'Unicode 符号预处理：√(x) 自动转为 $\\sqrt{x}$，支持 ∞、≤、≥ 等符号。',
+          '转义字符修复：解决 \\times、\\frac 等被 JavaScript 错误解析的问题。',
+          '公式保护系统：防止 Markdown 解析器破坏矩阵等包含 \\\\ 的公式。',
+          'LaTeX 文档转换：支持 AI 生成的完整 LaTeX 文档转换为 Markdown。',
+          '纯 LaTeX 自动包裹：检测无分隔符的 LaTeX 代码并自动添加 $...$。',
+          '填空题下划线：连续 3+ 下划线自动转为实线下划线样式。',
+          '代码块智能处理：识别并正确处理包含 LaTeX 的假代码块。'
+        ]
+      },
       {
         version: '1.2.3',
         date: '2026-02-27',
