@@ -14,6 +14,17 @@
 
 ## 🧾 更新说明
 
+### v1.3.4 (2026-03-26)
+
+**代码质量与 ESLint 规范修复**
+
+- 修复正则表达式问题：移除不必要的转义字符，优化控制字符处理
+- 清理未使用变量：移除 `symbolDisplayCache`、`themeButtonTitle` 等冗余代码
+- 统一错误处理：将 `console` 语句替换为 `logger` 工具，规范错误日志
+- 修复类型定义：添加 `eslint-disable` 注释处理必要的 `any` 类型
+- 优化导入语句：移除未使用的 `Ref`、`vi`、`beforeEach` 等导入
+- 构建验证通过：TypeScript 编译无错误，核心包质量提升
+
 ### v1.3.0 (2026-03-20)
 
 **LaTeX 工具函数全面升级**
@@ -42,6 +53,9 @@
 - 🚀 **Vue 3 + TypeScript** - 现代化的技术栈
 - 📱 **响应式设计** - 完美适配桌面端和移动端
 - 🔧 **易于集成** - 简单的 API 设计，轻松集成到现有项目
+- 🎨 **主题系统** - 支持亮色/暗色/自动主题，可自定义主题
+- 📱 **移动端优化** - 虚拟键盘适配、触摸优化、安全区域支持
+- ⚡ **性能优化** - 虚拟列表、LRU 缓存、懒加载、内存泄漏防护
 
 ## 📦 安装
 
@@ -737,15 +751,25 @@ vue-mathjax-beautiful/
 │   └── core/                 # 核心组件包
 │       ├── src/
 │       │   ├── components/   # Vue 组件
-│       │   │   └── VueMathjaxBeautiful/      # 公式编辑器
-│       │   │       └── index.vue
+│       │   │   ├── VueMathjaxBeautiful/      # 公式编辑器
+│       │   │   └── VueMathjaxEditor/         # 编辑器组件
+│       │   ├── composables/  # 组合式函数
+│       │   │   ├── useVirtualList.ts   # 虚拟列表
+│       │   │   ├── useTheme.ts         # 主题系统
+│       │   │   ├── useMobile.ts        # 移动端优化
+│       │   │   └── useI18n.ts          # 国际化
 │       │   ├── data/         # 数据文件
 │       │   │   ├── formulas.ts   # 公式模板
 │       │   │   └── symbols.ts    # 符号数据
 │       │   ├── utils/        # 工具函数
-│       │   │   └── latex.ts      # LaTeX 处理
+│       │   │   ├── latex.ts      # LaTeX 处理
+│       │   │   ├── lazyLoad.ts   # MathJax 懒加载
+│       │   │   ├── cache.ts      # LRU 缓存
+│       │   │   └── logger.ts     # 日志工具
 │       │   ├── styles/       # 样式文件
-│       │   │   └── index.scss    # 主样式
+│       │   │   ├── index.scss    # 主样式
+│       │   │   ├── mobile.scss   # 移动端样式
+│       │   │   └── variables.scss # 变量定义
 │       │   ├── types/        # TypeScript 类型
 │       │   └── index.ts      # 入口文件
 │       ├── package.json
@@ -753,6 +777,8 @@ vue-mathjax-beautiful/
 ├── examples/
 │   └── playground/           # 示例应用
 │       ├── src/
+│       │   ├── components/   # 演示组件
+│       │   ├── views/        # 页面视图
 │       │   ├── App.vue       # 主应用
 │       │   └── main.ts       # 入口文件
 │       └── package.json

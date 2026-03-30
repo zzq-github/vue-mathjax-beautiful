@@ -1,0 +1,278 @@
+// 移动端优化样式
+
+// 安全区域支持
+@supports (padding-top: env(safe-area-inset-top)) {
+  :root {
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+  }
+}
+
+// 移动端基础适配
+@media (max-width: 767px) {
+  .vue-mathjax-beautiful-dialog {
+    // 全屏弹窗
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    
+    // 适配安全区域
+    padding-top: var(--sat, 0);
+    padding-bottom: var(--sab, 0);
+    padding-left: var(--sal, 0);
+    padding-right: var(--sar, 0);
+  }
+
+  .vue-mathjax-beautiful-inline {
+    // 紧凑模式
+    .editor-container {
+      padding: var(--math-editor-padding, 12px);
+    }
+
+    .input-section {
+      .section-header {
+        padding: 8px 0;
+        
+        .section-title {
+          font-size: 14px;
+        }
+      }
+
+      .latex-input {
+        font-size: 16px; // 防止 iOS 缩放
+        padding: 12px;
+        min-height: 80px;
+      }
+    }
+
+    // 符号面板优化
+    .symbols-section {
+      .category-tabs {
+        gap: 4px;
+        padding: 8px 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        
+        &::-webkit-scrollbar {
+          display: none;
+        }
+
+        .tab-button {
+          padding: 8px 12px;
+          font-size: 13px;
+          white-space: nowrap;
+        }
+      }
+
+      .symbols-grid {
+        grid-template-columns: repeat(4, 1fr); // 移动端每行4个
+        gap: 8px;
+        
+        .symbol-button {
+          padding: 12px 8px;
+          font-size: 14px;
+          min-height: 48px;
+          
+          // 增大触摸区域
+          &::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+          }
+        }
+      }
+    }
+
+    // 底部操作栏
+    .inline-footer {
+      position: sticky;
+      bottom: 0;
+      background: var(--math-editor-bg);
+      padding: 12px 0;
+      border-top: 1px solid var(--math-editor-border);
+      
+      // 适配底部安全区域
+      padding-bottom: max(12px, var(--sab, 0));
+      
+      .btn {
+        flex: 1;
+        padding: 12px 16px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // 预览区域优化
+  .preview-section {
+    .preview-container {
+      min-height: 60px;
+      padding: 12px;
+      
+      .formula-preview {
+        font-size: 18px;
+      }
+    }
+  }
+
+  // 公式示例网格
+  .formula-examples {
+    .examples-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      
+      .example-button {
+        padding: 12px;
+        
+        .example-preview {
+          font-size: 14px;
+        }
+        
+        .example-description {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+// 平板适配
+@media (min-width: 768px) and (max-width: 1023px) {
+  .vue-mathjax-beautiful-dialog {
+    width: 90vw !important;
+    max-width: 700px !important;
+    max-height: 90vh !important;
+  }
+
+  .symbols-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+// 横屏模式优化
+@media (max-width: 767px) and (orientation: landscape) {
+  .vue-mathjax-beautiful-dialog {
+    display: flex;
+    flex-direction: row;
+    
+    .editor-container {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+    }
+
+    .input-section,
+    .preview-section {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .symbols-section {
+      width: 200px;
+      border-left: 1px solid var(--math-editor-border);
+    }
+  }
+}
+
+// 触摸设备优化
+@media (pointer: coarse) {
+  .vue-mathjax-beautiful-inline,
+  .vue-mathjax-beautiful-dialog {
+    // 增大触摸目标
+    .symbol-button,
+    .action-btn,
+    .tab-button,
+    .btn {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    // 禁用悬停效果
+    .symbol-button:hover,
+    .action-btn:hover,
+    .tab-button:hover {
+      transform: none;
+    }
+
+    // 激活状态
+    .symbol-button:active,
+    .action-btn:active,
+    .tab-button:active {
+      opacity: 0.7;
+    }
+  }
+}
+
+// 减少动画（性能优化）
+@media (prefers-reduced-motion: reduce) {
+  .vue-mathjax-beautiful-inline,
+  .vue-mathjax-beautiful-dialog {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+// 虚拟键盘适配
+@media (max-width: 767px) {
+  .vue-mathjax-beautiful-dialog {
+    // 当虚拟键盘弹出时调整布局
+    &.keyboard-open {
+      .symbols-section {
+        max-height: 30vh;
+        overflow-y: auto;
+      }
+
+      .preview-section {
+        display: none; // 小屏幕隐藏预览
+      }
+    }
+  }
+}
+
+// 底部 Sheet 样式（移动端替代弹窗）
+.vue-mathjax-beautiful-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--math-editor-bg);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+  
+  // 拖拽指示器
+  .sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--math-editor-border);
+    border-radius: 2px;
+    margin: 12px auto;
+  }
+  
+  // 适配安全区域
+  padding-bottom: max(16px, var(--sab, 0));
+}
+
+// 暗色主题移动端适配
+@media (max-width: 767px) {
+  .theme-dark {
+    .vue-mathjax-beautiful-sheet {
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    }
+  }
+}

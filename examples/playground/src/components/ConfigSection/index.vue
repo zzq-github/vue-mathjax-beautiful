@@ -1,5 +1,8 @@
 <template>
-  <section id="config" class="py-16">
+  <section
+    id="config"
+    class="py-16"
+  >
     <div class="container mx-auto px-4">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
@@ -24,10 +27,12 @@
             <div class="px-6 pt-4 pb-2">
               <div class="flex items-center gap-2 text-sm">
                 <span class="text-gray-600 dark:text-gray-400">{{ t('config.modes.current') }}:</span>
-                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-sm border"
-                      :class="config.inlineMode 
-                        ? 'bg-green-100/80 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-200/50 dark:border-green-700/50' 
-                        : 'bg-blue-100/80 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 border-blue-200/50 dark:border-blue-700/50'">
+                <span
+                  class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-sm border"
+                  :class="config.inlineMode 
+                    ? 'bg-green-100/80 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-200/50 dark:border-green-700/50' 
+                    : 'bg-blue-100/80 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 border-blue-200/50 dark:border-blue-700/50'"
+                >
                   {{ config.inlineMode ? t('config.inlineMode') : t('config.dialogMode') }}
                 </span>
               </div>
@@ -39,13 +44,13 @@
                 <button 
                   v-for="tab in configTabs"
                   :key="tab.key"
-                  @click="activeTab = tab.key"
                   :class="[
                     'px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200',
                     activeTab === tab.key 
                       ? 'bg-white/90 dark:bg-gray-800/90 text-emerald-600 dark:text-emerald-400 shadow-sm ring-1 ring-emerald-600/10 dark:ring-emerald-400/10 backdrop-blur-sm' 
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50'
                   ]"
+                  @click="activeTab = tab.key"
                 >
                   {{ tab.label }}
                 </button>
@@ -55,7 +60,10 @@
             <!-- 配置内容 -->
             <div class="p-6">
               <!-- 基础配置 -->
-              <div v-if="activeTab === 'basic'" class="space-y-6">
+              <div
+                v-if="activeTab === 'basic'"
+                class="space-y-6"
+              >
                 <!-- 模式选择 -->
                 <div class="space-y-3">
                   <div class="flex items-center justify-between">
@@ -69,25 +77,25 @@
                   <div class="flex gap-2 p-1 bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-600/50">
                     <button
                       type="button"
-                      @click="config.inlineMode = false"
                       :class="[
                         'flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                         !config.inlineMode
                           ? 'bg-white/90 dark:bg-gray-800/90 text-blue-600 dark:text-blue-400 shadow-sm backdrop-blur-sm'
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                       ]"
+                      @click="config.inlineMode = false"
                     >
                       {{ t('config.dialogMode') }}
                     </button>
                     <button
                       type="button"
-                      @click="config.inlineMode = true"
                       :class="[
                         'flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                         config.inlineMode
                           ? 'bg-white/90 dark:bg-gray-800/90 text-green-600 dark:text-green-400 shadow-sm backdrop-blur-sm'
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                       ]"
+                      @click="config.inlineMode = true"
                     >
                       {{ t('config.inlineMode') }}
                     </button>
@@ -107,25 +115,25 @@
                   <div class="flex gap-2 p-1 bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-600/50">
                     <button
                       type="button"
-                      @click="config.theme = 'light'"
                       :class="[
                         'flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                         config.theme === 'light'
                           ? 'bg-white/90 dark:bg-gray-800/90 text-yellow-600 dark:text-yellow-400 shadow-sm backdrop-blur-sm'
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                       ]"
+                      @click="config.theme = 'light'"
                     >
                       {{ t('config.lightTheme') }}
                     </button>
                     <button
                       type="button"
-                      @click="config.theme = 'dark'"
                       :class="[
                         'flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                         config.theme === 'dark'
                           ? 'bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 shadow-sm backdrop-blur-sm'
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                       ]"
+                      @click="config.theme = 'dark'"
                     >
                       {{ t('config.darkTheme') }}
                     </button>
@@ -133,7 +141,10 @@
                 </div>
 
                 <!-- 弹窗专用文本设置 -->
-                <div v-if="!config.inlineMode" class="space-y-4">
+                <div
+                  v-if="!config.inlineMode"
+                  class="space-y-4"
+                >
                   <div class="flex items-center justify-between">
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {{ t('config.textSettings') }}
@@ -152,7 +163,7 @@
                         type="text"
                         :placeholder="t('config.placeholders.title')"
                         class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                      />
+                      >
                     </div>
                     
                     <div class="space-y-2">
@@ -164,14 +175,17 @@
                         type="text"
                         :placeholder="t('config.placeholders.subtitle')"
                         class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                      />
+                      >
                     </div>
                   </div>
                 </div>
               </div>
 
               <!-- 主题配置 -->
-              <div v-if="activeTab === 'theme'" class="space-y-6">
+              <div
+                v-if="activeTab === 'theme'"
+                class="space-y-6"
+              >
                 <!-- 主题色选择 -->
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
@@ -183,203 +197,203 @@
                     </span>
                   </div>
                   
-                                     <div class="grid grid-cols-1 gap-4">
-                     <div class="space-y-2">
-                       <label class="text-sm text-gray-700 dark:text-gray-300">
-                         {{ t('config.primaryColor') }}
-                       </label>
-                       <div class="flex gap-2">
-                         <input
-                           v-model="config.themeConfig.light.primary"
-                           type="color"
-                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
-                         />
-                         <input
-                           v-model="config.themeConfig.light.primary"
-                           type="text"
-                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                           placeholder="#3b82f6"
-                         />
-                       </div>
-                     </div>
+                  <div class="grid grid-cols-1 gap-4">
+                    <div class="space-y-2">
+                      <label class="text-sm text-gray-700 dark:text-gray-300">
+                        {{ t('config.primaryColor') }}
+                      </label>
+                      <div class="flex gap-2">
+                        <input
+                          v-model="config.themeConfig.light.primary"
+                          type="color"
+                          class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                        >
+                        <input
+                          v-model="config.themeConfig.light.primary"
+                          type="text"
+                          class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                          placeholder="#3b82f6"
+                        >
+                      </div>
+                    </div>
                      
-                     <div class="space-y-2">
-                       <label class="text-sm text-gray-700 dark:text-gray-300">
-                         {{ t('config.secondaryColor') }}
-                       </label>
-                       <div class="flex gap-2">
-                         <input
-                           v-model="config.themeConfig.light.secondary"
-                           type="color"
-                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
-                         />
-                         <input
-                           v-model="config.themeConfig.light.secondary"
-                           type="text"
-                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                           placeholder="#6b7280"
-                         />
-                       </div>
-                     </div>
+                    <div class="space-y-2">
+                      <label class="text-sm text-gray-700 dark:text-gray-300">
+                        {{ t('config.secondaryColor') }}
+                      </label>
+                      <div class="flex gap-2">
+                        <input
+                          v-model="config.themeConfig.light.secondary"
+                          type="color"
+                          class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                        >
+                        <input
+                          v-model="config.themeConfig.light.secondary"
+                          type="text"
+                          class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                          placeholder="#6b7280"
+                        >
+                      </div>
+                    </div>
                      
-                     <div class="space-y-2">
-                       <label class="text-sm text-gray-700 dark:text-gray-300">
-                         {{ t('config.accentColor') }}
-                       </label>
-                       <div class="flex gap-2">
-                         <input
-                           v-model="config.themeConfig.light.accent"
-                           type="color"
-                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
-                         />
-                         <input
-                           v-model="config.themeConfig.light.accent"
-                           type="text"
-                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                           placeholder="#10b981"
-                         />
-                       </div>
-                     </div>
-                   </div>
+                    <div class="space-y-2">
+                      <label class="text-sm text-gray-700 dark:text-gray-300">
+                        {{ t('config.accentColor') }}
+                      </label>
+                      <div class="flex gap-2">
+                        <input
+                          v-model="config.themeConfig.light.accent"
+                          type="color"
+                          class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                        >
+                        <input
+                          v-model="config.themeConfig.light.accent"
+                          type="text"
+                          class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                          placeholder="#10b981"
+                        >
+                      </div>
+                    </div>
+                  </div>
                  
-                 <!-- 按钮样式 -->
-                 <div class="space-y-4">
-                   <div class="flex items-center justify-between">
-                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                       {{ t('config.buttonStyles') }}
-                     </h4>
-                   </div>
+                  <!-- 按钮样式 -->
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                      <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {{ t('config.buttonStyles') }}
+                      </h4>
+                    </div>
                    
-                   <div class="grid grid-cols-1 gap-4">
-                     <div class="space-y-2">
-                       <label class="text-sm text-gray-700 dark:text-gray-300">
-                         {{ t('config.buttonColor') }}
-                       </label>
-                       <div class="flex gap-2">
-                         <input
-                           v-model="config.themeConfig.light.button"
-                           type="color"
-                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
-                         />
-                         <input
-                           v-model="config.themeConfig.light.button"
-                           type="text"
-                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                           placeholder="#3b82f6"
-                         />
-                       </div>
-                     </div>
+                    <div class="grid grid-cols-1 gap-4">
+                      <div class="space-y-2">
+                        <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.buttonColor') }}
+                        </label>
+                        <div class="flex gap-2">
+                          <input
+                            v-model="config.themeConfig.light.button"
+                            type="color"
+                            class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                          >
+                          <input
+                            v-model="config.themeConfig.light.button"
+                            type="text"
+                            class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                            placeholder="#3b82f6"
+                          >
+                        </div>
+                      </div>
                      
-                     <div class="space-y-2">
-                       <label class="text-sm text-gray-700 dark:text-gray-300">
-                         {{ t('config.buttonHoverColor') }}
-                       </label>
-                       <div class="flex gap-2">
-                         <input
-                           v-model="config.themeConfig.light.buttonHover"
-                           type="color"
-                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
-                         />
-                         <input
-                           v-model="config.themeConfig.light.buttonHover"
-                           type="text"
-                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                           placeholder="#2563eb"
-                         />
-                       </div>
-                     </div>
+                      <div class="space-y-2">
+                        <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.buttonHoverColor') }}
+                        </label>
+                        <div class="flex gap-2">
+                          <input
+                            v-model="config.themeConfig.light.buttonHover"
+                            type="color"
+                            class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                          >
+                          <input
+                            v-model="config.themeConfig.light.buttonHover"
+                            type="text"
+                            class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                            placeholder="#2563eb"
+                          >
+                        </div>
+                      </div>
                      
-                     <div class="space-y-2">
-                       <label class="text-sm text-gray-700 dark:text-gray-300">
-                         {{ t('config.buttonTextColor') }}
-                       </label>
-                       <div class="flex gap-2">
-                         <input
-                           v-model="config.themeConfig.light.buttonText"
-                           type="color"
-                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
-                         />
-                         <input
-                           v-model="config.themeConfig.light.buttonText"
-                           type="text"
-                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                           placeholder="#ffffff"
-                         />
-                       </div>
-                     </div>
-                   </div>
-                 </div>
+                      <div class="space-y-2">
+                        <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.buttonTextColor') }}
+                        </label>
+                        <div class="flex gap-2">
+                          <input
+                            v-model="config.themeConfig.light.buttonText"
+                            type="color"
+                            class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                          >
+                          <input
+                            v-model="config.themeConfig.light.buttonText"
+                            type="text"
+                            class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                            placeholder="#ffffff"
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                  
-                 <!-- 弹窗样式 -->
-                 <div class="space-y-4">
-                   <div class="flex items-center justify-between">
-                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                       {{ t('config.dialogStyles') }}
-                     </h4>
-                   </div>
+                  <!-- 弹窗样式 -->
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                      <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {{ t('config.dialogStyles') }}
+                      </h4>
+                    </div>
                    
-                   <div class="grid grid-cols-1 gap-4">
-                     <div class="space-y-2">
-                       <label class="text-sm text-gray-700 dark:text-gray-300">
-                         {{ t('config.dialogBackgroundColor') }}
-                       </label>
-                       <div class="flex gap-2">
-                         <input
-                           v-model="config.themeConfig.light.dialogBackground"
-                           type="color"
-                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
-                         />
-                         <input
-                           v-model="config.themeConfig.light.dialogBackground"
-                           type="text"
-                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                           placeholder="留空使用默认"
-                         />
-                       </div>
-                     </div>
+                    <div class="grid grid-cols-1 gap-4">
+                      <div class="space-y-2">
+                        <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.dialogBackgroundColor') }}
+                        </label>
+                        <div class="flex gap-2">
+                          <input
+                            v-model="config.themeConfig.light.dialogBackground"
+                            type="color"
+                            class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                          >
+                          <input
+                            v-model="config.themeConfig.light.dialogBackground"
+                            type="text"
+                            class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                            placeholder="留空使用默认"
+                          >
+                        </div>
+                      </div>
                      
-                     <div class="space-y-2">
-                       <label class="text-sm text-gray-700 dark:text-gray-300">
-                         {{ t('config.inputBackgroundColor') }}
-                       </label>
-                       <div class="flex gap-2">
-                         <input
-                           v-model="config.themeConfig.light.inputBackground"
-                           type="color"
-                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
-                         />
-                         <input
-                           v-model="config.themeConfig.light.inputBackground"
-                           type="text"
-                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                           placeholder="留空使用默认"
-                         />
-                       </div>
-                     </div>
+                      <div class="space-y-2">
+                        <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.inputBackgroundColor') }}
+                        </label>
+                        <div class="flex gap-2">
+                          <input
+                            v-model="config.themeConfig.light.inputBackground"
+                            type="color"
+                            class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                          >
+                          <input
+                            v-model="config.themeConfig.light.inputBackground"
+                            type="text"
+                            class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                            placeholder="留空使用默认"
+                          >
+                        </div>
+                      </div>
                      
-                     <div class="space-y-2">
-                       <label class="text-sm text-gray-700 dark:text-gray-300">
-                         {{ t('config.inputBorderColor') }}
-                       </label>
-                       <div class="flex gap-2">
-                         <input
-                           v-model="config.themeConfig.light.inputBorder"
-                           type="color"
-                           class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
-                         />
-                         <input
-                           v-model="config.themeConfig.light.inputBorder"
-                           type="text"
-                           class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                           placeholder="留空使用默认"
-                         />
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
+                      <div class="space-y-2">
+                        <label class="text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('config.inputBorderColor') }}
+                        </label>
+                        <div class="flex gap-2">
+                          <input
+                            v-model="config.themeConfig.light.inputBorder"
+                            type="color"
+                            class="w-12 h-10 rounded-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer"
+                          >
+                          <input
+                            v-model="config.themeConfig.light.inputBorder"
+                            type="text"
+                            class="flex-1 px-4 py-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
+                            placeholder="留空使用默认"
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-               <!-- 预设主题 -->
+                <!-- 预设主题 -->
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -391,14 +405,23 @@
                     <button
                       v-for="preset in presetThemes"
                       :key="preset.name"
-                      @click="applyPresetTheme(preset)"
                       class="p-4 border border-gray-200/50 dark:border-gray-600/50 rounded-xl hover:border-emerald-500/50 transition-all"
+                      @click="applyPresetTheme(preset)"
                     >
                       <div class="flex items-center gap-3">
                         <div class="flex gap-1">
-                          <div class="w-4 h-4 rounded" :style="{ backgroundColor: preset.primary }"></div>
-                          <div class="w-4 h-4 rounded" :style="{ backgroundColor: preset.secondary }"></div>
-                          <div class="w-4 h-4 rounded" :style="{ backgroundColor: preset.accent }"></div>
+                          <div
+                            class="w-4 h-4 rounded"
+                            :style="{ backgroundColor: preset.primary }"
+                          />
+                          <div
+                            class="w-4 h-4 rounded"
+                            :style="{ backgroundColor: preset.secondary }"
+                          />
+                          <div
+                            class="w-4 h-4 rounded"
+                            :style="{ backgroundColor: preset.accent }"
+                          />
                         </div>
                         <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ preset.name }}</span>
                       </div>
@@ -408,7 +431,10 @@
               </div>
 
               <!-- 显示选项 -->
-              <div v-if="activeTab === 'display'" class="space-y-6">
+              <div
+                v-if="activeTab === 'display'"
+                class="space-y-6"
+              >
                 <!-- 界面功能开关 -->
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
@@ -421,22 +447,35 @@
                   </div>
                   
                   <div class="grid grid-cols-1 gap-3">
-                    <div v-for="feature in featureList" :key="feature.key" class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
+                    <div
+                      v-for="feature in featureList"
+                      :key="feature.key"
+                      class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30"
+                    >
                       <div class="flex-1">
                         <div class="flex items-center gap-2">
                           <span class="text-sm font-medium text-gray-900 dark:text-white">{{ feature.label }}</span>
-                          <span v-if="feature.mode" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium backdrop-blur-sm border"
-                                :class="feature.mode === 'dialog' 
-                                  ? 'bg-blue-100/80 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 border-blue-200/50 dark:border-blue-700/50' 
-                                  : 'bg-green-100/80 text-green-700 dark:bg-green-900/50 dark:text-green-300 border-green-200/50 dark:border-green-700/50'">
+                          <span
+                            v-if="feature.mode"
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium backdrop-blur-sm border"
+                            :class="feature.mode === 'dialog' 
+                              ? 'bg-blue-100/80 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 border-blue-200/50 dark:border-blue-700/50' 
+                              : 'bg-green-100/80 text-green-700 dark:bg-green-900/50 dark:text-green-300 border-green-200/50 dark:border-green-700/50'"
+                          >
                             {{ feature.mode === 'dialog' ? t('config.modes.dialog') : t('config.modes.inline') }}
                           </span>
                         </div>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ feature.description }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ feature.description }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer ml-3">
-                        <input type="checkbox" v-model="config[feature.key as keyof typeof config]" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm"></div>
+                        <input
+                          v-model="config[feature.key as keyof typeof config]"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm" />
                       </label>
                     </div>
                   </div>
@@ -456,44 +495,68 @@
                     <div class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.basicSymbols') }}</span>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.basicSymbolsDesc') }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ t('config.basicSymbolsDesc') }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" v-model="enabledBasic" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm"></div>
+                        <input
+                          v-model="enabledBasic"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm" />
                       </label>
                     </div>
                     
                     <div class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.greekLetters') }}</span>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.greekLettersDesc') }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ t('config.greekLettersDesc') }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" v-model="enabledGreek" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm"></div>
+                        <input
+                          v-model="enabledGreek"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm" />
                       </label>
                     </div>
                     
                     <div class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.advancedSymbols') }}</span>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.advancedSymbolsDesc') }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ t('config.advancedSymbolsDesc') }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" v-model="enabledAdvanced" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm"></div>
+                        <input
+                          v-model="enabledAdvanced"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm" />
                       </label>
                     </div>
                     
                     <div class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.showFormulaExamples') }}</span>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.showFormulaExamplesDesc') }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ t('config.showFormulaExamplesDesc') }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" v-model="config.showFormulaExamples" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm"></div>
+                        <input
+                          v-model="config.showFormulaExamples"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm" />
                       </label>
                     </div>
                   </div>
@@ -501,7 +564,10 @@
               </div>
 
               <!-- 输入设置 -->
-              <div v-if="activeTab === 'input'" class="space-y-6">
+              <div
+                v-if="activeTab === 'input'"
+                class="space-y-6"
+              >
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -522,7 +588,7 @@
                         type="text"
                         :placeholder="t('config.placeholders.placeholder')"
                         class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                      />
+                      >
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
@@ -536,7 +602,7 @@
                           min="10"
                           max="5000"
                           class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                        />
+                        >
                       </div>
                       
                       <div class="space-y-2">
@@ -555,14 +621,17 @@
                           max="10"
                           :disabled="!config.inlineMode"
                           class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                        />
+                        >
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <!-- 弹窗专用按钮文本设置 -->
-                <div v-if="!config.inlineMode" class="space-y-4">
+                <div
+                  v-if="!config.inlineMode"
+                  class="space-y-4"
+                >
                   <div class="flex items-center justify-between">
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {{ t('config.buttonTextSettings') }}
@@ -582,7 +651,7 @@
                         type="text"
                         :placeholder="t('config.placeholders.insertButton')"
                         class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                      />
+                      >
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
@@ -595,7 +664,7 @@
                           type="text"
                           :placeholder="t('config.placeholders.cancelButton')"
                           class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                        />
+                        >
                       </div>
                       
                       <div class="space-y-2">
@@ -607,7 +676,7 @@
                           type="text"
                           :placeholder="t('config.placeholders.clearButton')"
                           class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900 dark:text-gray-100"
-                        />
+                        >
                       </div>
                     </div>
                   </div>
@@ -615,7 +684,10 @@
               </div>
 
               <!-- 行为设置 -->
-              <div v-if="activeTab === 'behavior'" class="space-y-6">
+              <div
+                v-if="activeTab === 'behavior'"
+                class="space-y-6"
+              >
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -630,33 +702,51 @@
                     <div class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.readonly') }}</span>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.readonlyDesc') }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ t('config.readonlyDesc') }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" v-model="config.readonly" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm"></div>
+                        <input
+                          v-model="config.readonly"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm" />
                       </label>
                     </div>
 
                     <div class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.autoFocus') }}</span>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.autoFocusDesc') }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ t('config.autoFocusDesc') }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" v-model="config.autoFocus" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm"></div>
+                        <input
+                          v-model="config.autoFocus"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm" />
                       </label>
                     </div>
 
                     <div class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('config.wrapFormula') }}</span>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('config.wrapFormulaDesc') }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ t('config.wrapFormulaDesc') }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" v-model="config.wrapFormula" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm"></div>
+                        <input
+                          v-model="config.wrapFormula"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300/20 dark:peer-focus:ring-emerald-800/20 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-sm" />
                       </label>
                     </div>
                   </div>
@@ -682,11 +772,14 @@
               
               <div class="p-6">
                 <!-- 弹窗模式预览 -->
-                <div v-if="!config.inlineMode" class="space-y-4">
+                <div
+                  v-if="!config.inlineMode"
+                  class="space-y-4"
+                >
                   <button
                     type="button"
-                    @click="showDialog = true"
                     class="w-full px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-lg transition-all duration-200 font-medium shadow-sm hover:shadow-md transform hover:scale-105"
+                    @click="showDialog = true"
                   >
                     {{ t('config.openDialog') }}
                   </button>
@@ -762,10 +855,16 @@
                 </div>
                 <div class="p-4">
                   <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 max-h-32 overflow-y-auto">
-                    <div v-if="eventLog.length === 0" class="text-sm text-gray-500 italic text-center py-2">
+                    <div
+                      v-if="eventLog.length === 0"
+                      class="text-sm text-gray-500 italic text-center py-2"
+                    >
                       {{ t('config.noEvents') }}
                     </div>
-                    <div v-else class="space-y-1">
+                    <div
+                      v-else
+                      class="space-y-1"
+                    >
                       <div
                         v-for="(event, index) in eventLog.slice(-5)"
                         :key="index"
@@ -821,7 +920,7 @@ const configTabs = computed(() => [
 // 响应式配置
 const config = reactive({
   inlineMode: false,
-  theme: 'light',
+  theme: 'light' as 'light' | 'dark',
   themeConfig: {
     light: {
       primary: '#3b82f6',

@@ -7,12 +7,14 @@
 - 🧮 **专业公式编辑** - 基于 MathJax 引擎，支持完整的 LaTeX 语法
 - 🎨 **丰富符号面板** - 240+ 数学符号和 38 个常用公式模板
 - 👀 **实时预览** - 所见即所得的公式编辑体验
-- 📝 **富文本编辑** - 支持粗体、斜体、下划线等文本格式
 - 🌍 **国际化支持** - 内置中文和英文界面
 - 🚀 **Vue 3 + TypeScript** - 现代化的技术栈
 - 📱 **响应式设计** - 完美适配桌面端和移动端
 - 🔧 **易于集成** - 简单的 API 设计，轻松集成到现有项目
 - ⚡ **工具函数** - 丰富的 LaTeX 处理工具函数
+- 🎨 **主题系统** - 支持亮色/暗色/自动主题，可自定义主题
+- 📱 **移动端优化** - 虚拟键盘适配、触摸优化、安全区域支持
+- ⚡ **性能优化** - 虚拟列表、LRU 缓存、懒加载、内存泄漏防护
 
 ## 安装
 
@@ -47,28 +49,18 @@ pnpm add vue-mathjax-beautiful
       @insert="handleInsert"
       @cancel="handleCancel"
     />
-    
-    <!-- 富文本编辑器 -->
-    <VueMathjaxEditor 
-      v-model="content"
-      placeholder="开始编写您的内容，支持数学公式..."
-      :min-height="'300px'"
-      @change="handleContentChange"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { 
-  VueMathjaxBeautiful, 
-  VueMathjaxEditor,
+  VueMathjaxBeautiful,
   initMathJax 
 } from 'vue-mathjax-beautiful'
 
 const showDialog = ref(false)
 const formula = ref('E = mc^2')
-const content = ref('')
 
 // 初始化 MathJax
 onMounted(async () => {
@@ -82,10 +74,6 @@ const handleInsert = (latex: string) => {
 
 const handleCancel = () => {
   showDialog.value = false
-}
-
-const handleContentChange = (value: string) => {
-  console.log('Content changed:', value)
 }
 </script>
 ```
@@ -124,31 +112,6 @@ app.mount('#app')
 |--------|------|------|
 | `@insert` | `(latex: string)` | 公式插入时触发 |
 | `@cancel` | `()` | 取消操作时触发 |
-
-### VueMathjaxEditor (富文本编辑器)
-
-#### Props
-
-| 属性名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `v-model` | `string` | `""` | 绑定的内容值 |
-| `placeholder` | `string` | `""` | 占位符文本 |
-| `min-height` | `string` | `"200px"` | 最小高度 |
-| `width` | `string` | `"100%"` | 编辑器宽度 |
-| `readonly` | `boolean` | `false` | 只读模式 |
-| `show-toolbar` | `boolean` | `true` | 是否显示工具栏 |
-| `theme` | `string` | `"default"` | 主题名称 |
-| `auto-focus` | `boolean` | `false` | 是否自动聚焦 |
-
-#### Events
-
-| 事件名 | 参数 | 说明 |
-|--------|------|------|
-| `@change` | `(value: string)` | 内容变化时触发 |
-| `@focus` | `()` | 编辑器获得焦点时触发 |
-| `@blur` | `()` | 编辑器失去焦点时触发 |
-| `@ready` | `()` | 编辑器准备就绪时触发 |
-| `@error` | `(error: any)` | 发生错误时触发 |
 
 ## 工具函数 API
 
@@ -212,6 +175,64 @@ const element = document.getElementById('content')
 clearMathTags(element, 'mjx-container')
 ```
 
+### MathJax 懒加载
+
+```typescript
+import { 
+  lazyLoadMathJax, 
+  isMathJaxReady, 
+  preloadMathJax 
+} from 'vue-mathjax-beautiful'
+
+// 按需加载 MathJax
+await lazyLoadMathJax()
+
+// 检查是否已加载
+if (isMathJaxReady()) {
+  console.log('MathJax 已就绪')
+}
+
+// 预加载（在用户可能使用时提前加载）
+preloadMathJax()
+```
+
+### 缓存系统
+
+```typescript
+import { 
+  LRUCache, 
+  FormulaCache, 
+  globalFormulaCache 
+} from 'vue-mathjax-beautiful'
+
+// 使用 LRU 缓存
+const cache = new LRUCache<string, string>({ maxSize: 100, ttl: 60000 })
+cache.set('key', 'value')
+const value = cache.get('key')
+
+// 使用公式缓存
+const formulaCache = new FormulaCache({ maxSize: 50 })
+formulaCache.set('E=mc^2', svgElement)
+
+// 使用全局公式缓存
+const cached = globalFormulaCache.get('some-formula')
+```
+
+### 日志控制
+
+```typescript
+import { logger } from 'vue-mathjax-beautiful'
+
+// 设置日志级别
+logger.setLevel('debug')  // 'debug' | 'info' | 'warn' | 'error'
+
+// 使用日志
+logger.debug('调试信息')
+logger.info('普通信息')
+logger.warn('警告信息')
+logger.error('错误信息')
+```
+
 ## 类型定义
 
 ```typescript
@@ -221,7 +242,14 @@ import type {
   Symbol,
   Category,
   Locale,
-  Messages
+  Messages,
+  Theme,
+  ThemeColors,
+  ThemeConfig,
+  Breakpoint,
+  MobileOptimizationConfig,
+  VirtualListOptions,
+  VirtualListItem
 } from 'vue-mathjax-beautiful'
 
 // LaTeX 匹配结果
@@ -249,180 +277,58 @@ interface Category {
 }
 ```
 
-## 完整示例
+## 主题系统
 
-### Vue 3 组合式 API
+### 使用主题
 
-```vue
-<template>
-  <div class="math-editor-container">
-    <!-- 富文本编辑器 -->
-    <VueMathjaxEditor
-      v-model="content"
-      :min-height="'300px'"
-      :readonly="isReadonly"
-      placeholder="开始编写您的数学内容..."
-      @change="handleContentChange"
-      @ready="handleEditorReady"
-    />
+```typescript
+import { useTheme, presetThemes } from 'vue-mathjax-beautiful'
 
-    <!-- 公式编辑器弹窗 -->
-    <VueMathjaxBeautiful
-      v-model="showFormulaDialog"
-      :existing-latex="selectedFormula"
-      title="高级公式编辑器"
-      @insert="handleFormulaInsert"
-      @cancel="handleCancel"
-    />
-    
-    <!-- 操作按钮 -->
-    <div class="toolbar">
-      <button @click="openFormulaEditor">插入公式</button>
-      <button @click="toggleReadonly">切换只读</button>
-      <button @click="analyzeFormulas">分析公式</button>
-    </div>
-  </div>
-</template>
+// 使用自动主题（跟随系统）
+const { theme, actualTheme, cssVariables, toggleTheme } = useTheme('auto')
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import {
-  VueMathjaxEditor, 
-  VueMathjaxBeautiful,
-  initMathJax, 
-  matchLatex,
-  hasLatexFormula,
-  type MatchLatexResult
-} from 'vue-mathjax-beautiful'
+// 使用预设主题
+const { themeConfig } = useTheme('light', presetThemes.purple)
 
-// 响应式数据
-const content = ref('')
-const showFormulaDialog = ref(false)
-const selectedFormula = ref('')
-const isReadonly = ref(false)
-
-// 初始化 MathJax
-onMounted(async () => {
-  try {
-    await initMathJax()
-    console.log('MathJax 初始化成功')
-  } catch (error) {
-    console.error('MathJax 初始化失败:', error)
-  }
-})
-
-// 事件处理函数
-const handleContentChange = (value: string) => {
-  content.value = value
-  console.log('内容变化:', value)
-}
-
-const handleEditorReady = () => {
-  console.log('编辑器准备就绪')
-}
-
-const handleFormulaInsert = (latex: string) => {
-  // 将公式插入到内容中
-  content.value += `$${latex}$`
-  showFormulaDialog.value = false
-}
-
-const handleCancel = () => {
-  showFormulaDialog.value = false
-}
-
-const openFormulaEditor = () => {
-  selectedFormula.value = 'E = mc^2'
-  showFormulaDialog.value = true
-}
-
-const toggleReadonly = () => {
-  isReadonly.value = !isReadonly.value
-}
-
-const analyzeFormulas = () => {
-  if (hasLatexFormula(content.value)) {
-    const matches: MatchLatexResult[] = matchLatex(content.value)
-    console.log('找到的公式:', matches)
-    
-    matches.forEach((match, index) => {
-      console.log(`公式 ${index + 1}:`, {
-        content: match.content,
-        type: match.isInline ? '行内' : '独立',
-        position: `${match.start}-${match.end}`
-      })
-    })
-  } else {
-    console.log('内容中没有找到公式')
-  }
-}
-</script>
-
-<style scoped>
-.math-editor-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.toolbar {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-}
-
-button {
-  padding: 8px 16px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
-}
-</style>
+// 创建自定义主题
+import { createTheme } from 'vue-mathjax-beautiful'
+const myTheme = createTheme('myTheme',
+  { primary: '#ff0000', accent: '#00ff00' },  // light
+  { primary: '#ff4444', accent: '#44ff44' }   // dark
+)
 ```
 
-### Options API
+### 主题类型
 
-```vue
-<template>
-  <div>
-    <VueMathjaxEditor 
-      v-model="content"
-      @change="handleChange"
-    />
-  </div>
-</template>
+- `light` - 亮色主题
+- `dark` - 暗色主题
+- `auto` - 自动（跟随系统偏好）
 
-<script>
-import { VueMathjaxEditor, initMathJax } from 'vue-mathjax-beautiful'
+## 移动端优化
 
-export default {
-  components: {
-    VueMathjaxEditor
-  },
-  
-  data() {
-    return {
-      content: ''
-    }
-  },
-  
-  async mounted() {
-    await initMathJax()
-  },
-  
-  methods: {
-    handleChange(value) {
-      this.content = value
-    }
-  }
-}
-</script>
+### 移动端检测
+
+```typescript
+import { useMobile, useMobileOptimization, useSafeArea } from 'vue-mathjax-beautiful'
+
+// 基础检测
+const { isMobile, isTablet, isTouch, screenSize } = useMobile()
+
+// 完整移动端优化
+const { 
+  isOptimizationEnabled,
+  virtualKeyboardHeight,
+  responsiveStyles,
+  touchHandlers 
+} = useMobileOptimization({
+  virtualKeyboard: { adjustHeight: true },
+  touch: { swipeEnabled: true },
+  performance: { reduceAnimations: true },
+  ui: { compactMode: true, bottomSheet: true }
+})
+
+// 安全区域适配（刘海屏）
+const { safeAreaInsets, cssSafeArea } = useSafeArea()
 ```
 
 ## 国际化

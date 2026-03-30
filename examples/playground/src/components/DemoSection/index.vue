@@ -1,5 +1,8 @@
 <template>
-  <section id="editor" class="py-20">
+  <section
+    id="editor"
+    class="py-20"
+  >
     <div class="container mx-auto px-4">
       <div class="text-center mb-16">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100/80 dark:bg-blue-900/80 backdrop-blur-sm border border-blue-200/50 dark:border-blue-700/50 mb-6">
@@ -62,22 +65,24 @@
                 <span class="text-white text-xs font-bold">💡</span>
               </div>
               <div class="text-sm text-blue-800 dark:text-blue-200 transition-colors duration-300">
-                <p class="font-medium mb-2">{{ t('demo.formulaEditor.tips.title') }}</p>
+                <p class="font-medium mb-2">
+                  {{ t('demo.formulaEditor.tips.title') }}
+                </p>
                 <ul class="space-y-1.5 text-blue-700 dark:text-blue-300 transition-colors duration-300">
                   <li class="flex items-start gap-2">
-                    <span class="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span class="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
                     <span>{{ t('demo.formulaEditor.tips.clickSymbols') }}</span>
                   </li>
                   <li class="flex items-start gap-2">
-                    <span class="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span class="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
                     <span>{{ t('demo.formulaEditor.tips.latexSupport') }}</span>
                   </li>
                   <li class="flex items-start gap-2">
-                    <span class="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span class="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
                     <span>{{ t('demo.formulaEditor.tips.realTime') }}</span>
                   </li>
                   <li class="flex items-start gap-2">
-                    <span class="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                    <span class="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
                     <span>{{ t('demo.formulaEditor.tips.modes') }}</span>
                   </li>
                 </ul>

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   matchLatex,
   hasLatexFormula,
@@ -119,7 +119,7 @@ describe('latex.ts 公开 API 测试', () => {
 
     it('空内容应该返回空数组', () => {
       expect(matchLatex('')).toEqual([]);
-      expect(matchLatex(null as any)).toEqual([]);
+      expect(matchLatex(null as unknown as string)).toEqual([]);
     });
   });
 
@@ -150,7 +150,7 @@ describe('latex.ts 公开 API 测试', () => {
 
     it('空内容应该返回 false', () => {
       expect(hasLatexFormula('')).toBe(false);
-      expect(hasLatexFormula(null as any)).toBe(false);
+      expect(hasLatexFormula(null as unknown as string)).toBe(false);
     });
   });
 

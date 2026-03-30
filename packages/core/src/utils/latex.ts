@@ -12,6 +12,18 @@
  * 9. \begin{gather}...\end{gather}     - 聚集公式环境
  * 10. \begin{displaymath}...\end{displaymath} - 显示数学环境
  */
+
+import { logger } from './logger';
+
+// 数学块会话存储（替代原来的动态属性）
+interface MathBlockSession {
+  blocks: string[];
+  timestamp: number;
+}
+
+const mathBlockSessions = new Map<string, MathBlockSession>();
+let currentSessionId: string | null = null;
+
 const LATEX_PATTERNS = [
   // 行内公式 $...$，但不匹配 $$...$
   // 允许 $ 后面有空格，以及 $ 前面有空格
@@ -311,7 +323,7 @@ function isPureLatexCode(content: string): boolean {
     }
 
     // 检查是否是简单的数学表达式（如 x + 12 = 35）
-    const simpleMathPattern = /^[a-zA-Z0-9\s+\-*\/=]+$/;
+    const simpleMathPattern = /^[a-zA-Z0-9\s+\-*/=]+$/;
     if (simpleMathPattern.test(content.trim())) {
       return false;
     }
@@ -506,14 +518,14 @@ function isValidFormulaContent(content: string): boolean {
   if (/^[\d.+\-*/=\s]+$/.test(content)) {
     return true;
   }
-  
+
   // 3. 带括号的数学表达式：(3+5), 2(x+1)
-  if (/^[\d.+\-*/=()\[\]{}\s]+$/.test(content)) {
+  if (/^[\d.+\-*/=()[\]{}\s]+$/.test(content)) {
     return true;
   }
-  
+
   // 4. 包含变量字母的简单表达式：x, 2x, 3y+1
-  if (/^[a-zA-Z\d.+\-*/=()\[\]{}\s]+$/.test(content)) {
+  if (/^[a-zA-Z\d.+\-*/=()[\]{}\s]+$/.test(content)) {
     return true;
   }
   
@@ -833,7 +845,7 @@ export async function convertLatexToSvg(content: string): Promise<string> {
 
         // 更新偏移量
         offset += svgHtml.length - match.formula.length;
-      } catch (err) {
+      } catch {
         // 如果转换失败，保留原始文本
         continue;
       }
@@ -846,7 +858,7 @@ export async function convertLatexToSvg(content: string): Promise<string> {
     result = processFillBlankUnderline(result);
 
     return result;
-  } catch (error) {
+  } catch {
     // 即使出错，也尝试恢复货币美元符号并处理下划线
     return processFillBlankUnderline(restoreCurrencyDollar(content));
   }
@@ -872,7 +884,7 @@ export async function batchConvertLatex(
         return { ...item, content: convertedContent };
       })
     );
-  } catch (error) {
+  } catch {
     return contents;
   }
 }
@@ -930,7 +942,7 @@ export const extractLatexFromSvg = (content: string): string => {
     });
 
     return tempDiv.innerHTML;
-  } catch (error) {
+  } catch {
     return content;
   }
 };
@@ -1082,22 +1094,19 @@ export function protectMathBlocks(content: string): string {
     });
   });
   
-  // 存储到静态变量，供 restoreMathBlocks 使用
-  if (!(protectMathBlocks as any)._sessions) {
-    (protectMathBlocks as any)._sessions = {};
-  }
-  (protectMathBlocks as any)._sessions[sessionId] = { blocks: mathBlocks, timestamp: Date.now() };
+  // 存储到模块级变量，供 restoreMathBlocks 使用
+  mathBlockSessions.set(sessionId, { blocks: mathBlocks, timestamp: Date.now() });
   
   // 清理过期的会话（超过30秒）
   const now = Date.now();
-  Object.keys((protectMathBlocks as any)._sessions).forEach((key) => {
-    if (now - (protectMathBlocks as any)._sessions[key].timestamp > 30000) {
-      delete (protectMathBlocks as any)._sessions[key];
+  for (const [key, session] of mathBlockSessions.entries()) {
+    if (now - session.timestamp > 30000) {
+      mathBlockSessions.delete(key);
     }
-  });
+  }
   
   // 将当前会话ID存储，供恢复时使用
-  (protectMathBlocks as any)._currentSessionId = sessionId;
+  currentSessionId = sessionId;
   
   return result;
 }
@@ -1115,7 +1124,7 @@ export function restoreMathBlocks(content: string): string {
   const END_MARKER = '\uE001';
   
   // 获取当前会话ID
-  const sessionId = (protectMathBlocks as any)._currentSessionId;
+  const sessionId = currentSessionId;
   if (!sessionId) {
     // 如果没有会话ID，尝试清理内容中可能残留的占位符
     const placeholderPattern = new RegExp(`${START_MARKER}MATH_BLOCK_[a-z0-9]+_\\d+${END_MARKER}`, 'g');
@@ -1123,7 +1132,7 @@ export function restoreMathBlocks(content: string): string {
     return content.replace(placeholderPattern, '').replace(newlinePattern, '\\\\');
   }
   
-  const session = (protectMathBlocks as any)._sessions?.[sessionId];
+  const session = mathBlockSessions.get(sessionId);
   if (!session) {
     // 如果会话不存在，清理占位符
     const placeholderPattern = new RegExp(`${START_MARKER}MATH_BLOCK_${sessionId}_\\d+${END_MARKER}`, 'g');
@@ -1147,8 +1156,8 @@ export function restoreMathBlocks(content: string): string {
   });
   
   // 清理当前会话
-  delete (protectMathBlocks as any)._sessions[sessionId];
-  delete (protectMathBlocks as any)._currentSessionId;
+  mathBlockSessions.delete(sessionId);
+  currentSessionId = null;
   
   return result;
 }
@@ -1187,8 +1196,10 @@ export function cleanupMathBlockPlaceholders(content: string): string {
   // 格式4: 旧格式 <<<MATH_BLOCK_index>>>（兼容旧代码）
   result = result.replace(/<<<MATH_BLOCK_\d+>>>/g, '');
   result = result.replace(/<<<LATEX_NEWLINE>>>/g, '\\\\');
-  // 格式5: \x00 格式（兼容之前的版本）
+  // 格式5: \x00 格式（兼容之前的版本）- 禁用控制字符检查
+  // eslint-disable-next-line no-control-regex
   result = result.replace(/\x00MATH_BLOCK_[a-z0-9]+_\d+\x00/g, '');
+  // eslint-disable-next-line no-control-regex
   result = result.replace(/\x00LATEX_NEWLINE_[a-z0-9]+\x00/g, '\\\\');
   // 格式6: replacement character 格式
   result = result.replace(/\ufffdMATH_BLOCK_[a-z0-9]+_\d+\ufffd/g, '');
@@ -1229,7 +1240,7 @@ export function preprocessLatexDocument(content: string): string {
   });
   
   // 保护 $...$ 行内公式（但不匹配 $$）
-  result = result.replace(/(?<!\$)\$(?!\$)([^\$\n]+)\$/g, (match) => {
+  result = result.replace(/(?<!\$)\$(?!\$)([^$\n]+)\$/g, (match) => {
     const index = mathBlocks.length;
     mathBlocks.push(match);
     return makePlaceholder(index);
@@ -1736,8 +1747,8 @@ export function preprocessLatexDocument(content: string): string {
   result = result.replace(/\\inf\s*/g, 'inf');
 
   // 括号缩放
-  result = result.replace(/\\left\s*(?=[\(\[\{])/g, '');
-  result = result.replace(/\\right\s*(?=[\)\]\}])/g, '');
+  result = result.replace(/\\left\s*(?=[([{])/g, '');
+  result = result.replace(/\\right\s*(?=[)\]}])/g, '');
 
   // 上下标 Unicode 转换（简单情况）
   // 上标数字
@@ -1971,7 +1982,7 @@ export function isMathContent(content: string): boolean {
   }
 
   // 检查是否主要是公式内容（$ 或 \( \) 包裹的内容占比）
-  const formulaPattern = /(?<!\$)\$(?!\$)[^\$]+\$(?!\$)|\\\([^)]+\\\)/g;
+  const formulaPattern = /(?<!\$)\$(?!\$)[^$]+\$(?!\$)|\\\([^)]+\\\)/g;
   const formulaMatches = content.match(formulaPattern);
   if (formulaMatches) {
     const formulaLength = formulaMatches.reduce((sum, m) => sum + m.length, 0);
@@ -1997,7 +2008,7 @@ export function smartProcessContent(content: string): string {
   // 如果检测到主要是数学内容，确保公式分隔符正确
   if (isMathContent(result)) {
     // 确保公式周围有适当空格
-    result = result.replace(/([^\s\$])\$/g, '$1 $');
+    result = result.replace(/([^\s$])\$/g, '$1 $');
     result = result.replace(/\$([^\s])/g, ' $1');
   }
 
@@ -2322,7 +2333,7 @@ export function preprocessCodeBlocks(content: string): string {
  * @param config - MathJax配置
  * @returns Promise
  */
-export async function initMathJax(config?: any): Promise<void> {
+export async function initMathJax(config?: import('../types/global').MathJaxConfig): Promise<void> {
   if (typeof window === 'undefined') return;
 
   // 先移除所有旧的MathJax脚本，避免冲突
@@ -2331,13 +2342,14 @@ export async function initMathJax(config?: any): Promise<void> {
   if (window.MathJax) delete window.MathJax;
 
   // 如果MathJax已经加载并且可用，直接返回
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((window.MathJax as any)?.tex2svgPromise) {
     return;
   }
 
   // 配置MathJax - 必须在加载脚本之前设置
   if (!window.MathJax) {
-    window.MathJax = {
+    const defaultConfig: import('../types/global').MathJaxConfig = {
       tex: {
         inlineMath: [
           ['$', '$'],
@@ -2349,30 +2361,26 @@ export async function initMathJax(config?: any): Promise<void> {
           ['\\[', '\\]'],
         ],
       },
-      'HTML-CSS': {
-        availableFonts: ['STIX', 'TeX'], //可选字体
-        showMathMenu: false, //关闭右击菜单显示
-      },
       svg: {
-        fontCache: 'global', // or 'global' or 'none',
+        fontCache: 'global',
         displayAlign: 'left',
-        scale: 1.0, // 增加整体缩放
-        mtextInheritFont: true, // 继承字体
-        merrorInheritFont: true, // 错误信息继承字体
-        mathmlSpacing: false, // 使用TeX间距
-        displayIndent: '0', // 显示缩进
+        scale: 1.0,
+        mtextInheritFont: true,
+        merrorInheritFont: true,
+        mathmlSpacing: false,
+        displayIndent: '0',
       },
       chtml: {
-        scale: 1.0, // CHTML输出的缩放
+        scale: 1.0,
         mtextInheritFont: true,
         merrorInheritFont: true
       }
     };
 
     // 合并用户配置
-    if (config) {
-      window.MathJax = { ...window.MathJax, ...config };
-    }
+    window.MathJax = config 
+      ? { ...defaultConfig, ...config } as Partial<import('../types/global').MathJaxInstance>
+      : defaultConfig as Partial<import('../types/global').MathJaxInstance>;
   }
 
   // 加载MathJax脚本
@@ -2391,12 +2399,11 @@ export async function initMathJax(config?: any): Promise<void> {
     if (!window.MathJax?.tex2svgPromise) {
       // 失败时移除所有相关脚本，避免缓存和冲突
       document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
-      console.error('MathJax initialization failed. Final state:', {
+      logger.error('MathJax initialization failed', {
         exists: !!window.MathJax,
         tex2svgPromise: !!window.MathJax?.tex2svgPromise,
         startup: !!window.MathJax?.startup,
         keys: window.MathJax ? Object.keys(window.MathJax) : [],
-        MathJax: window.MathJax,
       });
       throw new Error('MathJax tex2svgPromise not available after initialization');
     }
@@ -2404,7 +2411,7 @@ export async function initMathJax(config?: any): Promise<void> {
   } catch (error) {
     // 失败时移除所有相关脚本，避免缓存和冲突
     document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
-    console.error('Failed to initialize MathJax:', error);
+    logger.error('Failed to initialize MathJax', error);
     throw error;
   }
 }
@@ -2434,7 +2441,7 @@ function loadMathJaxFromUrl(url: string): Promise<void> {
     script.id = 'mathjax-script';
 
     const timeout = setTimeout(() => {
-      console.warn('MathJax loading timeout for:', url);
+      logger.warn(`MathJax loading timeout for: ${url}`);
       reject(new Error(`Timeout loading MathJax from ${url}`));
     }, 10000); // 10秒超时
 
@@ -2445,7 +2452,7 @@ function loadMathJaxFromUrl(url: string): Promise<void> {
 
     script.onerror = (error) => {
       clearTimeout(timeout);
-      console.warn('Failed to load MathJax from:', url, error);
+      logger.warn(`Failed to load MathJax from: ${url}`, error);
       reject(new Error(`Failed to load MathJax from ${url}`));
     };
 
@@ -2497,7 +2504,7 @@ export async function loadMathJax(
       await loadMathJaxFromUrl(url);
       return;
     } catch (error) {
-      console.warn('Failed to load from:', url, error);
+      logger.warn(`Failed to load from: ${url}`, error);
       // 移除失败的脚本标签
       const failedScript = document.getElementById('mathjax-script');
       if (failedScript) {

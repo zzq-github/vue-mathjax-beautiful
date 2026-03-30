@@ -1,5 +1,8 @@
 <template>
-  <section id="features" class="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
+  <section
+    id="features"
+    class="py-20 bg-white dark:bg-gray-900 transition-colors duration-300"
+  >
     <div class="container mx-auto px-4">
       <div class="text-center mb-16">
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl transition-colors duration-300">
@@ -17,7 +20,10 @@
         >
           <!-- 背景装饰 -->
           <div class="absolute top-0 right-0 w-20 h-20 opacity-10 dark:opacity-5 transition-opacity duration-300">
-            <component :is="feature.icon" class="w-full h-full text-gray-400" />
+            <component
+              :is="feature.icon"
+              class="w-full h-full text-gray-400"
+            />
           </div>
           
           <!-- 主要内容 -->
@@ -27,12 +33,15 @@
               <div
                 :class="`relative flex items-center justify-center w-full h-full rounded-2xl ${feature.color} shadow-lg group-hover:scale-110 transition-transform duration-300`"
               >
-                <component :is="feature.icon" class="w-8 h-8 text-white" />
+                <component
+                  :is="feature.icon"
+                  class="w-8 h-8 text-white"
+                />
                 
                 <!-- 发光效果 -->
                 <div
                   :class="`absolute inset-0 rounded-2xl ${feature.color} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-300`"
-                ></div>
+                />
               </div>
             </div>
 
@@ -48,7 +57,7 @@
           </div>
 
           <!-- 悬停时的边框高亮 -->
-          <div class="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-blue-400/20 transition-colors duration-300"></div>
+          <div class="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-blue-400/20 transition-colors duration-300" />
         </div>
       </div>
     </div>

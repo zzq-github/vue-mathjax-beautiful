@@ -19,24 +19,24 @@
             <button 
               v-if="availableLocales.length > 1 && showLanguageToggle"
               class="action-btn" 
-              @click="toggleLanguage" 
-              :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
+              :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'" 
+              @click="toggleLanguage"
             >
               <span class="icon">🌐</span>
             </button>
             <button 
               v-if="showThemeToggle"
               class="action-btn" 
-              @click="toggleTheme" 
-              :title="internalTheme === 'dark' ? t.beautiful.themeToggle.light : t.beautiful.themeToggle.dark"
+              :title="internalTheme === 'dark' ? t.beautiful.themeToggle.light : t.beautiful.themeToggle.dark" 
+              @click="toggleTheme"
             >
               <span class="icon">{{ themeIcon }}</span>
             </button>
             <button 
               v-if="showClearButton && !readonly"
               class="action-btn" 
-              @click="clearInput" 
-              :title="t.beautiful.clearButton"
+              :title="t.beautiful.clearButton" 
+              @click="clearInput"
             >
               <span class="icon">🗑️</span>
             </button>
@@ -51,25 +51,41 @@
             :rows="rows"
             :maxlength="maxLength"
             @input="handleInput"
-          ></textarea>
+          />
         </div>
       </div>
 
       <!-- 预览区域 -->
-      <div v-if="showPreview" class="preview-section">
+      <div
+        v-if="showPreview"
+        class="preview-section"
+      >
         <div class="section-header">
           <div class="section-title">
             <span class="icon">👁️</span>
             <span>{{ t.beautiful.previewSection }}</span>
           </div>
-          <div class="preview-status" :class="{ active: latexInput }">
-            <span v-if="latexInput" class="status-dot"></span>
+          <div
+            class="preview-status"
+            :class="{ active: latexInput }"
+          >
+            <span
+              v-if="latexInput"
+              class="status-dot"
+            />
             {{ latexInput ? t.beautiful.rendering : t.beautiful.noFormula }}
           </div>
         </div>
         <div class="preview-container">
-          <div v-if="latexInput" class="formula-preview" v-html="renderedFormula"></div>
-          <div v-else class="no-formula">
+          <div
+            v-if="latexInput"
+            class="formula-preview"
+            v-html="renderedFormula"
+          />
+          <div
+            v-else
+            class="no-formula"
+          >
             <span class="icon">💡</span>
             <span>{{ t.beautiful.inputPlaceholder }}</span>
           </div>
@@ -77,7 +93,10 @@
       </div>
 
       <!-- 符号面板 -->
-      <div v-if="showSymbols" class="symbols-section">
+      <div
+        v-if="showSymbols"
+        class="symbols-section"
+      >
         <!-- 分类标签 -->
         <div class="category-tabs">
           <button
@@ -90,8 +109,8 @@
             <span class="tab-name">{{ getCategoryName(category, locale) }}</span>
           </button>
           
-                      <!-- 大小写切换按钮（仅在基础分类时显示） -->
-            <!-- <button
+          <!-- 大小写切换按钮（仅在基础分类时显示） -->
+          <!-- <button
               v-if="activeCategory === 'basic'"
               class="case-toggle-btn"
               :class="{ 'uppercase': isUppercase }"
@@ -104,22 +123,39 @@
 
         <!-- 符号内容 -->
         <div class="symbols-content">
-          <!-- 符号网格 -->
-          <div class="symbols-grid">
-            <button
-              v-for="symbol in currentSymbols"
-              :key="symbol.latex"
-              class="symbol-button"
-              @click="insertSymbol(symbol.latex)"
-              :title="getSymbolDescription(symbol, locale)"
-            >
-              <span v-if="symbol.display" v-html="symbol.display"></span>
-              <span v-else class="symbol-fallback">{{ symbol.latex }}</span>
-            </button>
+          <!-- 符号网格（虚拟网格优化） -->
+          <div 
+            ref="symbolsContainerRef"
+            class="symbols-grid virtual-grid-container"
+            :style="{ height: '240px', overflowY: 'auto' }"
+            @scroll="handleSymbolsScroll"
+          >
+            <div :style="{ height: symbolsRange.totalHeight + 'px', position: 'relative' }">
+              <button
+                v-for="item in visibleSymbols"
+                :key="item.data.latex"
+                class="symbol-button"
+                :style="getSymbolItemStyle(item)"
+                :title="getSymbolDescription(item.data, locale)"
+                @click="insertSymbol(item.data.latex)"
+              >
+                <span
+                  v-if="item.data.display"
+                  v-html="item.data.display"
+                />
+                <span
+                  v-else
+                  class="symbol-fallback"
+                >{{ item.data.latex }}</span>
+              </button>
+            </div>
           </div>
 
           <!-- 常用公式示例 -->
-          <div v-if="activeCategory === 'basic' && showFormulaExamples" class="formula-examples">
+          <div
+            v-if="activeCategory === 'basic' && showFormulaExamples"
+            class="formula-examples"
+          >
             <div class="examples-header">
               <span class="icon">⭐</span>
               <span>{{ t.beautiful.categories.formulas }}</span>
@@ -129,11 +165,16 @@
                 v-for="example in reactiveFormulaExamples"
                 :key="example.latex"
                 class="example-button"
-                @click="insertSymbol(example.latex)"
                 :title="getSymbolDescription(example, locale)"
+                @click="insertSymbol(example.latex)"
               >
-                <div class="example-preview" v-html="example.display"></div>
-                <div class="example-description">{{ getSymbolDescription(example, locale) }}</div>
+                <div
+                  class="example-preview"
+                  v-html="example.display"
+                />
+                <div class="example-description">
+                  {{ getSymbolDescription(example, locale) }}
+                </div>
               </button>
             </div>
           </div>
@@ -151,8 +192,8 @@
         </button>
         <button 
           class="btn btn-primary" 
-          @click="handleInsert" 
-          :disabled="!latexInput || readonly"
+          :disabled="!latexInput || readonly" 
+          @click="handleInsert"
         >
           {{ t.beautiful.insertButton }}
         </button>
@@ -162,126 +203,158 @@
 
   <!-- 弹窗模式 -->
   <Teleport to="body">
-  <Transition name="overlay" appear>
-    <div
-      v-if="visible"
-      class="vue-mathjax-beautiful-overlay"
-      :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light', 'show': visible }"
-      @click="handleOverlayClick"
+    <Transition
+      name="overlay"
+      appear
     >
-      <Transition name="dialog" appear>
-        <div
-          v-if="visible"
-          class="vue-mathjax-beautiful-dialog"
-          :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light', 'show': visible }"
-          :style="{ ...dialogStyle, ...customThemeVars }"
-          @click.stop
+      <div
+        v-if="visible"
+        class="vue-mathjax-beautiful-overlay"
+        :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light', 'show': visible }"
+        @click="handleOverlayClick"
+      >
+        <Transition
+          name="dialog"
+          appear
         >
-      <!-- 头部 -->
-      <div class="dialog-header">
-        <div class="header-content">
-          <div class="header-icon">
-            <span class="icon">📐</span>
-          </div>
-          <div class="header-text">
-            <h3 class="header-title">{{ title || t.beautiful.title }}</h3>
-            <p class="header-subtitle">{{ subtitle || t.beautiful.subtitle }}</p>
-          </div>
-          <div class="header-badge">
-            <span>LaTeX</span>
-          </div>
-        </div>
-        <button class="close-btn" @click="handleClose">
-          <span>×</span>
-        </button>
-      </div>
-
-      <!-- 编辑器内容 -->
-      <div class="editor-container">
-        <!-- 输入区域 -->
-        <div class="input-section">
-          <div class="section-header">
-            <div class="section-title">
-              <span class="icon">📝</span>
-              <span>{{ t.beautiful.inputSection }}</span>
-            </div>
-            <div class="input-actions">
-              <button 
-                v-if="availableLocales.length > 1 && showLanguageToggle"
-                class="action-btn" 
-                @click="toggleLanguage" 
-                :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
+          <div
+            v-if="visible"
+            class="vue-mathjax-beautiful-dialog"
+            :class="{ 'theme-dark': internalTheme === 'dark', 'theme-light': internalTheme === 'light', 'show': visible }"
+            :style="{ ...dialogStyle, ...customThemeVars }"
+            @click.stop
+          >
+            <!-- 头部 -->
+            <div class="dialog-header">
+              <div class="header-content">
+                <div class="header-icon">
+                  <span class="icon">📐</span>
+                </div>
+                <div class="header-text">
+                  <h3 class="header-title">
+                    {{ title || t.beautiful.title }}
+                  </h3>
+                  <p class="header-subtitle">
+                    {{ subtitle || t.beautiful.subtitle }}
+                  </p>
+                </div>
+                <div class="header-badge">
+                  <span>LaTeX</span>
+                </div>
+              </div>
+              <button
+                class="close-btn"
+                @click="handleClose"
               >
-                <span class="icon">🌐</span>
-              </button>
-              <button 
-                v-if="showThemeToggle"
-                class="action-btn" 
-                @click="toggleTheme" 
-                :title="internalTheme === 'dark' ? t.beautiful.themeToggle.light : t.beautiful.themeToggle.dark"
-              >
-                <span class="icon">{{ themeIcon }}</span>
-              </button>
-              <button 
-                v-if="showClearButton && !readonly"
-                class="action-btn" 
-                @click="clearInput" 
-                :title="t.beautiful.clearButton"
-              >
-                <span class="icon">🗑️</span>
+                <span>×</span>
               </button>
             </div>
-          </div>
-          <div class="input-wrapper">
-            <textarea
-              v-model="latexInput"
-              class="latex-input"
-              :placeholder="computedPlaceholder"
-              :readonly="readonly"
-              :rows="rows"
-              :maxlength="maxLength"
-              @input="handleInput"
-            ></textarea>
-          </div>
-        </div>
 
-        <!-- 预览区域 -->
-        <div v-if="showPreview" class="preview-section">
-          <div class="section-header">
-            <div class="section-title">
-              <span class="icon">👁️</span>
-              <span>{{ t.beautiful.previewSection }}</span>
-            </div>
-            <div class="preview-status" :class="{ active: latexInput }">
-              <span v-if="latexInput" class="status-dot"></span>
-              {{ latexInput ? t.beautiful.rendering : t.beautiful.noFormula }}
-            </div>
-          </div>
-          <div class="preview-container">
-            <div v-if="latexInput" class="formula-preview" v-html="renderedFormula"></div>
-            <div v-else class="no-formula">
-              <span class="icon">💡</span>
-              <span>{{ t.beautiful.inputPlaceholder }}</span>
-            </div>
-          </div>
-        </div>
+            <!-- 编辑器内容 -->
+            <div class="editor-container">
+              <!-- 输入区域 -->
+              <div class="input-section">
+                <div class="section-header">
+                  <div class="section-title">
+                    <span class="icon">📝</span>
+                    <span>{{ t.beautiful.inputSection }}</span>
+                  </div>
+                  <div class="input-actions">
+                    <button 
+                      v-if="availableLocales.length > 1 && showLanguageToggle"
+                      class="action-btn" 
+                      :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'" 
+                      @click="toggleLanguage"
+                    >
+                      <span class="icon">🌐</span>
+                    </button>
+                    <button 
+                      v-if="showThemeToggle"
+                      class="action-btn" 
+                      :title="internalTheme === 'dark' ? t.beautiful.themeToggle.light : t.beautiful.themeToggle.dark" 
+                      @click="toggleTheme"
+                    >
+                      <span class="icon">{{ themeIcon }}</span>
+                    </button>
+                    <button 
+                      v-if="showClearButton && !readonly"
+                      class="action-btn" 
+                      :title="t.beautiful.clearButton" 
+                      @click="clearInput"
+                    >
+                      <span class="icon">🗑️</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="input-wrapper">
+                  <textarea
+                    v-model="latexInput"
+                    class="latex-input"
+                    :placeholder="computedPlaceholder"
+                    :readonly="readonly"
+                    :rows="rows"
+                    :maxlength="maxLength"
+                    @input="handleInput"
+                  />
+                </div>
+              </div>
 
-        <!-- 符号面板 -->
-        <div v-if="showSymbols" class="symbols-section">
-          <!-- 分类标签 -->
-          <div class="category-tabs">
-            <button
-              v-for="category in filteredCategories"
-              :key="category.key"
-              :class="['tab-button', { active: activeCategory === category.key }]"
-              @click="activeCategory = category.key"
-            >
-              <span class="tab-icon">{{ category.icon }}</span>
-              <span class="tab-name">{{ getCategoryName(category, locale) }}</span>
-            </button>
+              <!-- 预览区域 -->
+              <div
+                v-if="showPreview"
+                class="preview-section"
+              >
+                <div class="section-header">
+                  <div class="section-title">
+                    <span class="icon">👁️</span>
+                    <span>{{ t.beautiful.previewSection }}</span>
+                  </div>
+                  <div
+                    class="preview-status"
+                    :class="{ active: latexInput }"
+                  >
+                    <span
+                      v-if="latexInput"
+                      class="status-dot"
+                    />
+                    {{ latexInput ? t.beautiful.rendering : t.beautiful.noFormula }}
+                  </div>
+                </div>
+                <div class="preview-container">
+                  <div
+                    v-if="latexInput"
+                    class="formula-preview"
+                    v-html="renderedFormula"
+                  />
+                  <div
+                    v-else
+                    class="no-formula"
+                  >
+                    <span class="icon">💡</span>
+                    <span>{{ t.beautiful.inputPlaceholder }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 符号面板 -->
+              <div
+                v-if="showSymbols"
+                class="symbols-section"
+              >
+                <!-- 分类标签 -->
+                <div class="category-tabs">
+                  <button
+                    v-for="category in filteredCategories"
+                    :key="category.key"
+                    :class="['tab-button', { active: activeCategory === category.key }]"
+                    @click="activeCategory = category.key"
+                  >
+                    <span class="tab-icon">{{ category.icon }}</span>
+                    <span class="tab-name">{{ getCategoryName(category, locale) }}</span>
+                  </button>
             
-            <!-- 大小写切换按钮（仅在基础分类时显示） -->
-            <!-- <button
+                  <!-- 大小写切换按钮（仅在基础分类时显示） -->
+                  <!-- <button
               v-if="activeCategory === 'basic'"
               class="case-toggle-btn"
               :class="{ 'uppercase': isUppercase }"
@@ -290,72 +363,100 @@
             >
               <span class="case-icon">{{ isUppercase ? 'Aa' : 'aA' }}</span>
             </button> -->
-          </div>
+                </div>
 
-          <!-- 符号内容 -->
-          <div class="symbols-content">
-            <!-- 符号网格 -->
-            <div class="symbols-grid">
+                <!-- 符号内容 -->
+                <div class="symbols-content">
+                  <!-- 符号网格（虚拟网格优化） -->
+                  <div 
+                    ref="symbolsContainerRef"
+                    class="symbols-grid virtual-grid-container"
+                    :style="{ height: '240px', overflowY: 'auto' }"
+                    @scroll="handleSymbolsScroll"
+                  >
+                    <div :style="{ height: symbolsRange.totalHeight + 'px', position: 'relative' }">
+                      <button
+                        v-for="item in visibleSymbols"
+                        :key="item.data.latex"
+                        class="symbol-button"
+                        :style="getSymbolItemStyle(item)"
+                        :title="getSymbolDescription(item.data, locale)"
+                        @click="insertSymbol(item.data.latex)"
+                      >
+                        <span
+                          v-if="item.data.display"
+                          v-html="item.data.display"
+                        />
+                        <span
+                          v-else
+                          class="symbol-fallback"
+                        >{{ item.data.latex }}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- 常用公式示例 -->
+                  <div
+                    v-if="activeCategory === 'basic' && showFormulaExamples"
+                    class="formula-examples"
+                  >
+                    <div class="examples-header">
+                      <span class="icon">⭐</span>
+                      <span>{{ t.beautiful.categories.formulas }}</span>
+                    </div>
+                    <div class="examples-grid">
+                      <button
+                        v-for="example in reactiveFormulaExamples"
+                        :key="example.latex"
+                        class="example-button"
+                        :title="getSymbolDescription(example, locale)"
+                        @click="insertSymbol(example.latex)"
+                      >
+                        <div
+                          class="example-preview"
+                          v-html="example.display"
+                        />
+                        <div class="example-description">
+                          {{ getSymbolDescription(example, locale) }}
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 底部操作（弹窗模式） -->
+            <div class="dialog-footer">
               <button
-                v-for="symbol in currentSymbols"
-                :key="symbol.latex"
-                class="symbol-button"
-                @click="insertSymbol(symbol.latex)"
-                :title="getSymbolDescription(symbol, locale)"
+                class="btn btn-secondary"
+                @click="handleClose"
               >
-                <span v-if="symbol.display" v-html="symbol.display"></span>
-                <span v-else class="symbol-fallback">{{ symbol.latex }}</span>
+                {{ t.beautiful.cancelButton }}
+              </button>
+              <button 
+                class="btn btn-primary" 
+                :disabled="!latexInput || readonly" 
+                @click="handleInsert"
+              >
+                {{ t.beautiful.insertButton }}
               </button>
             </div>
-
-            <!-- 常用公式示例 -->
-            <div v-if="activeCategory === 'basic' && showFormulaExamples" class="formula-examples">
-              <div class="examples-header">
-                <span class="icon">⭐</span>
-                <span>{{ t.beautiful.categories.formulas }}</span>
-              </div>
-              <div class="examples-grid">
-                <button
-                  v-for="example in reactiveFormulaExamples"
-                  :key="example.latex"
-                  class="example-button"
-                  @click="insertSymbol(example.latex)"
-                  :title="getSymbolDescription(example, locale)"
-                >
-                  <div class="example-preview" v-html="example.display"></div>
-                  <div class="example-description">{{ getSymbolDescription(example, locale) }}</div>
-                </button>
-              </div>
-            </div>
           </div>
-        </div>
-      </div>
-
-        <!-- 底部操作（弹窗模式） -->
-        <div class="dialog-footer">
-          <button class="btn btn-secondary" @click="handleClose">{{ t.beautiful.cancelButton }}</button>
-          <button 
-            class="btn btn-primary" 
-            @click="handleInsert" 
-            :disabled="!latexInput || readonly"
-          >
-            {{ t.beautiful.insertButton }}
-          </button>
-        </div>
+        </Transition>
       </div>
     </Transition>
-  </div>
-  </Transition>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { initMathJax } from '../../utils/latex';
 import { useI18n } from '../../composables/useI18n';
+import { useVirtualGrid, useBatchRender } from '../../composables/useVirtualList';
+import { logger } from '../../utils/logger';
 import {
   type Symbol,
-  type Category,
   basicSymbols,
   greekSymbols,
   advancedSymbols,
@@ -399,7 +500,7 @@ const props = withDefaults(
     inlineMode?: boolean;
     
     // 主题和样式
-    theme?: string;
+    theme?: 'light' | 'dark';
     themeConfig?: ThemeConfig;
     width?: string;
     height?: string;
@@ -509,17 +610,70 @@ const visible = ref(false);
 const latexInput = ref('');
 const activeCategory = ref(props.defaultCategory);
 const renderedFormula = ref('');
-const symbolDisplayCache = new Map<string, string>();
 const isUppercase = ref(false);
 
 // 组件内部主题状态（独立于外部传入的theme）
 const internalTheme = ref(props.theme || 'light');
 
 // 创建响应式的符号数据副本
-const reactiveBasicSymbols = ref([...basicSymbols]);
-const reactiveGreekSymbols = ref([...greekSymbols]);
-const reactiveAdvancedSymbols = ref([...advancedSymbols]);
-const reactiveFormulaExamples = ref([...formulaExamples]);
+const reactiveBasicSymbols = ref<Symbol[]>([...basicSymbols]);
+const reactiveGreekSymbols = ref<Symbol[]>([...greekSymbols]);
+const reactiveAdvancedSymbols = ref<Symbol[]>([...advancedSymbols]);
+const reactiveFormulaExamples = ref<Symbol[]>([...formulaExamples]);
+
+// 虚拟网格优化 - 符号面板
+const symbolsList = computed(() => currentSymbols.value);
+const {
+  containerRef: symbolsContainerRef,
+  visibleItems: visibleSymbols,
+  visibleRange: symbolsRange,
+  getItemStyle: getSymbolItemStyle,
+  handleScroll: handleSymbolsScroll,
+  updateContainerWidth: updateSymbolsContainerWidth,
+} = useVirtualGrid(symbolsList, {
+  itemHeight: 48,
+  columnCount: 8, // 每行8个符号
+  gap: 8,
+  overscan: 2,
+  containerHeight: 240,
+});
+
+// 批量渲染控制
+const renderSymbolItem = async (symbol: Symbol) => {
+  if (symbol.display || !window.MathJax?.tex2svgPromise) return;
+  
+  try {
+    const result = await window.MathJax.tex2svgPromise(symbol.latex, {
+      display: false,
+      scale: 1.3,
+      em: 16,
+      ex: 8,
+      containerWidth: 1280,
+    });
+    
+    const svg = result.getElementsByTagName('svg')[0];
+    if (svg) {
+      svg.style.fontSize = '18px';
+      svg.style.verticalAlign = 'middle';
+      svg.style.maxWidth = '32px';
+      svg.style.maxHeight = '32px';
+      svg.style.width = 'auto';
+      svg.style.height = 'auto';
+      svg.setAttribute('shape-rendering', 'geometricPrecision');
+      svg.setAttribute('text-rendering', 'optimizeLegibility');
+      symbol.display = svg.outerHTML;
+    }
+  } catch (error) {
+    logger.warn(`符号 ${symbol.latex} 渲染失败`, error);
+    symbol.display = '';
+  }
+};
+
+const { renderQueue: renderSymbolsQueue } = useBatchRender(
+  symbolsList,
+  renderSymbolItem,
+  { batchSize: 8, delay: 0, priority: 'visible-first' }
+);
 
 // 计算属性
 const filteredCategories = computed(() => {
@@ -532,7 +686,7 @@ const currentSymbols = computed(() => {
       return reactiveGreekSymbols.value;
     case 'advanced':
       return reactiveAdvancedSymbols.value;
-    default:
+    default: {
       // 基础分类时，始终显示所有符号，大小写切换只影响字母
       const allBasicSymbols = reactiveBasicSymbols.value;
       return allBasicSymbols.filter(symbol => {
@@ -550,6 +704,7 @@ const currentSymbols = computed(() => {
           return true;
         }
       });
+    }
   }
 });
 
@@ -568,10 +723,6 @@ const dialogStyle = computed(() => {
 // 主题相关计算属性
 const themeIcon = computed(() => {
   return internalTheme.value === 'dark' ? '☀️' : '🌙';
-});
-
-const themeButtonTitle = computed(() => {
-  return internalTheme.value === 'dark' ? '切换到亮色主题' : '切换到暗色主题';
 });
 
 // 计算化的placeholder
@@ -640,21 +791,14 @@ watch(
   () => props.inlineMode,
   (newVal) => {
     if (newVal) {
-      // 内联模式激活时，确保符号已渲染
+      // 内联模式激活时，使用批量渲染
       nextTick(async () => {
         try {
-          // 检查是否需要重新渲染符号
-          const needsRender =
-            reactiveBasicSymbols.value.some((symbol) => !symbol.display) ||
-            reactiveGreekSymbols.value.some((symbol) => !symbol.display) ||
-            reactiveAdvancedSymbols.value.some((symbol) => !symbol.display) ||
-            reactiveFormulaExamples.value.some((example) => !example.display);
-
-          if (needsRender && window.MathJax?.tex2svgPromise) {
-            await Promise.all([renderAllSymbols(), renderFormulaExamples()]);
-          }
+          // 优先渲染可见区域的符号
+          const visibleIndices = new Set<number>(visibleSymbols.value.map((item: { index: number }) => item.index));
+          await renderSymbolsQueue(visibleIndices);
         } catch (error) {
-          console.error('内联模式符号渲染失败:', error);
+          logger.error('内联模式符号渲染失败', error);
         }
       });
     }
@@ -693,6 +837,17 @@ watch(
     }
   },
   { immediate: true }
+);
+
+// 监听分类变化，触发批量渲染
+watch(
+  () => activeCategory.value,
+  () => {
+    nextTick(() => {
+      const visibleIndices = new Set<number>(visibleSymbols.value.map((item: { index: number }) => item.index));
+      renderSymbolsQueue(visibleIndices);
+    });
+  }
 );
 
 // 方法
@@ -763,7 +918,7 @@ const updatePreview = async () => {
 
     // 再次检查MathJax是否可用
     if (!window.MathJax?.tex2svgPromise) {
-      console.error('MathJax初始化失败，无法预览公式');
+      logger.error('MathJax初始化失败，无法预览公式');
       renderedFormula.value = '<span style="color: red;">MathJax未加载</span>';
       return;
     }
@@ -784,11 +939,11 @@ const updatePreview = async () => {
       svg.style.margin = '0 auto';
       renderedFormula.value = svg.outerHTML;
     } else {
-      console.warn('未获取到SVG元素');
+      logger.warn('未获取到SVG元素');
       renderedFormula.value = '<span style="color: red;">渲染失败</span>';
     }
   } catch (error) {
-    console.error('LaTeX预览失败:', error);
+    logger.error('LaTeX预览失败:', error);
     const errorMessage = error instanceof Error ? error.message : '未知错误';
     renderedFormula.value = `<span style="color: red;">预览失败: ${errorMessage}</span>`;
   }
@@ -796,7 +951,6 @@ const updatePreview = async () => {
 
 const handleInsert = () => {
   if (latexInput.value.trim()) {
-    console.log('latexInput.value.trim()', latexInput.value.trim());
     let latex = latexInput.value.trim();
     
     // 如果启用了公式包裹，添加相应的包裹符
@@ -832,14 +986,14 @@ const toggleLanguage = () => {
   setLocale(newLocale);
 };
 
-// 大小写切换方法
-const toggleCase = () => {
-  isUppercase.value = !isUppercase.value;
-  // 重新渲染基础符号以应用大小写变化
-  nextTick(async () => {
-    await renderSymbols(reactiveBasicSymbols.value);
-  });
-};
+// 大小写切换方法（已禁用）
+// const toggleCase = () => {
+//   isUppercase.value = !isUppercase.value;
+//   // 重新渲染基础符号以应用大小写变化
+//   nextTick(async () => {
+//     await renderSymbols(reactiveBasicSymbols.value);
+//   });
+// };
 
 // 处理输入变化
 const handleInput = (event: Event) => {
@@ -881,141 +1035,98 @@ const focusInput = () => {
   }
 };
 
-// 渲染符号
-const renderSymbols = async (symbols: Symbol[]) => {
-  for (let i = 0; i < symbols.length; i++) {
-    const symbol = symbols[i];
-    if (!symbol.display) {
-      try {
-        if (window.MathJax?.tex2svgPromise) {
-
-          const result = await window.MathJax.tex2svgPromise(symbol.latex, {
-            display: false,
-            scale: 1.3,
-            em: 16,
-            ex: 8,
-            containerWidth: 1280,
-          });
-
-          const svg = result.getElementsByTagName('svg')[0];
-          if (svg) {
-            // 提升SVG渲染质量
-            svg.style.fontSize = '18px';
-            svg.style.verticalAlign = 'middle';
-            svg.style.maxWidth = '32px';
-            svg.style.maxHeight = '32px';
-            svg.style.width = 'auto';
-            svg.style.height = 'auto';
-
-            // 设置SVG属性以提高渲染质量
-            svg.setAttribute('shape-rendering', 'geometricPrecision');
-            svg.setAttribute('text-rendering', 'optimizeLegibility');
-
-            symbol.display = svg.outerHTML;
-          } else {
-            symbol.display = '';
-          }
-        }
-      } catch (error) {
-        console.warn(`符号 ${symbol.latex} 渲染失败:`, error);
-        // 如果渲染失败，使用空字符串，让后备文本显示
-        symbol.display = '';
-      }
-
-      // 添加小延迟避免过快渲染导致的问题
-      await new Promise((resolve) => setTimeout(resolve, 50));
-    }
-  }
-};
-
-// 渲染所有符号
-const renderAllSymbols = async () => {  
-
-  // 检查MathJax是否可用
-  if (!window.MathJax?.tex2svgPromise) {
-    console.warn('MathJax不可用，跳过符号渲染');
-    return;
-  }
-
-  try {
-    // 串行渲染避免并发问题
-    await renderSymbols(reactiveBasicSymbols.value);
-
-    await renderSymbols(reactiveGreekSymbols.value);
-
-    await renderSymbols(reactiveAdvancedSymbols.value);
-
-  } catch (error) {
-    console.error('符号渲染过程中出错:', error);
-  }
-};
-
-// 渲染公式示例
+// 渲染公式示例（使用批量渲染）
 const renderFormulaExamples = async () => {
-
   if (!window.MathJax?.tex2svgPromise) {
+    logger.warn('MathJax不可用，跳过公式示例渲染');
     return;
   }
 
-  for (let i = 0; i < reactiveFormulaExamples.value.length; i++) {
-    const example = reactiveFormulaExamples.value[i];
-    if (!example.display) {
-      try {
+  const renderExample = async (example: Symbol) => {
+    if (example.display || !window.MathJax?.tex2svgPromise) return;
+    
+    try {
+      const result = await window.MathJax.tex2svgPromise(example.latex, {
+        display: false,
+        scale: 1.0,
+        em: 16,
+        ex: 8,
+        containerWidth: 1280,
+      });
 
-        const result = await window.MathJax.tex2svgPromise(example.latex, {
-          display: false,
-          scale: 1.0,
-          em: 16,
-          ex: 8,
-          containerWidth: 1280,
-        });
-
-        const svg = result.getElementsByTagName('svg')[0];
-        if (svg) {
-          svg.style.fontSize = '16px';
-          svg.style.maxWidth = '100%';
-          svg.style.verticalAlign = 'middle';
-
-          // 设置SVG属性以提高渲染质量
-          svg.setAttribute('shape-rendering', 'geometricPrecision');
-          svg.setAttribute('text-rendering', 'optimizeLegibility');
-
-          example.display = svg.outerHTML;
-        } else {
-          example.display = '';
-        }
-      } catch (error) {
-        console.warn(`公式示例 ${example.latex} 渲染失败:`, error);
-        example.display = '';
+      const svg = result.getElementsByTagName('svg')[0];
+      if (svg) {
+        svg.style.fontSize = '16px';
+        svg.style.maxWidth = '100%';
+        svg.style.verticalAlign = 'middle';
+        svg.setAttribute('shape-rendering', 'geometricPrecision');
+        svg.setAttribute('text-rendering', 'optimizeLegibility');
+        example.display = svg.outerHTML;
       }
-
-      // 添加小延迟
-      await new Promise((resolve) => setTimeout(resolve, 100));
+    } catch (error) {
+      logger.warn(`公式示例 ${example.latex} 渲染失败`, error);
+      example.display = '';
     }
-  }
+  };
 
+  // 批量渲染公式示例
+  const batchSize = 5;
+  for (let i = 0; i < reactiveFormulaExamples.value.length; i += batchSize) {
+    const batch = reactiveFormulaExamples.value.slice(i, i + batchSize);
+    await Promise.all(batch.map(renderExample));
+    // 使用 requestAnimationFrame 让出主线程
+    await new Promise(resolve => requestAnimationFrame(resolve));
+  }
 };
+
+// 清理函数
+let isUnmounted = false;
 
 // 生命周期
 onMounted(async () => {
-  
   // 如果是内联模式或者弹窗已显示，则执行自动聚焦
   if (props.inlineMode || visible.value) {
     focusInput();
   }
   
+  // 更新虚拟网格容器宽度
+  updateSymbolsContainerWidth();
+  
   try {
     await initMathJax();
 
-    // 等待一段时间确保MathJax完全就绪
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    // 等待 MathJax 就绪
+    await new Promise((resolve) => {
+      const checkInterval = setInterval(() => {
+        if (window.MathJax?.tex2svgPromise) {
+          clearInterval(checkInterval);
+          resolve(undefined);
+        }
+      }, 100);
+      // 5秒超时
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        resolve(undefined);
+      }, 5000);
+    });
 
-    // 并行渲染符号和公式示例
-    await Promise.all([renderAllSymbols(), renderFormulaExamples()]);
+    if (isUnmounted) return;
+
+    // 优先渲染可见区域的符号
+    const visibleIndices = new Set<number>(visibleSymbols.value.map((item: { index: number }) => item.index));
+    await renderSymbolsQueue(visibleIndices);
+    
+    // 渲染公式示例
+    await renderFormulaExamples();
 
   } catch (error) {
-    console.error('VueMathjaxBeautiful初始化失败:', error);
+    logger.error('VueMathjaxBeautiful初始化失败', error);
   }
+});
+
+onUnmounted(() => {
+  isUnmounted = true;
+  // 清理工作由 useBatchRender 和 useVirtualList 自动处理
 });
 </script>
 

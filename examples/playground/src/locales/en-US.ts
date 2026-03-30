@@ -432,6 +432,7 @@ export default {
       basicUsage: 'Basic Usage',
       coreComponents: 'Core Components',
       beautifulApi: 'VueMathjaxBeautiful API',
+      advancedFeatures: 'Advanced Features',
       
       examples: 'Examples & Best Practices',
     },
@@ -493,6 +494,14 @@ export default {
           insert: 'Triggered when formula is inserted (latex: string)',
           cancel: 'Triggered when operation is cancelled',
         },
+      },
+
+      advancedFeatures: {
+        title: 'Advanced Features',
+        themeSystem: 'Theme System',
+        mobileOptimization: 'Mobile Optimization',
+        lazyLoading: 'MathJax Lazy Loading',
+        caching: 'Caching System',
       },
 
 
@@ -613,6 +622,21 @@ export default {
     lastUpdated: 'Last Updated: Mar 2026',
     empty: 'No updates yet.',
     entries: [
+      {
+        version: '1.3.4',
+        date: '2026-03-26',
+        typeLabel: 'Optimization',
+        title: 'Code Quality & ESLint Compliance',
+        summary: 'Comprehensive ESLint error and warning fixes to improve code maintainability and type safety.',
+        items: [
+          'Fixed regex issues: Removed unnecessary escape characters, optimized control character handling.',
+          'Cleaned unused variables: Removed redundant code like symbolDisplayCache, themeButtonTitle.',
+          'Unified error handling: Replaced console statements with logger utility for standardized error logging.',
+          'Fixed type definitions: Added eslint-disable comments for necessary any types.',
+          'Optimized imports: Removed unused imports like Ref, vi, beforeEach.',
+          'Build validation passed: TypeScript compilation error-free, core package quality improved.'
+        ]
+      },
       {
         version: '1.3.0',
         date: '2026-03-20',

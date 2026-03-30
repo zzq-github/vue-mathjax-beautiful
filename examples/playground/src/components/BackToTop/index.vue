@@ -2,9 +2,9 @@
   <Transition name="back-to-top">
     <button
       v-if="showBackToTop"
-      @click="scrollToTop"
       class="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 group"
       :aria-label="t('backToTop')"
+      @click="scrollToTop"
     >
       <svg
         class="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5"
@@ -21,7 +21,10 @@
       </svg>
 
       <!-- 进度环 -->
-      <svg class="absolute inset-0 h-12 w-12 -rotate-90 transform" viewBox="0 0 48 48">
+      <svg
+        class="absolute inset-0 h-12 w-12 -rotate-90 transform"
+        viewBox="0 0 48 48"
+      >
         <circle
           cx="24"
           cy="24"

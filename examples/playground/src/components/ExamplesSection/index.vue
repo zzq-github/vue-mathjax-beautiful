@@ -30,7 +30,7 @@
             <div
               class="text-lg font-mono min-h-[40px] flex items-center justify-center dark:text-white transition-colors duration-300"
               v-html="example.rendered"
-            ></div>
+            />
             <h4 class="font-semibold text-gray-900 dark:text-white transition-colors duration-300">
               {{ example.name() }}
             </h4>

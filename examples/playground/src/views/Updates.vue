@@ -9,12 +9,24 @@
       <div class="absolute bottom-1/6 right-1/12 w-40 h-40 bg-violet-100/20 dark:bg-violet-900/20 rounded-full blur-2xl animate-pulse delay-700" />
 
       <!-- 数学符号装饰 -->
-      <div class="absolute top-20 left-10 text-indigo-300/20 dark:text-indigo-400/20 text-8xl font-bold select-none rotate-12">∫</div>
-      <div class="absolute bottom-32 right-20 text-blue-300/20 dark:text-blue-400/20 text-6xl font-bold select-none -rotate-12">∂</div>
-      <div class="absolute top-1/3 right-10 text-purple-300/20 dark:text-purple-400/20 text-5xl font-bold select-none rotate-45">∑</div>
-      <div class="absolute bottom-1/3 left-20 text-violet-300/20 dark:text-violet-400/20 text-4xl font-bold select-none -rotate-45">√</div>
-      <div class="absolute top-2/3 left-1/4 text-indigo-200/20 dark:text-indigo-300/20 text-3xl font-bold select-none rotate-12">π</div>
-      <div class="absolute top-1/4 right-1/3 text-blue-200/20 dark:text-blue-300/20 text-4xl font-bold select-none -rotate-12">Σ</div>
+      <div class="absolute top-20 left-10 text-indigo-300/20 dark:text-indigo-400/20 text-8xl font-bold select-none rotate-12">
+        ∫
+      </div>
+      <div class="absolute bottom-32 right-20 text-blue-300/20 dark:text-blue-400/20 text-6xl font-bold select-none -rotate-12">
+        ∂
+      </div>
+      <div class="absolute top-1/3 right-10 text-purple-300/20 dark:text-purple-400/20 text-5xl font-bold select-none rotate-45">
+        ∑
+      </div>
+      <div class="absolute bottom-1/3 left-20 text-violet-300/20 dark:text-violet-400/20 text-4xl font-bold select-none -rotate-45">
+        √
+      </div>
+      <div class="absolute top-2/3 left-1/4 text-indigo-200/20 dark:text-indigo-300/20 text-3xl font-bold select-none rotate-12">
+        π
+      </div>
+      <div class="absolute top-1/4 right-1/3 text-blue-200/20 dark:text-blue-300/20 text-4xl font-bold select-none -rotate-12">
+        Σ
+      </div>
 
       <!-- 网格背景 -->
       <div class="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
@@ -46,7 +58,9 @@
             {{ t('updates.subtitle') }}
           </p>
 
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">{{ t('updates.lastUpdated') }}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
+            {{ t('updates.lastUpdated') }}
+          </p>
         </div>
       </div>
     </div>
@@ -55,9 +69,16 @@
     <div class="relative z-10 container mx-auto px-4 py-8">
       <div class="max-w-5xl mx-auto">
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-xl p-8 lg:p-12">
-          <div v-if="entries.length" class="relative">
+          <div
+            v-if="entries.length"
+            class="relative"
+          >
             <div class="absolute left-3 top-2 bottom-2 w-px bg-indigo-200/70 dark:bg-indigo-700/60" />
-            <section v-for="entry in entries" :key="entry.version" class="relative pl-10 pb-8 last:pb-0">
+            <section
+              v-for="entry in entries"
+              :key="entry.version"
+              class="relative pl-10 pb-8 last:pb-0"
+            >
               <div class="absolute left-0 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-500 text-white text-xs font-semibold shadow-sm">
                 <span class="sr-only">{{ entry.version }}</span>
               </div>
@@ -70,8 +91,12 @@
                       </span>
                       <span class="text-sm text-gray-500 dark:text-gray-400">{{ entry.date }}</span>
                     </div>
-                    <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ entry.title }}</h3>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">{{ entry.summary }}</p>
+                    <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                      {{ entry.title }}
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                      {{ entry.summary }}
+                    </p>
                   </div>
                   <div class="flex items-center gap-2">
                     <div class="rounded-full bg-indigo-100 dark:bg-indigo-800/80 px-4 py-1.5 text-sm font-semibold text-indigo-700 dark:text-indigo-200">
@@ -82,14 +107,22 @@
 
                 <div class="mt-4 bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-5 border border-gray-200/50 dark:border-gray-600/50">
                   <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 ml-2">
-                    <li v-for="item in entry.items" :key="item">{{ item }}</li>
+                    <li
+                      v-for="item in entry.items"
+                      :key="item"
+                    >
+                      {{ item }}
+                    </li>
                   </ul>
                 </div>
               </div>
             </section>
           </div>
 
-          <div v-else class="text-center text-gray-500 dark:text-gray-400">
+          <div
+            v-else
+            class="text-center text-gray-500 dark:text-gray-400"
+          >
             {{ t('updates.empty') }}
           </div>
         </div>

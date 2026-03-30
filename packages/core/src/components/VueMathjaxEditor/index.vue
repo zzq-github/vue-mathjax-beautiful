@@ -13,15 +13,22 @@
     :style="editorStyle"
   >
     <!-- 工具栏 -->
-    <div class="toolbar" :class="props.toolbarClass" v-if="showToolbar">
+    <div
+      v-if="showToolbar"
+      class="toolbar"
+      :class="props.toolbarClass"
+    >
       <!-- 基础格式工具 -->
-      <div class="format-group" v-if="shouldShowTool('bold') || shouldShowTool('italic') || shouldShowTool('underline') || shouldShowTool('strikethrough')">
+      <div
+        v-if="shouldShowTool('bold') || shouldShowTool('italic') || shouldShowTool('underline') || shouldShowTool('strikethrough')"
+        class="format-group"
+      >
         <button
           v-if="shouldShowTool('bold')"
           class="toolbar-btn"
           :class="{ active: isFormatActive('bold') }"
-          @click="toggleFormat('bold')"
           :title="tooltipTexts.bold"
+          @click="toggleFormat('bold')"
         >
           <strong>B</strong>
         </button>
@@ -29,8 +36,8 @@
           v-if="shouldShowTool('italic')"
           class="toolbar-btn"
           :class="{ active: isFormatActive('italic') }"
-          @click="toggleFormat('italic')"
           :title="tooltipTexts.italic"
+          @click="toggleFormat('italic')"
         >
           <em>I</em>
         </button>
@@ -38,8 +45,8 @@
           v-if="shouldShowTool('underline')"
           class="toolbar-btn"
           :class="{ active: isFormatActive('underline') }"
-          @click="toggleFormat('underline')"
           :title="tooltipTexts.underline"
+          @click="toggleFormat('underline')"
         >
           <u>U</u>
         </button>
@@ -47,79 +54,110 @@
           v-if="shouldShowTool('strikethrough')"
           class="toolbar-btn"
           :class="{ active: isFormatActive('strikethrough') }"
-          @click="toggleFormat('strikethrough')"
           :title="tooltipTexts.strikethrough"
+          @click="toggleFormat('strikethrough')"
         >
           <s>S</s>
         </button>
       </div>
 
-      <div class="divider" v-if="(shouldShowTool('bold') || shouldShowTool('italic') || shouldShowTool('underline') || shouldShowTool('strikethrough')) && shouldShowTool('formula')"></div>
+      <div
+        v-if="(shouldShowTool('bold') || shouldShowTool('italic') || shouldShowTool('underline') || shouldShowTool('strikethrough')) && shouldShowTool('formula')"
+        class="divider"
+      />
 
       <!-- 公式工具 -->
-      <div class="math-group" v-if="shouldShowTool('formula')">
-        <button class="toolbar-btn formula-btn" @click="showFormulaEditor" :title="tooltipTexts.formula">
+      <div
+        v-if="shouldShowTool('formula')"
+        class="math-group"
+      >
+        <button
+          class="toolbar-btn formula-btn"
+          :title="tooltipTexts.formula"
+          @click="showFormulaEditor"
+        >
           <span class="fx-icon">fx</span>
           <span>{{ t.editor.toolbar.formulaShort }}</span>
         </button>
       </div>
 
-      <div class="divider" v-if="shouldShowTool('formula') && (shouldShowTool('image') || shouldShowTool('clear') || shouldShowTool('theme'))"></div>
+      <div
+        v-if="shouldShowTool('formula') && (shouldShowTool('image') || shouldShowTool('clear') || shouldShowTool('theme'))"
+        class="divider"
+      />
 
       <!-- 插入工具 -->
-      <div class="insert-group" v-if="shouldShowTool('image') || shouldShowTool('clear') || shouldShowTool('theme')">
+      <div
+        v-if="shouldShowTool('image') || shouldShowTool('clear') || shouldShowTool('theme')"
+        class="insert-group"
+      >
         <input
           v-if="shouldShowTool('image')"
           ref="imageInput"
           type="file"
           :accept="props.allowedImageTypes.join(',')"
-          @change="handleImageUpload"
           style="display: none"
-        />
+          @change="handleImageUpload"
+        >
         <button
           v-if="shouldShowTool('image')"
           class="toolbar-btn image-btn"
-          @click="imageInput?.click()"
           :disabled="uploadLoading || props.readonly"
           :title="tooltipTexts.image"
+          @click="imageInput?.click()"
         >
-          <span v-if="uploadLoading" class="loading-icon">⟳</span>
-          <span v-else class="icon">🖼️</span>
+          <span
+            v-if="uploadLoading"
+            class="loading-icon"
+          >⟳</span>
+          <span
+            v-else
+            class="icon"
+          >🖼️</span>
           <span>{{ t.editor.toolbar.imageShort }}</span>
         </button>
 
-        <div class="divider" v-if="shouldShowTool('image') && (shouldShowTool('clear') || shouldShowTool('theme'))"></div>
+        <div
+          v-if="shouldShowTool('image') && (shouldShowTool('clear') || shouldShowTool('theme'))"
+          class="divider"
+        />
 
         <button 
           v-if="shouldShowTool('clear')"
           class="toolbar-btn clear-btn" 
-          @click="clearFormat" 
-          :title="tooltipTexts.clear"
+          :title="tooltipTexts.clear" 
           :disabled="props.readonly"
+          @click="clearFormat"
         >
           <span class="icon">🧹</span>
           <span>{{ t.editor.toolbar.clearShort }}</span>
         </button>
 
-        <div class="divider" v-if="shouldShowTool('clear') && (shouldShowTool('theme') || availableLocales.length > 1)"></div>
+        <div
+          v-if="shouldShowTool('clear') && (shouldShowTool('theme') || availableLocales.length > 1)"
+          class="divider"
+        />
 
         <button 
           v-if="availableLocales.length > 1"
           class="toolbar-btn language-btn" 
-          @click="toggleLanguage" 
-          :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
+          :title="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'" 
+          @click="toggleLanguage"
         >
           <span class="icon">🌐</span>
           <span>{{ locale === 'zh-CN' ? '中' : 'EN' }}</span>
         </button>
 
-        <div class="divider" v-if="availableLocales.length > 1 && shouldShowTool('theme')"></div>
+        <div
+          v-if="availableLocales.length > 1 && shouldShowTool('theme')"
+          class="divider"
+        />
 
         <button 
           v-if="shouldShowTool('theme')"
           class="toolbar-btn theme-btn" 
-          @click="toggleTheme" 
-          :title="tooltipTexts.theme"
+          :title="tooltipTexts.theme" 
+          @click="toggleTheme"
         >
           <span class="icon">{{ themeIcon }}</span>
           <span>{{ t.editor.toolbar.theme }}</span>
@@ -135,6 +173,8 @@
         :class="props.editorClass"
         :contenteditable="!props.readonly"
         :spellcheck="props.spellcheck"
+        :placeholder="placeholder"
+        :style="{ minHeight: minHeight, maxHeight: props.maxHeight !== 'none' ? props.maxHeight : undefined }"
         @input="handleInput"
         @beforeinput="handleBeforeInput"
         @keydown="handleKeydown"
@@ -143,14 +183,18 @@
         @blur="handleBlur"
         @mouseup="updateSelection"
         @keyup="updateSelection"
-        :placeholder="placeholder"
-        :style="{ minHeight: minHeight, maxHeight: props.maxHeight !== 'none' ? props.maxHeight : undefined }"
-      ></div>
+      />
 
       <!-- 统计信息 -->
-      <div class="char-counter" v-if="props.showCharCount || props.showWordCount">
+      <div
+        v-if="props.showCharCount || props.showWordCount"
+        class="char-counter"
+      >
         <span>{{ statsDisplay }}</span>
-        <span v-if="props.maxLength" class="limit-info">/ {{ props.maxLength }}</span>
+        <span
+          v-if="props.maxLength"
+          class="limit-info"
+        >/ {{ props.maxLength }}</span>
       </div>
     </div>
 
@@ -335,10 +379,6 @@ const hasUserChangedTheme = ref(false);
 // 主题相关计算属性
 const themeIcon = computed(() => {
   return internalTheme.value === 'dark' ? '☀️' : '🌙';
-});
-
-const themeButtonTitle = computed(() => {
-  return internalTheme.value === 'dark' ? '切换到亮色主题' : '切换到暗色主题';
 });
 
 // 编辑器样式计算
@@ -919,12 +959,12 @@ const clearSelectionFormat = async (range: Range) => {
   let cleanText = tempContainer.textContent || '';
   
   // 恢复公式和图片的占位符
-  formulas.forEach(({ placeholder }, index) => {
+  formulas.forEach(({ placeholder: _ph }, index) => {
     cleanText = cleanText.replace(`__FORMULA_${index}__`, `__FORMULA_${index}__`);
     cleanText = cleanText.replace(`__SPAN_FORMULA_${index}__`, `__SPAN_FORMULA_${index}__`);
   });
-  
-  images.forEach(({ placeholder }, index) => {
+
+  images.forEach(({ placeholder: _ph }, index) => {
     cleanText = cleanText.replace(`__IMAGE_${index}__`, `__IMAGE_${index}__`);
   });
   
@@ -1130,7 +1170,7 @@ const handlePaste = async (event: ClipboardEvent) => {
 
       handleInput();
       setupFormulaClickEvents();
-    } catch (error) {
+    } catch {
       // 如果转换失败，插入纯文本
       document.execCommand('insertText', false, text);
     }
@@ -1147,7 +1187,7 @@ const handlePaste = async (event: ClipboardEvent) => {
           target: {
             files: [file],
           },
-        } as any;
+        } as unknown as Event;
 
         await handleImageUpload(fakeEvent);
       }

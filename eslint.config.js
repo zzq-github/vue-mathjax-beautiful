@@ -1,55 +1,47 @@
-import { defineConfig } from 'eslint-define-config'
+// @ts-check
+import js from '@eslint/js'
 import vue from 'eslint-plugin-vue'
-import typescript from '@typescript-eslint/eslint-plugin'
-import typescriptParser from '@typescript-eslint/parser'
-import prettier from 'eslint-plugin-prettier'
+import vueParser from 'vue-eslint-parser'
+import tseslint from 'typescript-eslint'
 
-export default defineConfig([
-  {
-    files: ['**/*.{js,jsx,ts,tsx,vue}'],
-    languageOptions: {
-      parser: typescriptParser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module',
-        extraFileExtensions: ['.vue']
-      }
-    },
-    plugins: {
-      vue,
-      '@typescript-eslint': typescript,
-      prettier
-    },
-    rules: {
-      // Prettier 规则
-      'prettier/prettier': 'error',
-      
-      // Vue 规则
-      'vue/multi-word-component-names': 'off',
-      'vue/no-unused-vars': 'error',
-      'vue/no-multiple-template-root': 'off',
-      
-      // TypeScript 规则
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      
-      // 通用规则
-      'no-console': 'warn',
-      'no-debugger': 'error',
-      'prefer-const': 'error',
-      'no-var': 'error',
-      
-      // 分号规则（确保与Prettier一致）
-      'semi': ['error', 'always']
-    }
-  },
+export default tseslint.config(
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  ...vue.configs['flat/recommended'],
   {
     files: ['**/*.vue'],
     languageOptions: {
-      parser: vue.parser,
+      parser: vueParser,
       parserOptions: {
-        parser: typescriptParser
+        parser: tseslint.parser,
+        sourceType: 'module'
       }
+    },
+    rules: {
+      'vue/multi-word-component-names': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-console': 'warn',
+      'no-debugger': 'error'
     }
+  },
+  {
+    files: ['**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-console': 'warn',
+      'no-debugger': 'error'
+    }
+  },
+  {
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      '*.config.js',
+      '*.config.ts',
+      'coverage/**',
+      'packages/core/dist/**'
+    ]
   }
-]) 
+) 

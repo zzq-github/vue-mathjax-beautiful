@@ -7,7 +7,7 @@ export default {
     editorConfig: '编辑器配置',
     features: '功能特性',
     examples: '示例',
-    docs: '文档',
+    docs: '使用文档',
     updates: '更新说明',
     toggleTheme: '切换主题',
     openMenu: '打开菜单',
@@ -432,6 +432,7 @@ export default {
       basicUsage: '基本使用',
       coreComponents: '核心组件',
       beautifulApi: 'VueMathjaxBeautiful API',
+      advancedFeatures: '高级特性',
       
       examples: '示例和最佳实践',
     },
@@ -492,6 +493,15 @@ export default {
           cancel: '用户点击取消按钮或关闭弹窗时触发',
         },
       },
+
+      advancedFeatures: {
+        title: '高级特性',
+        themeSystem: '主题系统',
+        mobileOptimization: '移动端优化',
+        lazyLoading: 'MathJax 懒加载',
+        caching: '缓存系统',
+      },
+      
       
 
       
@@ -611,6 +621,21 @@ export default {
     lastUpdated: '最后更新时间：2026年3月',
     empty: '暂无更新记录。',
     entries: [
+      {
+        version: '1.3.4',
+        date: '2026-03-26',
+        typeLabel: '优化',
+        title: '代码质量与 ESLint 规范修复',
+        summary: '全面修复 ESLint 错误与警告，提升代码可维护性和类型安全。',
+        items: [
+          '修复正则表达式问题：移除不必要的转义字符，优化控制字符处理。',
+          '清理未使用变量：移除 symbolDisplayCache、themeButtonTitle 等冗余代码。',
+          '统一错误处理：将 console 语句替换为 logger 工具，规范错误日志。',
+          '修复类型定义：添加 eslint-disable 注释处理必要的 any 类型。',
+          '优化导入语句：移除未使用的 Ref、vi、beforeEach 等导入。',
+          '构建验证通过：TypeScript 编译无错误，核心包质量提升。'
+        ]
+      },
       {
         version: '1.3.0',
         date: '2026-03-20',

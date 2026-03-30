@@ -9,12 +9,24 @@
       <div class="absolute bottom-1/6 right-1/12 w-40 h-40 bg-amber-100/20 dark:bg-amber-900/20 rounded-full blur-2xl animate-pulse delay-700" />
       
       <!-- 数学符号装饰 -->
-      <div class="absolute top-20 left-10 text-orange-300/20 dark:text-orange-400/20 text-8xl font-bold select-none rotate-12">Σ</div>
-      <div class="absolute bottom-32 right-20 text-red-300/20 dark:text-red-400/20 text-6xl font-bold select-none -rotate-12">∫</div>
-      <div class="absolute top-1/3 right-10 text-pink-300/20 dark:text-pink-400/20 text-5xl font-bold select-none rotate-45">π</div>
-      <div class="absolute bottom-1/3 left-20 text-amber-300/20 dark:text-amber-400/20 text-4xl font-bold select-none -rotate-45">Δ</div>
-      <div class="absolute top-2/3 left-1/4 text-orange-200/20 dark:text-orange-300/20 text-3xl font-bold select-none rotate-12">θ</div>
-      <div class="absolute top-1/4 right-1/3 text-red-200/20 dark:text-red-300/20 text-4xl font-bold select-none -rotate-12">∇</div>
+      <div class="absolute top-20 left-10 text-orange-300/20 dark:text-orange-400/20 text-8xl font-bold select-none rotate-12">
+        Σ
+      </div>
+      <div class="absolute bottom-32 right-20 text-red-300/20 dark:text-red-400/20 text-6xl font-bold select-none -rotate-12">
+        ∫
+      </div>
+      <div class="absolute top-1/3 right-10 text-pink-300/20 dark:text-pink-400/20 text-5xl font-bold select-none rotate-45">
+        π
+      </div>
+      <div class="absolute bottom-1/3 left-20 text-amber-300/20 dark:text-amber-400/20 text-4xl font-bold select-none -rotate-45">
+        Δ
+      </div>
+      <div class="absolute top-2/3 left-1/4 text-orange-200/20 dark:text-orange-300/20 text-3xl font-bold select-none rotate-12">
+        θ
+      </div>
+      <div class="absolute top-1/4 right-1/3 text-red-200/20 dark:text-red-300/20 text-4xl font-bold select-none -rotate-12">
+        ∇
+      </div>
       
       <!-- 网格背景 -->
       <div class="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
@@ -24,9 +36,22 @@
     <div class="relative z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-700/50">
       <div class="container mx-auto px-4 py-12">
         <div class="flex items-center space-x-4 mb-8">
-          <router-link to="/" class="group flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
-            <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          <router-link
+            to="/"
+            class="group flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+          >
+            <svg
+              class="w-5 h-5 transition-transform group-hover:-translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             <span class="font-medium">{{ t('common.back') }}</span>
           </router-link>
@@ -45,7 +70,9 @@
           <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-light">
             {{ t('terms.subtitle') }}
           </p>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">{{ t('terms.lastUpdated') }}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
+            {{ t('terms.lastUpdated') }}
+          </p>
         </div>
       </div>
     </div>
@@ -62,8 +89,12 @@
                   <span class="text-2xl">📋</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.overview.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.overview.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.overview.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.overview.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -80,8 +111,12 @@
                   <span class="text-2xl">🚀</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.productDescription.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.productDescription.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.productDescription.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.productDescription.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -89,7 +124,12 @@
                   {{ t('terms.sections.productDescription.description') }}
                 </p>
                 <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 ml-4">
-                  <li v-for="feature in productFeatures" :key="feature">{{ feature }}</li>
+                  <li
+                    v-for="feature in productFeatures"
+                    :key="feature"
+                  >
+                    {{ feature }}
+                  </li>
                 </ul>
               </div>
             </section>
@@ -101,25 +141,38 @@
                   <span class="text-2xl">⚖️</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.licensing.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.licensing.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.licensing.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.licensing.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
                 <div class="space-y-6">
                   <div>
-                    <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ t('terms.sections.licensing.openSource.title') }}</h4>
+                    <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-3">
+                      {{ t('terms.sections.licensing.openSource.title') }}
+                    </h4>
                     <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                       {{ t('terms.sections.licensing.openSource.content') }}
                     </p>
                   </div>
                   <div>
-                    <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ t('terms.sections.licensing.permissions.title') }}</h4>
+                    <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-3">
+                      {{ t('terms.sections.licensing.permissions.title') }}
+                    </h4>
                     <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
                       {{ t('terms.sections.licensing.permissions.description') }}
                     </p>
                     <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 ml-4">
-                      <li v-for="item in permissionItems" :key="item">{{ item }}</li>
+                      <li
+                        v-for="item in permissionItems"
+                        :key="item"
+                      >
+                        {{ item }}
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -133,8 +186,12 @@
                   <span class="text-2xl">👤</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.userResponsibilities.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.userResponsibilities.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.userResponsibilities.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.userResponsibilities.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -142,7 +199,12 @@
                   {{ t('terms.sections.userResponsibilities.description') }}
                 </p>
                 <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 ml-4">
-                  <li v-for="responsibility in userResponsibilities" :key="responsibility">{{ responsibility }}</li>
+                  <li
+                    v-for="responsibility in userResponsibilities"
+                    :key="responsibility"
+                  >
+                    {{ responsibility }}
+                  </li>
                 </ul>
               </div>
             </section>
@@ -154,8 +216,12 @@
                   <span class="text-2xl">🚫</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.prohibitedActions.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.prohibitedActions.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.prohibitedActions.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.prohibitedActions.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -163,7 +229,12 @@
                   {{ t('terms.sections.prohibitedActions.description') }}
                 </p>
                 <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 ml-4">
-                  <li v-for="prohibition in prohibitedActions" :key="prohibition">{{ prohibition }}</li>
+                  <li
+                    v-for="prohibition in prohibitedActions"
+                    :key="prohibition"
+                  >
+                    {{ prohibition }}
+                  </li>
                 </ul>
               </div>
             </section>
@@ -175,20 +246,28 @@
                   <span class="text-2xl">💡</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.intellectualProperty.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.intellectualProperty.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.intellectualProperty.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.intellectualProperty.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
                 <div class="space-y-6">
                   <div>
-                    <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ t('terms.sections.intellectualProperty.productIP.title') }}</h4>
+                    <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-3">
+                      {{ t('terms.sections.intellectualProperty.productIP.title') }}
+                    </h4>
                     <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                       {{ t('terms.sections.intellectualProperty.productIP.content') }}
                     </p>
                   </div>
                   <div>
-                    <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-3">{{ t('terms.sections.intellectualProperty.thirdParty.title') }}</h4>
+                    <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-3">
+                      {{ t('terms.sections.intellectualProperty.thirdParty.title') }}
+                    </h4>
                     <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                       {{ t('terms.sections.intellectualProperty.thirdParty.content') }}
                     </p>
@@ -204,8 +283,12 @@
                   <span class="text-2xl">⚠️</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.disclaimer.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.disclaimer.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.disclaimer.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.disclaimer.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -213,7 +296,12 @@
                   {{ t('terms.sections.disclaimer.description') }}
                 </p>
                 <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 ml-4">
-                  <li v-for="disclaimer in disclaimerItems" :key="disclaimer">{{ disclaimer }}</li>
+                  <li
+                    v-for="disclaimer in disclaimerItems"
+                    :key="disclaimer"
+                  >
+                    {{ disclaimer }}
+                  </li>
                 </ul>
                 <p class="text-gray-700 dark:text-gray-300 leading-relaxed mt-4">
                   {{ t('terms.sections.disclaimer.note') }}
@@ -228,8 +316,12 @@
                   <span class="text-2xl">📊</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.liabilityLimitation.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.liabilityLimitation.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.liabilityLimitation.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.liabilityLimitation.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -246,8 +338,12 @@
                   <span class="text-2xl">🔄</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.serviceChanges.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.serviceChanges.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.serviceChanges.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.serviceChanges.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -264,8 +360,12 @@
                   <span class="text-2xl">📝</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.termsUpdates.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.termsUpdates.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.termsUpdates.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.termsUpdates.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -282,8 +382,12 @@
                   <span class="text-2xl">⚖️</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.applicableLaw.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.applicableLaw.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.applicableLaw.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.applicableLaw.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -300,8 +404,12 @@
                   <span class="text-2xl">📞</span>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ t('terms.sections.contact.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('terms.sections.contact.subtitle') }}</p>
+                  <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                    {{ t('terms.sections.contact.title') }}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm">
+                    {{ t('terms.sections.contact.subtitle') }}
+                  </p>
                 </div>
               </div>
               <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -311,8 +419,16 @@
                 <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                   <p class="text-gray-700 dark:text-gray-300">
                     <strong>{{ t('terms.sections.contact.developer') }}：</strong>不讲道理的柯里昂<br>
-                    <strong>{{ t('terms.sections.contact.github') }}：</strong><a href="https://github.com/zzq-github/vue-mathjax-beautiful" target="_blank" class="text-orange-600 dark:text-orange-400 hover:underline">https://github.com/zzq-github/vue-mathjax-beautiful</a><br>
-                    <strong>{{ t('terms.sections.contact.issues') }}：</strong><a href="https://github.com/zzq-github/vue-mathjax-beautiful/issues" target="_blank" class="text-orange-600 dark:text-orange-400 hover:underline">https://github.com/zzq-github/vue-mathjax-beautiful/issues</a>
+                    <strong>{{ t('terms.sections.contact.github') }}：</strong><a
+                      href="https://github.com/zzq-github/vue-mathjax-beautiful"
+                      target="_blank"
+                      class="text-orange-600 dark:text-orange-400 hover:underline"
+                    >https://github.com/zzq-github/vue-mathjax-beautiful</a><br>
+                    <strong>{{ t('terms.sections.contact.issues') }}：</strong><a
+                      href="https://github.com/zzq-github/vue-mathjax-beautiful/issues"
+                      target="_blank"
+                      class="text-orange-600 dark:text-orange-400 hover:underline"
+                    >https://github.com/zzq-github/vue-mathjax-beautiful/issues</a>
                   </p>
                 </div>
               </div>

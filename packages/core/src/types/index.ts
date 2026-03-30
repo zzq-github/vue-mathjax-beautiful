@@ -141,6 +141,7 @@ export interface VueMathjaxEditorProps {
   autoSaveInterval?: number;
   
   // 公式编辑器配置
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formulaEditorProps?: Record<string, any>;
   
   // 上传配置

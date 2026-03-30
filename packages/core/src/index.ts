@@ -28,6 +28,29 @@ export {
   type MatchLatexResult,
 } from './utils/latex';
 
+// 导出日志工具
+export { logger, Logger } from './utils/logger';
+export type { LogLevel } from './utils/logger';
+
+// 导出缓存工具
+export { LRUCache, FormulaCache, MemoryCache, globalFormulaCache } from './utils/cache';
+export type { CacheEntry, LRUCacheOptions } from './utils/cache';
+
+// 导出懒加载工具
+export { lazyLoadMathJax, isMathJaxReady, preloadMathJax, resetMathJaxLoadState } from './utils/lazyLoad';
+
+// 导出虚拟列表组合式函数
+export { useVirtualList, useVirtualGrid, useBatchRender } from './composables/useVirtualList';
+export type { VirtualListOptions, VirtualGridOptions, VirtualListItem, VirtualGridItem } from './composables/useVirtualList';
+
+// 导出主题组合式函数
+export { useTheme, useGlobalTheme, createTheme, presetThemes } from './composables/useTheme';
+export type { Theme, ThemeColors, ThemeConfig } from './composables/useTheme';
+
+// 导出移动端优化组合式函数
+export { useMobile, useMobileOptimization, useSafeArea, defaultMobileConfig } from './composables/useMobile';
+export type { Breakpoint, MobileOptimizationConfig } from './composables/useMobile';
+
 // 导出国际化
 export { useI18n } from './composables/useI18n';
 export type { Locale, Messages } from './composables/useI18n';
@@ -60,6 +83,8 @@ export function install(app: App) {
 // 默认导出
 export default {
   install,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   VueMathjaxEditor: VueMathjaxEditor as any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   VueMathjaxBeautiful: VueMathjaxBeautiful as any,
 };

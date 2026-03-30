@@ -1,5 +1,8 @@
 <template>
-  <div id="editor-config" class="py-16">
+  <div
+    id="editor-config"
+    class="py-16"
+  >
     <div class="container mx-auto px-4">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
@@ -36,13 +39,13 @@
                 <button 
                   v-for="tab in configTabs"
                   :key="tab.key"
-                  @click="activeTab = tab.key"
                   :class="[
                     'px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200',
                     activeTab === tab.key 
                       ? 'bg-white/90 dark:bg-gray-800/90 text-orange-600 dark:text-orange-400 shadow-sm ring-1 ring-orange-600/10 dark:ring-orange-400/10 backdrop-blur-sm' 
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50'
                   ]"
+                  @click="activeTab = tab.key"
                 >
                   {{ tab.label }}
                 </button>
@@ -52,7 +55,10 @@
             <!-- 配置内容 -->
             <div class="p-6">
               <!-- 基础配置 -->
-              <div v-if="activeTab === 'basic'" class="space-y-6">
+              <div
+                v-if="activeTab === 'basic'"
+                class="space-y-6"
+              >
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -72,7 +78,7 @@
                         v-model="config.placeholder" 
                         type="text" 
                         class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
-                      />
+                      >
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
@@ -85,7 +91,7 @@
                           type="text" 
                           placeholder="300px" 
                           class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
-                        />
+                        >
                       </div>
                       
                       <div class="space-y-2">
@@ -97,7 +103,7 @@
                           type="text" 
                           placeholder="100%" 
                           class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
-                        />
+                        >
                       </div>
                     </div>
                     
@@ -108,25 +114,25 @@
                       <div class="flex gap-2 p-1 bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-600/50">
                         <button
                           type="button"
-                          @click="config.theme = 'light'"
                           :class="[
                             'flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                             config.theme === 'light'
                               ? 'bg-white/90 dark:bg-gray-800/90 text-yellow-600 dark:text-yellow-400 shadow-sm backdrop-blur-sm'
                               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                           ]"
+                          @click="config.theme = 'light'"
                         >
                           Light
                         </button>
                         <button
                           type="button"
-                          @click="config.theme = 'dark'"
                           :class="[
                             'flex-1 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                             config.theme === 'dark'
                               ? 'bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 shadow-sm backdrop-blur-sm'
                               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                           ]"
+                          @click="config.theme = 'dark'"
                         >
                           Dark
                         </button>
@@ -137,7 +143,10 @@
               </div>
               
               <!-- 工具栏配置 -->
-              <div v-if="activeTab === 'toolbar'" class="space-y-6">
+              <div
+                v-if="activeTab === 'toolbar'"
+                class="space-y-6"
+              >
                 <!-- 工具栏开关 -->
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
@@ -152,17 +161,26 @@
                   <div class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
                     <div>
                       <span class="text-sm font-medium text-gray-900 dark:text-white">{{ t('editorConfig.toolbar.showToolbar') }}</span>
-                      <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ t('editorConfig.modes.showToolbarDesc') }}</p>
+                      <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                        {{ t('editorConfig.modes.showToolbarDesc') }}
+                      </p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" v-model="config.showToolbar" class="sr-only peer">
-                      <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm"></div>
+                      <input
+                        v-model="config.showToolbar"
+                        type="checkbox"
+                        class="sr-only peer"
+                      >
+                      <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm" />
                     </label>
                   </div>
                 </div>
                 
                 <!-- 工具选择 -->
-                <div v-if="config.showToolbar" class="space-y-4">
+                <div
+                  v-if="config.showToolbar"
+                  class="space-y-4"
+                >
                   <div class="flex items-center justify-between">
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {{ t('editorConfig.toolbar.enabledTools') }}
@@ -173,25 +191,34 @@
                   </div>
                   
                   <div class="grid grid-cols-1 gap-3">
-                    <div v-for="tool in availableTools" :key="tool.value" class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
+                    <div
+                      v-for="tool in availableTools"
+                      :key="tool.value"
+                      class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30"
+                    >
                       <div class="flex-1">
                         <div class="flex items-center gap-2">
                           <span class="text-sm font-medium text-gray-900 dark:text-white">{{ tool.label }}</span>
-                          <span v-if="tool.category" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium backdrop-blur-sm border"
-                                :class="getCategoryBadgeClass(tool.category)">
+                          <span
+                            v-if="tool.category"
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium backdrop-blur-sm border"
+                            :class="getCategoryBadgeClass(tool.category)"
+                          >
                             {{ t(`editorConfig.modes.categories.${tool.category}`) }}
                           </span>
                         </div>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ tool.description }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ tool.description }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer ml-3">
                         <input 
-                          type="checkbox" 
+                          v-model="config.enabledTools" 
+                          type="checkbox"
                           :value="tool.value"
-                          v-model="config.enabledTools"
                           class="sr-only peer"
-                        />
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm"></div>
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm" />
                       </label>
                     </div>
                   </div>
@@ -199,7 +226,10 @@
               </div>
               
               <!-- 功能配置 -->
-              <div v-if="activeTab === 'features'" class="space-y-6">
+              <div
+                v-if="activeTab === 'features'"
+                class="space-y-6"
+              >
                 <!-- 格式功能 -->
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
@@ -212,14 +242,24 @@
                   </div>
                   
                   <div class="grid grid-cols-1 gap-3">
-                    <div v-for="feature in formatFeatures" :key="feature.key" class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
+                    <div
+                      v-for="feature in formatFeatures"
+                      :key="feature.key"
+                      class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30"
+                    >
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ feature.title }}</span>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ feature.description }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ feature.description }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" v-model="config[feature.key as keyof typeof config]" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm"></div>
+                        <input
+                          v-model="config[feature.key as keyof typeof config]"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm" />
                       </label>
                     </div>
                   </div>
@@ -237,14 +277,24 @@
                   </div>
                   
                   <div class="grid grid-cols-1 gap-3">
-                    <div v-for="feature in advancedFeatures" :key="feature.key" class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30">
+                    <div
+                      v-for="feature in advancedFeatures"
+                      :key="feature.key"
+                      class="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-700/30 backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-gray-600/30"
+                    >
                       <div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ feature.title }}</span>
-                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">{{ feature.description }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          {{ feature.description }}
+                        </p>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" v-model="config[feature.key as keyof typeof config]" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm"></div>
+                        <input
+                          v-model="config[feature.key as keyof typeof config]"
+                          type="checkbox"
+                          class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200/80 dark:bg-gray-600/80 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300/20 dark:peer-focus:ring-orange-800/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-600 shadow-sm" />
                       </label>
                     </div>
                   </div>
@@ -252,7 +302,10 @@
               </div>
               
               <!-- 限制配置 -->
-              <div v-if="activeTab === 'limits'" class="space-y-6">
+              <div
+                v-if="activeTab === 'limits'"
+                class="space-y-6"
+              >
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -273,7 +326,7 @@
                         type="number"
                         min="0" 
                         class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
-                      />
+                      >
                     </div>
                     
                     <div class="space-y-2">
@@ -286,7 +339,7 @@
                         min="0" 
                         step="0.1"
                         class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-gray-900 dark:text-gray-100"
-                      />
+                      >
                     </div>
                   </div>
                 </div>
@@ -326,10 +379,12 @@
               <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-700/50">
                 <div class="p-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-t-xl">
                   <div class="flex items-center justify-between">
-                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">{{ t('editorConfig.events.title') }}</h4>
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
+                      {{ t('editorConfig.events.title') }}
+                    </h4>
                     <button 
-                      @click="clearLog" 
-                      class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs rounded-lg transition-colors"
+                      class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs rounded-lg transition-colors" 
+                      @click="clearLog"
                     >
                       {{ t('editorConfig.events.clear') }}
                     </button>
@@ -337,10 +392,16 @@
                 </div>
                 <div class="p-4">
                   <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 max-h-32 overflow-y-auto">
-                    <div v-if="eventLog.length === 0" class="text-sm text-gray-500 italic text-center py-2">
+                    <div
+                      v-if="eventLog.length === 0"
+                      class="text-sm text-gray-500 italic text-center py-2"
+                    >
                       {{ t('editorConfig.modes.noEvents') }}
                     </div>
-                    <div v-else class="space-y-1">
+                    <div
+                      v-else
+                      class="space-y-1"
+                    >
                       <div 
                         v-for="(event, index) in eventLog.slice(-5)" 
                         :key="index"
@@ -362,10 +423,12 @@
               <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-700/50">
                 <div class="p-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/50 rounded-t-xl">
                   <div class="flex items-center justify-between">
-                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">{{ t('editorConfig.code.title') }}</h4>
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
+                      {{ t('editorConfig.code.title') }}
+                    </h4>
                     <button 
-                      @click="copyCode" 
-                      class="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-lg transition-colors"
+                      class="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-lg transition-colors" 
+                      @click="copyCode"
                     >
                       {{ t('editorConfig.code.copy') }}
                     </button>

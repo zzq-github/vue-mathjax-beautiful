@@ -18,7 +18,10 @@
     <router-view />
 
     <!-- 返回顶部按钮 -->
-    <BackToTop :show-back-to-top="showBackToTop" :scroll-progress="scrollProgress" />
+    <BackToTop
+      :show-back-to-top="showBackToTop"
+      :scroll-progress="scrollProgress"
+    />
 
     <!-- 页脚 -->
     <AppFooter />
