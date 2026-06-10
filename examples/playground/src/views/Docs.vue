@@ -36,10 +36,10 @@
     <!-- <div class="bg-white dark:bg-gray-800 shadow-sm">
       <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          {{ t('docs.title') }}
+          {{ docsTitle }}
         </h1>
         <p class="text-lg text-gray-600 dark:text-gray-300">
-          {{ t('docs.description') }}
+          {{ docsDescription }}
         </p>
       </div>
     </div> -->
@@ -52,8 +52,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from '../composables/useI18n'
 import DocsSection from '../components/DocsSection/index.vue'
 
-const { t } = useI18n()
+const i18n = useI18n()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const docsTitle = computed(() => i18n.t('docs.title'))
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const docsDescription = computed(() => i18n.t('docs.description'))
 </script> 

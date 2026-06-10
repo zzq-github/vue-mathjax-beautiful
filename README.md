@@ -14,6 +14,17 @@
 
 ## 🧾 更新说明
 
+### v1.4.0 (2026-06-10)
+
+**公共 API 对齐与安全加固**
+
+- 对齐包根导出：统一导出组件、工具函数、组合式函数、数据助手和公共类型
+- 新增样式子路径：支持 `vue-mathjax-beautiful/style.css`，并兼容旧的 `dist/style.css`
+- 增强安全清洗：暴露 `sanitizeHtml` / `escapeHtml`，并在组件内部清洗 MathJax SVG/HTML
+- 稳定 MathJax 加载：明确 `loadMathJax(urls?: string | string[])` 等加载 API
+- 补充回归测试：覆盖运行时导出、类型导出、样式子路径和安全清洗工具
+- 更新文档：README API 文档与实际 props、events 和工具函数保持一致
+
 ### v1.3.4 (2026-03-26)
 
 **代码质量与 ESLint 规范修复**
@@ -253,29 +264,82 @@ const clearFormula = () => {
 
 ## 📚 API 文档
 
-### VueMathjaxBeautiful 组件 (公式编辑器)
+### 样式入口
 
-#### Props
+```typescript
+import 'vue-mathjax-beautiful/style.css'
+// 兼容旧写法：import 'vue-mathjax-beautiful/dist/style.css'
+```
 
-| 属性               | 类型        | 默认值     | 说明              |
-| ---------------- | --------- | ------- | --------------- |
-| `v-model`        | `boolean` | `false` | 控制弹窗显示/隐藏（弹窗模式） |
-| `existing-latex` | `string`  | `''`    | 已有的 LaTeX 公式代码  |
-| `inline-mode`    | `boolean` | `false` | 是否启用内联模式        |
+### 组件
 
-#### Events
+| 组件 | 说明 |
+|------|------|
+| `VueMathjaxBeautiful` | 公式编辑器，支持弹窗模式和内联模式 |
+| `VueMathjaxEditor` | 富文本编辑器，内置公式插入、图片插入、格式工具栏 |
 
-| 事件名      | 参数                | 说明         |
-| -------- | ----------------- | ---------- |
+### VueMathjaxBeautiful Props
+
+| 属性 | 类型 | 默认值 | 说明 |
+| ---- | ---- | ------ | ---- |
+| `v-model` | `boolean` | `false` | 控制弹窗显示/隐藏 |
+| `existing-latex` | `string` | `''` | 已有的 LaTeX 公式代码 |
+| `inline-mode` | `boolean` | `false` | 是否启用内联模式 |
+| `theme` | `'light' \| 'dark'` | `'light'` | 初始主题 |
+| `theme-config` | `VueMathjaxBeautifulThemeConfig` | 内置主题 | 自定义亮色/暗色主题色 |
+| `show-symbols` / `show-preview` | `boolean` | `true` | 控制符号面板和实时预览 |
+| `show-theme-toggle` / `show-language-toggle` | `boolean` | `true` | 控制主题和语言切换按钮 |
+| `enabled-categories` | `string[]` | `['basic', 'greek', 'advanced']` | 启用的符号分类 |
+| `default-category` | `string` | `'basic'` | 默认符号分类 |
+| `placeholder`, `max-length`, `rows` | `string` / `number` | 内置默认值 | 输入区配置 |
+| `insert-button-text`, `cancel-button-text`, `clear-button-text` | `string` | 内置文案 | 按钮文案 |
+| `title`, `subtitle`, `wrap-formula` | `string` / `boolean` | 内置默认值 | 标题和公式包裹控制 |
+
+### VueMathjaxBeautiful Events
+
+| 事件名 | 参数 | 说明 |
+| ------ | ---- | ---- |
+| `update:modelValue` | `(value: boolean)` | 弹窗显示状态变化 |
 | `insert` | `(latex: string)` | 插入/应用公式时触发 |
+| `change` | `(latex: string)` | 输入内容变化时触发 |
+| `clear` | `()` | 清空内容时触发 |
+| `close` | `()` | 关闭或取消时触发 |
+| `theme-change` | `(theme: string)` | 主题切换时触发 |
 
-#### 功能特性
+### 工具函数
 
-- **符号面板**：提供 240+ 个数学符号，分为基础符号、希腊字母、高级符号三个分类
-- **公式模板**：38 个常用数学公式模板，涵盖代数、几何、微积分等领域
-- **实时预览**：输入 LaTeX 代码时实时显示渲染效果
-- **智能插入**：点击符号自动插入到光标位置
-- **双模式支持**：支持弹窗模式和内联模式
+根路径导出 MathJax 加载、LaTeX 处理、安全清洗、缓存、主题、移动端和虚拟列表工具：
+
+```typescript
+import {
+  initMathJax,
+  loadMathJax,
+  lazyLoadMathJax,
+  resetMathJaxLoadState,
+  convertLatexToSvg,
+  batchConvertLatex,
+  matchLatex,
+  hasLatexFormula,
+  sanitizeHtml,
+  escapeHtml
+} from 'vue-mathjax-beautiful'
+```
+
+组件内部写入 HTML/SVG 前会使用 DOMPurify 清洗；如果你在业务里手动使用 `v-html`，建议复用 `sanitizeHtml`。
+
+### 类型
+
+```typescript
+import type {
+  VueMathjaxBeautifulProps,
+  VueMathjaxBeautifulEvents,
+  VueMathjaxBeautifulThemeConfig,
+  VueMathjaxEditorProps,
+  VueMathjaxEditorEvents,
+  MathJaxConfig,
+  MatchLatexResult
+} from 'vue-mathjax-beautiful'
+```
 
 ## ⌨️ 快捷键
 
@@ -709,8 +773,7 @@ import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful'
 1. **样式引入**：
 
 ```javascript
-// 如果需要自定义样式
-import 'vue-mathjax-beautiful/dist/style.css'
+import 'vue-mathjax-beautiful/style.css'
 ```
 
 ## 🛠️ 开发

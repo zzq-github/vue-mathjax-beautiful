@@ -37,11 +37,13 @@ export default tseslint.config(
   {
     ignores: [
       'dist/**',
+      '**/dist/**',
       'node_modules/**',
       '*.config.js',
       '*.config.ts',
       'coverage/**',
-      'packages/core/dist/**'
+      'packages/core/dist/**',
+      '**/public/mathjax/**'
     ]
   }
 ) 

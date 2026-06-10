@@ -455,6 +455,8 @@ import { initMathJax } from '../../utils/latex';
 import { useI18n } from '../../composables/useI18n';
 import { useVirtualGrid, useBatchRender } from '../../composables/useVirtualList';
 import { logger } from '../../utils/logger';
+import { escapeHtml, sanitizeHtml } from '../../utils/sanitizeHtml';
+import type { VueMathjaxBeautifulProps, VueMathjaxBeautifulThemeConfig } from '../../types';
 import {
   type Symbol,
   basicSymbols,
@@ -466,78 +468,10 @@ import {
   getCategoryName,
 } from '../../data';
 
-// 定义主题配置类型
-type ThemeConfig = {
-  light?: {
-    primary?: string;
-    secondary?: string;
-    accent?: string;
-    button?: string;
-    buttonHover?: string;
-    buttonText?: string;
-    dialogBackground?: string;
-    inputBackground?: string;
-    inputBorder?: string;
-  };
-  dark?: {
-    primary?: string;
-    secondary?: string;
-    accent?: string;
-    button?: string;
-    buttonHover?: string;
-    buttonText?: string;
-    dialogBackground?: string;
-    inputBackground?: string;
-    inputBorder?: string;
-  };
-};
+type ThemeConfig = VueMathjaxBeautifulThemeConfig;
 
 const props = withDefaults(
-  defineProps<{
-    // 基础控制
-    modelValue?: boolean;
-    existingLatex?: string;
-    inlineMode?: boolean;
-    
-    // 主题和样式
-    theme?: 'light' | 'dark';
-    themeConfig?: ThemeConfig;
-    width?: string;
-    height?: string;
-    scale?: number;
-    fontSize?: string;
-    
-    // 功能控制
-    readonly?: boolean;
-    showSymbols?: boolean;
-    showPreview?: boolean;
-    showThemeToggle?: boolean;
-    showClearButton?: boolean;
-    showLanguageToggle?: boolean;
-    showFormulaExamples?: boolean;
-    autoFocus?: boolean;
-    
-    // 输入控制
-    placeholder?: string;
-    maxLength?: number;
-    rows?: number;
-    
-    // 符号面板控制
-    enabledCategories?: string[];
-    defaultCategory?: string;
-    
-    // 按钮文本自定义
-    insertButtonText?: string;
-    cancelButtonText?: string;
-    clearButtonText?: string;
-    
-    // 标题自定义
-    title?: string;
-    subtitle?: string;
-    
-    // 公式包裹控制
-    wrapFormula?: boolean;
-  }>(),
+  defineProps<VueMathjaxBeautifulProps>(),
   {
     modelValue: false,
     existingLatex: '',
@@ -661,7 +595,7 @@ const renderSymbolItem = async (symbol: Symbol) => {
       svg.style.height = 'auto';
       svg.setAttribute('shape-rendering', 'geometricPrecision');
       svg.setAttribute('text-rendering', 'optimizeLegibility');
-      symbol.display = svg.outerHTML;
+      symbol.display = sanitizeHtml(svg.outerHTML);
     }
   } catch (error) {
     logger.warn(`符号 ${symbol.latex} 渲染失败`, error);
@@ -919,7 +853,7 @@ const updatePreview = async () => {
     // 再次检查MathJax是否可用
     if (!window.MathJax?.tex2svgPromise) {
       logger.error('MathJax初始化失败，无法预览公式');
-      renderedFormula.value = '<span style="color: red;">MathJax未加载</span>';
+      renderedFormula.value = sanitizeHtml('<span style="color: red;">MathJax未加载</span>');
       return;
     }
 
@@ -937,15 +871,17 @@ const updatePreview = async () => {
       svg.style.height = 'auto';
       svg.style.display = 'block';
       svg.style.margin = '0 auto';
-      renderedFormula.value = svg.outerHTML;
+      renderedFormula.value = sanitizeHtml(svg.outerHTML);
     } else {
       logger.warn('未获取到SVG元素');
-      renderedFormula.value = '<span style="color: red;">渲染失败</span>';
+      renderedFormula.value = sanitizeHtml('<span style="color: red;">渲染失败</span>');
     }
   } catch (error) {
     logger.error('LaTeX预览失败:', error);
     const errorMessage = error instanceof Error ? error.message : '未知错误';
-    renderedFormula.value = `<span style="color: red;">预览失败: ${errorMessage}</span>`;
+    renderedFormula.value = sanitizeHtml(
+      `<span style="color: red;">预览失败: ${escapeHtml(errorMessage)}</span>`
+    );
   }
 };
 
@@ -1061,7 +997,7 @@ const renderFormulaExamples = async () => {
         svg.style.verticalAlign = 'middle';
         svg.setAttribute('shape-rendering', 'geometricPrecision');
         svg.setAttribute('text-rendering', 'optimizeLegibility');
-        example.display = svg.outerHTML;
+        example.display = sanitizeHtml(svg.outerHTML);
       }
     } catch (error) {
       logger.warn(`公式示例 ${example.latex} 渲染失败`, error);

@@ -447,7 +447,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from '../../composables/useI18n';
 import { VueMathjaxEditor } from 'vue-mathjax-beautiful';
 
@@ -622,7 +622,8 @@ const generatedCode = computed(() => {
   
   // 启用的工具（如果不是默认全部启用）
   const defaultTools = ['bold', 'italic', 'underline', 'strikethrough', 'formula', 'image', 'clear'];
-  if (JSON.stringify(config.value.enabledTools.sort()) !== JSON.stringify(defaultTools.sort())) {
+  const enabledTools = [...config.value.enabledTools].sort();
+  if (JSON.stringify(enabledTools) !== JSON.stringify([...defaultTools].sort())) {
     props.push(`  :enabled-tools="['${config.value.enabledTools.join("', '")}']"`);
   }
   

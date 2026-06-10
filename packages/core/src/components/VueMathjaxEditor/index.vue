@@ -215,6 +215,7 @@ import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import VueMathjaxBeautiful from '../VueMathjaxBeautiful/index.vue';
 import { convertLatexToSvg, extractLatexFromSvg, initMathJax } from '../../utils/latex';
 import { useI18n } from '../../composables/useI18n';
+import { escapeHtml, sanitizeHtml } from '../../utils/sanitizeHtml';
 
 interface Props {
   // 基础内容控制
@@ -371,6 +372,7 @@ const uploadLoading = ref(false);
 const activeFormats = ref(new Set<string>());
 const autoSaveTimer = ref<number | null>(null);
 const lastSavedContent = ref('');
+const objectUrls = new Set<string>();
 
 // 组件内部主题状态（独立于外部传入的theme）
 const internalTheme = ref(props.theme || 'light');
@@ -482,7 +484,7 @@ watch(
     if (newVal !== content.value && editorRef.value) {
       content.value = newVal || '';
       const htmlContent = await convertFromStandardSyntax(newVal || '');
-      editorRef.value.innerHTML = htmlContent;
+      editorRef.value.innerHTML = sanitizeHtml(htmlContent);
       updateStats();
       await nextTick();
       setupFormulaClickEvents();
@@ -528,10 +530,9 @@ const convertFromStandardSyntax = async (content: string): Promise<string> => {
     .replace(/\*(.*?)\*/g, '<em>$1</em>') // 斜体
     .replace(/__(.*?)__/g, '<u>$1</u>') // 下划线
     .replace(/~~(.*?)~~/g, '<s>$1</s>') // 删除线
-    .replace(
-      /!\[([^\]]*)\]\(([^)]*)\)/g,
-      '<img src="$2" alt="$1" style="max-width: 100%; height: auto; margin: 8px 0; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">'
-    )
+    .replace(/!\[([^\]]*)\]\(([^)]*)\)/g, (_match, alt, src) => {
+      return `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" style="max-width: 100%; height: auto; margin: 8px 0; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">`;
+    })
     .replace(/\n/g, '<br>'); // 换行
 
   // 转换LaTeX公式为SVG
@@ -541,7 +542,7 @@ const convertFromStandardSyntax = async (content: string): Promise<string> => {
     console.warn('LaTeX conversion failed:', error);
   }
 
-  return htmlContent;
+  return sanitizeHtml(htmlContent);
 };
 
 // 将HTML内容转换为标准表达式语法
@@ -567,7 +568,7 @@ const convertToStandardSyntax = (editorElement: HTMLElement) => {
     }
   });
 
-  return clonedElement.innerHTML;
+  return sanitizeHtml(clonedElement.innerHTML);
 };
 
 // 格式检查 - 检查当前选区或光标位置的格式状态
@@ -662,7 +663,7 @@ const handleBeforeInput = (event: Event) => {
   if (activeFormats.value.size > 0 && inputEvent.inputType === 'insertText' && inputEvent.data) {
     event.preventDefault();
     
-    let wrappedText = inputEvent.data;
+    let wrappedText = escapeHtml(inputEvent.data);
     const activeFormatsArray = Array.from(activeFormats.value);
     
     // 构建样式对象
@@ -709,7 +710,7 @@ const handleBeforeInput = (event: Event) => {
       range.deleteContents();
       
       const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = wrappedText;
+      tempDiv.innerHTML = sanitizeHtml(wrappedText);
       const fragment = document.createDocumentFragment();
       
       while (tempDiv.firstChild) {
@@ -763,7 +764,7 @@ const insertFormula = async (latex: string) => {
     }
 
     // 转换LaTeX为SVG
-    const svgHtml = await convertLatexToSvg(`$$${latex}$$`);
+    const svgHtml = sanitizeHtml(await convertLatexToSvg(`$$${latex}$$`));
 
     // 确保编辑器获得焦点
     editorRef.value.focus();
@@ -792,7 +793,7 @@ const insertFormula = async (latex: string) => {
     // 如果SVG转换失败，作为备用方案插入LaTeX文本
     try {
       editorRef.value.focus();
-      document.execCommand('insertHTML', false, `$$${latex}$$`);
+      document.execCommand('insertText', false, `$$${latex}$$`);
       handleInput();
     } catch (fallbackError) {
       console.error('备用插入也失败:', fallbackError);
@@ -863,9 +864,12 @@ const handleImageUpload = async (event: Event) => {
   try {
     // 创建本地预览URL
     const imageUrl = URL.createObjectURL(file);
+    objectUrls.add(imageUrl);
 
     // 插入图片
-    const imgHtml = `<img src="${imageUrl}" alt="${file.name}" style="max-width: 100%; height: auto; margin: 8px 0; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />`;
+    const imgHtml = sanitizeHtml(
+      `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(file.name)}" style="max-width: 100%; height: auto; margin: 8px 0; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />`
+    );
 
     editorRef.value.focus();
     document.execCommand('insertHTML', false, imgHtml);
@@ -998,6 +1002,7 @@ const clearSelectionFormat = async (range: Range) => {
       newContainer.innerHTML = newContainer.innerHTML.replace(imagePlaceholder, element.outerHTML);
     }
   });
+  newContainer.innerHTML = sanitizeHtml(newContainer.innerHTML);
   
   // 创建文档片段
   const fragment = document.createDocumentFragment();
@@ -1213,7 +1218,7 @@ onMounted(async () => {
     // 设置初始内容
     if (props.modelValue && editorRef.value) {
       const htmlContent = await convertFromStandardSyntax(props.modelValue);
-      editorRef.value.innerHTML = htmlContent;
+      editorRef.value.innerHTML = sanitizeHtml(htmlContent);
       await nextTick();
       setupFormulaClickEvents();
     }
@@ -1239,6 +1244,8 @@ onUnmounted(() => {
   if (autoSaveTimer.value) {
     window.clearTimeout(autoSaveTimer.value);
   }
+  objectUrls.forEach((url) => URL.revokeObjectURL(url));
+  objectUrls.clear();
 });
 </script>
 

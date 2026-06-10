@@ -45,11 +45,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useI18n } from '../composables/useI18n'
 import { initMathJax } from 'vue-mathjax-beautiful'
 import DemoSection from '../components/DemoSection/index.vue'
-
-const { t } = useI18n()
 
 // 主题状态
 const isDark = ref(false)

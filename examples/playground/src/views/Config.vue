@@ -41,11 +41,8 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useI18n } from '../composables/useI18n'
 import { initMathJax } from 'vue-mathjax-beautiful'
 import ConfigSection from '../components/ConfigSection/index.vue'
-
-const { t } = useI18n()
 
 onMounted(async () => {
   try {

@@ -850,10 +850,10 @@ const scrollToSection = (sectionId: string) => {
 }
 
 // 节流函数
-const throttle = (func: Function, delay: number) => {
-  let timeoutId: NodeJS.Timeout | null = null
+const throttle = <Args extends unknown[]>(func: (...args: Args) => void, delay: number) => {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
   let lastExecTime = 0
-  return (...args: any[]) => {
+  return (...args: Args) => {
     const currentTime = Date.now()
     
     if (currentTime - lastExecTime > delay) {

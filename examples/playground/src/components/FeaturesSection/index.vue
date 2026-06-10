@@ -68,7 +68,6 @@
 import { computed } from 'vue';
 import {
   Calculator as CalculatorIcon,
-  Edit3 as Edit3Icon,
   Eye as EyeIcon,
   Palette as PaletteIcon,
   Smartphone as SmartphoneIcon,

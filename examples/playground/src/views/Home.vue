@@ -390,7 +390,7 @@ const renderExamples = async () => {
 
       const svgHtml = await convertLatexToSvg(`$${example.latex}$`)
       example.rendered = svgHtml
-    } catch (error) {
+    } catch {
       example.rendered = `<span class="text-sm font-mono text-red-500">${example.latex}</span>`
     }
 
@@ -452,7 +452,7 @@ onMounted(async () => {
         example.rendered = `<span class="text-sm font-mono text-red-500">${t('loadingFailed')}</span>`
       })
     }
-  } catch (error) {
+  } catch {
     examples.value.forEach((example) => {
       example.rendered = `<span class="text-sm font-mono text-red-500">${t('initializationFailed')}</span>`
     })

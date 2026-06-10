@@ -13,6 +13,7 @@
  * 10. \begin{displaymath}...\end{displaymath} - 显示数学环境
  */
 
+import type { MathJaxConfig, MathJaxInstance } from '../types';
 import { logger } from './logger';
 
 // 数学块会话存储（替代原来的动态属性）
@@ -2327,90 +2328,111 @@ export function preprocessCodeBlocks(content: string): string {
   return result;
 }
 
+const DEFAULT_MATHJAX_CONFIG: MathJaxConfig = {
+  tex: {
+    inlineMath: [
+      ['$', '$'],
+      ['\\(', '\\)'],
+    ],
+    displayMath: [
+      ['$$', '$$'],
+      ['\\[', '\\]'],
+    ],
+  },
+  svg: {
+    fontCache: 'global',
+    displayAlign: 'left',
+    scale: 1.0,
+    mtextInheritFont: true,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    displayIndent: '0',
+  },
+  chtml: {
+    scale: 1.0,
+    mtextInheritFont: true,
+    merrorInheritFont: true,
+  },
+};
+
+const MATHJAX_SCRIPT_ID = 'vue-mathjax-beautiful-mathjax-script';
+const MATHJAX_SCRIPT_ATTR = 'data-vue-mathjax-beautiful';
+
+let mathJaxInitPromise: Promise<void> | null = null;
+let mathJaxScriptLoadPromise: Promise<void> | null = null;
+
+function isMathJaxAvailable(): boolean {
+  return typeof window !== 'undefined' && !!window.MathJax?.tex2svgPromise;
+}
+
+function mergeMathJaxConfig(
+  ...configs: Array<Partial<MathJaxInstance> | MathJaxConfig | undefined>
+): Partial<MathJaxInstance> {
+  const merged: Partial<MathJaxInstance> = {};
+
+  configs.forEach((config) => {
+    if (!config) return;
+
+    Object.assign(merged, config);
+    merged.tex = { ...merged.tex, ...config.tex };
+    merged.svg = { ...merged.svg, ...config.svg };
+    merged.chtml = { ...merged.chtml, ...config.chtml };
+    merged.options = { ...merged.options, ...config.options };
+  });
+
+  return merged;
+}
+
+function ensureMathJaxConfig(config?: MathJaxConfig): void {
+  if (isMathJaxAvailable()) return;
+
+  window.MathJax = mergeMathJaxConfig(
+    DEFAULT_MATHJAX_CONFIG,
+    window.MathJax,
+    config
+  );
+}
+
+async function waitForMathJaxReady(timeoutMs = 10000): Promise<void> {
+  const startedAt = Date.now();
+
+  while (!isMathJaxAvailable() && Date.now() - startedAt < timeoutMs) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
+  if (!isMathJaxAvailable()) {
+    logger.error('MathJax initialization failed', {
+      exists: !!window.MathJax,
+      tex2svgPromise: !!window.MathJax?.tex2svgPromise,
+      startup: !!window.MathJax?.startup,
+      keys: window.MathJax ? Object.keys(window.MathJax) : [],
+    });
+    throw new Error('MathJax tex2svgPromise not available after initialization');
+  }
+}
+
 
 /**
  * 初始化并加载MathJax
  * @param config - MathJax配置
  * @returns Promise
  */
-export async function initMathJax(config?: import('../types/global').MathJaxConfig): Promise<void> {
+export async function initMathJax(config?: MathJaxConfig): Promise<void> {
   if (typeof window === 'undefined') return;
+  if (isMathJaxAvailable()) return;
 
-  // 先移除所有旧的MathJax脚本，避免冲突
-  document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
-  // 彻底清理全局MathJax对象，避免只读属性报错
-  if (window.MathJax) delete window.MathJax;
-
-  // 如果MathJax已经加载并且可用，直接返回
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if ((window.MathJax as any)?.tex2svgPromise) {
-    return;
+  if (!mathJaxInitPromise) {
+    ensureMathJaxConfig(config);
+    mathJaxInitPromise = (async () => {
+      await loadMathJax();
+      await waitForMathJaxReady();
+    })();
   }
 
-  // 配置MathJax - 必须在加载脚本之前设置
-  if (!window.MathJax) {
-    const defaultConfig: import('../types/global').MathJaxConfig = {
-      tex: {
-        inlineMath: [
-          ['$', '$'],
-          ['\\(', '\\)'],
-        ],
-        displayMath: [
-          // start/end delimiter pairs for display math
-          ['$$', '$$'],
-          ['\\[', '\\]'],
-        ],
-      },
-      svg: {
-        fontCache: 'global',
-        displayAlign: 'left',
-        scale: 1.0,
-        mtextInheritFont: true,
-        merrorInheritFont: true,
-        mathmlSpacing: false,
-        displayIndent: '0',
-      },
-      chtml: {
-        scale: 1.0,
-        mtextInheritFont: true,
-        merrorInheritFont: true
-      }
-    };
-
-    // 合并用户配置
-    window.MathJax = config 
-      ? { ...defaultConfig, ...config } as Partial<import('../types/global').MathJaxInstance>
-      : defaultConfig as Partial<import('../types/global').MathJaxInstance>;
-  }
-
-  // 加载MathJax脚本
   try {
-    await loadMathJax();
-
-    // 等待MathJax完全初始化
-    let retries = 0;
-    const maxRetries = 100; // 最多等待10秒
-
-    while (!window.MathJax?.tex2svgPromise && retries < maxRetries) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      retries++;
-    }
-
-    if (!window.MathJax?.tex2svgPromise) {
-      // 失败时移除所有相关脚本，避免缓存和冲突
-      document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
-      logger.error('MathJax initialization failed', {
-        exists: !!window.MathJax,
-        tex2svgPromise: !!window.MathJax?.tex2svgPromise,
-        startup: !!window.MathJax?.startup,
-        keys: window.MathJax ? Object.keys(window.MathJax) : [],
-      });
-      throw new Error('MathJax tex2svgPromise not available after initialization');
-    }
-          
+    await mathJaxInitPromise;
   } catch (error) {
-    // 失败时移除所有相关脚本，避免缓存和冲突
-    document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
+    mathJaxInitPromise = null;
     logger.error('Failed to initialize MathJax', error);
     throw error;
   }
@@ -2435,10 +2457,17 @@ const MATHJAX_CDNS = [
  */
 function loadMathJaxFromUrl(url: string): Promise<void> {
   return new Promise((resolve, reject) => {
+    const existingScript = document.querySelector(`script[src="${url}"]`);
+    if (existingScript) {
+      resolve();
+      return;
+    }
+
     const script = document.createElement('script');
     script.src = url;
     script.async = true;
-    script.id = 'mathjax-script';
+    script.id = MATHJAX_SCRIPT_ID;
+    script.setAttribute(MATHJAX_SCRIPT_ATTR, 'true');
 
     const timeout = setTimeout(() => {
       logger.warn(`MathJax loading timeout for: ${url}`);
@@ -2460,30 +2489,39 @@ function loadMathJaxFromUrl(url: string): Promise<void> {
   });
 }
 
+function hasExistingMathJaxScript(): boolean {
+  return !!document.querySelector(
+    `script[${MATHJAX_SCRIPT_ATTR}="true"], script[src*="mathjax"]`
+  );
+}
+
+function removeOwnedMathJaxScript(): void {
+  document
+    .querySelectorAll(`script[${MATHJAX_SCRIPT_ATTR}="true"]`)
+    .forEach((script) => script.remove());
+}
+
 /**
  * 加载MathJax脚本（带备用CDN）
  * @param urls - MathJax脚本URL数组
  * @returns Promise
  */
-export async function loadMathJax(
-  urls: string[] = MATHJAX_LOCAL_URLS
-): Promise<void> {
+export async function loadMathJax(urls: string | string[] = MATHJAX_LOCAL_URLS): Promise<void> {
   if (typeof window === 'undefined') {
     throw new Error('MathJax can only be loaded in browser environment');
   }
 
-  // 加载前移除所有旧的MathJax脚本，避免冲突
-  document.querySelectorAll('script[src*="mathjax"]').forEach(s => s.remove());
-  // 彻底清理全局MathJax对象，避免只读属性报错
-  if (window.MathJax) delete window.MathJax;
+  if (isMathJaxAvailable()) return;
+  ensureMathJaxConfig();
 
-  // 检查是否已经有MathJax脚本
-  const existingScript = document.querySelector(`script[src*="mathjax"]`);
-  if (existingScript) {
+  if (mathJaxScriptLoadPromise) {
+    await mathJaxScriptLoadPromise;
     return;
   }
 
-  // 跳过polyfill加载，现代浏览器通常不需要
+  if (hasExistingMathJaxScript()) {
+    return;
+  }
 
   // 如果只传入了一个字符串，转换为数组
   const urlList = Array.isArray(urls) ? urls : [urls];
@@ -2498,21 +2536,25 @@ export async function loadMathJax(
   // 去重
   const uniqueUrls = [...new Set(allUrls)];
 
-  // 依次尝试每个CDN
-  for (const url of uniqueUrls) {
-    try {
-      await loadMathJaxFromUrl(url);
-      return;
-    } catch (error) {
-      logger.warn(`Failed to load from: ${url}`, error);
-      // 移除失败的脚本标签
-      const failedScript = document.getElementById('mathjax-script');
-      if (failedScript) {
-        failedScript.remove();
+  mathJaxScriptLoadPromise = (async () => {
+    // 依次尝试每个CDN
+    for (const url of uniqueUrls) {
+      try {
+        await loadMathJaxFromUrl(url);
+        return;
+      } catch (error) {
+        logger.warn(`Failed to load from: ${url}`, error);
+        removeOwnedMathJaxScript();
       }
-      continue;
     }
-  }
 
-  throw new Error('Failed to load MathJax from all available CDNs');
+    throw new Error('Failed to load MathJax from all available CDNs');
+  })();
+
+  try {
+    await mathJaxScriptLoadPromise;
+  } catch (error) {
+    mathJaxScriptLoadPromise = null;
+    throw error;
+  }
 }

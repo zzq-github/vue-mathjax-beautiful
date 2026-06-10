@@ -1,13 +1,15 @@
 {
-  "name": "vue-mathjax-beautiful",
+  "name": "vue-mathjax-beautiful-monorepo",
   "version": "1.3.4",
   "description": "🚀 精简、高效的 Vue 3 数学公式编辑器组件库",
-  "private": false,
+  "private": true,
   "type": "module",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "pnpm --filter playground dev",
     "build": "pnpm --filter vue-mathjax-beautiful build",
     "build:all": "pnpm -r build",
+    "type-check": "pnpm -r exec vue-tsc",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "lint": "eslint . --fix",

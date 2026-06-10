@@ -335,7 +335,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
 import { Calculator as CalculatorIcon, Globe as GlobeIcon } from 'lucide-vue-next';
 import { useI18n } from '../../composables/useI18n';
 

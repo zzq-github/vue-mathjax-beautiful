@@ -1,11 +1,12 @@
 {
   "name": "vue-mathjax-beautiful",
-  "version": "1.3.4",
+  "version": "1.4.0",
   "description": "🚀 精简、高效的 Vue 3 数学公式编辑器组件库",
   "type": "module",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "main": "./dist/vue-mathjax-beautiful.umd",
   "module": "./dist/vue-mathjax-beautiful.js",
@@ -16,11 +17,13 @@
       "require": "./dist/vue-mathjax-beautiful.umd",
       "types": "./dist/index.d.ts"
     },
+    "./style.css": "./dist/style.css",
     "./dist/style.css": "./dist/style.css"
   },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
+    "type-check": "vue-tsc",
     "preview": "vite preview",
     "prepublishOnly": "npm run build"
   },
@@ -52,6 +55,7 @@
     "vue": "^3.3.0"
   },
   "dependencies": {
+    "dompurify": "^3.4.8",
     "mathjax": "^3.2.2"
   },
   "devDependencies": {

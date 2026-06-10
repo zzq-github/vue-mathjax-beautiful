@@ -1,19 +1,10 @@
-// MathJax配置接口
-export interface MathJaxConfig {
-  loader?: {
-    load?: string[];
-  };
-  tex?: {
-    inlineMath?: string[][];
-    displayMath?: string[][];
-    packages?: string[];
-  };
-  svg?: {
-    fontCache?: string;
-  };
-}
+export type {
+  MathJaxConfig,
+  MathJaxInstance,
+  MathJaxRenderOptions,
+  MathJaxStartup,
+} from './global';
 
-// 富文本编辑器属性接口
 export interface RichTextEditorProps {
   modelValue?: string;
   placeholder?: string;
@@ -22,27 +13,40 @@ export interface RichTextEditorProps {
   readonly?: boolean;
 }
 
-// 公式编辑器弹窗属性接口
 export interface FormulaEditorDialogProps {
   modelValue: boolean;
   existingLatex?: string;
 }
 
-// VueMathjaxBeautiful组件属性接口
+export interface VueMathjaxBeautifulThemeColors {
+  primary?: string;
+  secondary?: string;
+  accent?: string;
+  button?: string;
+  buttonHover?: string;
+  buttonText?: string;
+  dialogBackground?: string;
+  inputBackground?: string;
+  inputBorder?: string;
+}
+
+export interface VueMathjaxBeautifulThemeConfig {
+  light?: VueMathjaxBeautifulThemeColors;
+  dark?: VueMathjaxBeautifulThemeColors;
+}
+
 export interface VueMathjaxBeautifulProps {
-  // 基础控制
   modelValue?: boolean;
   existingLatex?: string;
   inlineMode?: boolean;
-  
-  // 主题和样式
-  theme?: 'light' | 'dark' | string;
+
+  theme?: 'light' | 'dark';
+  themeConfig?: VueMathjaxBeautifulThemeConfig;
   width?: string;
   height?: string;
   scale?: number;
   fontSize?: string;
-  
-  // 功能控制
+
   readonly?: boolean;
   showSymbols?: boolean;
   showPreview?: boolean;
@@ -51,30 +55,24 @@ export interface VueMathjaxBeautifulProps {
   showLanguageToggle?: boolean;
   showFormulaExamples?: boolean;
   autoFocus?: boolean;
-  
-  // 输入控制
+
   placeholder?: string;
   maxLength?: number;
   rows?: number;
-  
-  // 符号面板控制
-  enabledCategories?: Array<'basic' | 'greek' | 'advanced'>;
-  defaultCategory?: 'basic' | 'greek' | 'advanced';
-  
-  // 按钮文本自定义
+
+  enabledCategories?: string[];
+  defaultCategory?: string;
+
   insertButtonText?: string;
   cancelButtonText?: string;
   clearButtonText?: string;
-  
-  // 标题自定义
+
   title?: string;
   subtitle?: string;
-  
-  // 公式包裹控制
+
   wrapFormula?: boolean;
 }
 
-// VueMathjaxBeautiful组件事件接口
 export interface VueMathjaxBeautifulEvents {
   'update:modelValue': (value: boolean) => void;
   insert: (latex: string) => void;
@@ -84,7 +82,6 @@ export interface VueMathjaxBeautifulEvents {
   themeChange: (theme: string) => void;
 }
 
-// 编辑器事件接口
 export interface EditorEvents {
   'update:modelValue': (value: string | boolean) => void;
   change: (value: string) => void;
@@ -93,68 +90,53 @@ export interface EditorEvents {
   insert: (latex: string) => void;
 }
 
-// VueMathjaxEditor 组件属性接口
 export interface VueMathjaxEditorProps {
-  // 基础内容控制
   modelValue?: string;
   placeholder?: string;
-  
-  // 尺寸和样式
+
   minHeight?: string;
   maxHeight?: string;
   width?: string;
   borderRadius?: string;
-  
-  // 工具栏配置
+
   showToolbar?: boolean;
   toolbarPosition?: 'top' | 'bottom';
   enabledTools?: string[];
-  
-  // 格式功能控制
+
   enableBold?: boolean;
   enableItalic?: boolean;
   enableUnderline?: boolean;
   enableStrikethrough?: boolean;
-  
-  // 插入功能控制
+
   enableFormula?: boolean;
   enableImage?: boolean;
   enableClearFormat?: boolean;
   enableThemeToggle?: boolean;
-  
-  // 编辑器行为配置
+
   readonly?: boolean;
   autoFocus?: boolean;
   spellcheck?: boolean;
   maxLength?: number;
-  
-  // 主题和外观
+
   theme?: 'light' | 'dark';
-  
-  // 统计显示
+
   showCharCount?: boolean;
   showWordCount?: boolean;
-  
-  // 功能增强
+
   enableShortcuts?: boolean;
   enableAutoSave?: boolean;
   autoSaveInterval?: number;
-  
-  // 公式编辑器配置
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formulaEditorProps?: Record<string, any>;
-  
-  // 上传配置
+
+  formulaEditorProps?: Record<string, unknown>;
+
   maxImageSize?: number;
   allowedImageTypes?: string[];
-  
-  // 自定义样式类
+
   customClass?: string;
   toolbarClass?: string;
   editorClass?: string;
 }
 
-// VueMathjaxEditor 组件事件接口
 export interface VueMathjaxEditorEvents {
   'update:modelValue': (value: string) => void;
   change: (value: string) => void;

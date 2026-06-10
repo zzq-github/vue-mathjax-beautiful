@@ -30,7 +30,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useI18n } from './composables/useI18n';
 
 // 导入组件
 import AppHeader from './components/AppHeader/index.vue';
@@ -38,7 +37,6 @@ import AppFooter from './components/AppFooter/index.vue';
 import BackToTop from './components/BackToTop/index.vue';
 
 // 国际化功能
-const { t } = useI18n();
 
 // 响应式数据
 const showBackToTop = ref(false);
