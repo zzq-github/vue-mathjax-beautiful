@@ -34,7 +34,8 @@
 
     <!-- 配置内容 -->
     <div class="relative z-10 container mx-auto px-4 py-8">
-      <ConfigSection />
+      <ConfigSection v-if="activeFramework === 'vue'" />
+      <ReactConfigSection v-else />
     </div>
   </div>
 </template>
@@ -43,6 +44,10 @@
 import { onMounted } from 'vue'
 import { initMathJax } from 'vue-mathjax-beautiful'
 import ConfigSection from '../components/ConfigSection/index.vue'
+import ReactConfigSection from '../components/ReactConfigSection/index.vue'
+import { useFramework } from '../composables/useFramework'
+
+const { activeFramework } = useFramework()
 
 onMounted(async () => {
   try {

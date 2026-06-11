@@ -287,9 +287,10 @@ const { t } = useI18n();
 // 技术栈标签
 const techStack = [
   'Vue 3',
+  'React',
   'TypeScript', 
   'MathJax',
   'LaTeX',
   'Tailwind CSS'
 ];
-</script> 
+</script>

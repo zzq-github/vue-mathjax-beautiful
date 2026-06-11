@@ -56,35 +56,6 @@
 
     <!-- 演示内容 -->
     <div class="relative z-10 container mx-auto px-4 py-8">
-      <div
-        class="mx-auto mb-8 flex max-w-xl rounded-xl border border-gray-200 bg-white/80 p-1 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-800/80"
-      >
-        <button
-          type="button"
-          class="flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition"
-          :class="
-            activeFramework === 'vue'
-              ? 'bg-blue-600 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-          "
-          @click="activeFramework = 'vue'"
-        >
-          Vue
-        </button>
-        <button
-          type="button"
-          class="flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition"
-          :class="
-            activeFramework === 'react'
-              ? 'bg-emerald-600 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-          "
-          @click="activeFramework = 'react'"
-        >
-          React
-        </button>
-      </div>
-
       <DemoSection
         v-if="activeFramework === 'vue'"
         :is-dark="isDark"
@@ -102,10 +73,11 @@ import { ref, onMounted } from 'vue';
 import { initMathJax } from 'vue-mathjax-beautiful';
 import DemoSection from '../components/DemoSection/index.vue';
 import ReactFormulaDemo from '../components/ReactFormulaDemo/index.vue';
+import { useFramework } from '../composables/useFramework';
 
 // 主题状态
 const isDark = ref(false);
-const activeFramework = ref<'vue' | 'react'>('vue');
+const { activeFramework } = useFramework();
 
 // 演示配置
 const demoConfig = ref({

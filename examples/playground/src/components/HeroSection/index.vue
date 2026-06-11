@@ -139,13 +139,14 @@ import { Zap as ZapIcon, Github as GithubIcon } from 'lucide-vue-next';
 import { useI18n } from '../../composables/useI18n';
 
 // 国际化功能
-const { t, currentLocale } = useI18n();
+const { t, tm } = useI18n();
 
 // 添加技术栈数组的计算属性
 const heroTechnologies = computed(() => {
-  const zhTech = ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX'];
-  const enTech = ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX'];
-  return currentLocale.value.code === 'zh-CN' ? zhTech : enTech;
+  const technologies = tm('hero.technologies');
+  return Array.isArray(technologies)
+    ? technologies.filter((tech): tech is string => typeof tech === 'string')
+    : [];
 });
 
 const handleViewSource = () => {
@@ -216,6 +217,7 @@ const handleViewSource = () => {
 .tech-delay-1 { animation-delay: 0.9s; }
 .tech-delay-2 { animation-delay: 1.0s; }
 .tech-delay-3 { animation-delay: 1.1s; }
+.tech-delay-4 { animation-delay: 1.2s; }
 
 /* 按钮悬停光晕效果 */
 .group:hover .absolute.blur {
@@ -232,4 +234,4 @@ const handleViewSource = () => {
     transform: scale(1);
   }
 }
-</style> 
+</style>

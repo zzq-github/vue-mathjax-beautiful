@@ -10,49 +10,49 @@ const router = createRouter({
       path: '/',
       name: 'Home',
       component: () => import('../views/Home.vue'),
-      meta: { title: 'Vue MathJax Beautiful' }
+      meta: { title: 'MathJax Beautiful' }
     },
     {
       path: '/demo',
       name: 'Demo',
       component: () => import('../views/Demo.vue'),
-      meta: { title: 'Demo - Vue MathJax Beautiful' }
+      meta: { title: 'Demo - MathJax Beautiful' }
     },
     {
       path: '/config',
       name: 'Config',
       component: () => import('../views/Config.vue'),
-      meta: { title: 'Configuration - Vue MathJax Beautiful' }
+      meta: { title: 'Configuration - MathJax Beautiful' }
     },
     {
       path: '/editor-config',
       name: 'EditorConfig',
       component: () => import('../views/EditorConfig.vue'),
-      meta: { title: 'Editor Configuration - Vue MathJax Beautiful' }
+      meta: { title: 'Editor Configuration - MathJax Beautiful' }
     },
     {
       path: '/docs',
       name: 'Docs',
       component: () => import('../views/Docs.vue'),
-      meta: { title: 'Documentation - Vue MathJax Beautiful' }
+      meta: { title: 'Documentation - MathJax Beautiful' }
     },
     {
       path: '/updates',
       name: 'Updates',
       component: () => import('../views/Updates.vue'),
-      meta: { title: 'Updates - Vue MathJax Beautiful' }
+      meta: { title: 'Updates - MathJax Beautiful' }
     },
     {
       path: '/privacy',
       name: 'Privacy',
       component: () => import('../views/Privacy.vue'),
-      meta: { title: 'Privacy Policy - Vue MathJax Beautiful' }
+      meta: { title: 'Privacy Policy - MathJax Beautiful' }
     },
     {
       path: '/terms',
       name: 'Terms',
       component: () => import('../views/Terms.vue'),
-      meta: { title: 'Terms of Service - Vue MathJax Beautiful' }
+      meta: { title: 'Terms of Service - MathJax Beautiful' }
     }
   ],
   scrollBehavior(to, from, savedPosition) {
@@ -72,4 +72,4 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-export default router 
+export default router

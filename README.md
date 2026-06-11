@@ -1,12 +1,12 @@
 <div align="center">
-  <img src="./title.svg" alt="Vue MathJax Beautiful" />
+  <img src="./title.svg" alt="MathJax Beautiful" />
 </div>
 
 <div align="center">
 
-# Vue MathJax Beautiful
+# MathJax Beautiful
 
-一个基于 Vue 3 和 MathJax 的强大数学公式编辑器组件库，提供专业的数学公式编辑功能。
+面向 Vue 3 与 React 的数学公式编辑器组件库，基于 MathJax 提供专业公式编辑、符号面板、实时预览和 LaTeX 工具能力。
 
 </div>
 
@@ -61,7 +61,7 @@
 - 🧮 **专业公式编辑** - 基于 MathJax 引擎，支持完整的 LaTeX 语法
 - 🎨 **丰富符号面板** - 240+ 数学符号和 38 个常用公式模板
 - 👀 **实时预览** - 所见即所得的公式编辑体验
-- 🚀 **Vue 3 + TypeScript** - 现代化的技术栈
+- 🚀 **Vue 3 / React + TypeScript** - 双框架组件包与共享工具能力
 - 📱 **响应式设计** - 完美适配桌面端和移动端
 - 🔧 **易于集成** - 简单的 API 设计，轻松集成到现有项目
 - 🎨 **主题系统** - 支持亮色/暗色/自动主题，可自定义主题
@@ -70,7 +70,7 @@
 
 ## 📦 安装
 
-### Vue 版本
+### Vue 包
 
 使用 npm：
 
@@ -90,9 +90,9 @@ yarn add vue-mathjax-beautiful
 pnpm add vue-mathjax-beautiful
 ```
 
-### React 版本（公式组件 MVP）
+### React 包（公式组件）
 
-React 版本是独立包，只提供公式组件，不包含富文本编辑器：
+React 包是独立包，提供公式编辑组件；富文本编辑器能力目前由 Vue 包提供：
 
 ```bash
 npm install react-mathjax-beautiful
@@ -104,7 +104,7 @@ pnpm add react-mathjax-beautiful
 
 ## 🚀 快速开始
 
-### React 公式组件 (MathjaxBeautiful)
+### React 公式编辑器 (MathjaxBeautiful)
 
 ```tsx
 import { useState } from 'react';
@@ -132,7 +132,7 @@ export function FormulaDemo() {
 }
 ```
 
-### 公式编辑器 (VueMathjaxBeautiful)
+### Vue 公式编辑器 (VueMathjaxBeautiful)
 
 专业的数学公式编辑器，提供丰富的符号面板和实时预览功能。
 
@@ -192,7 +192,7 @@ const handleInsert = (latex) => {
 </script>
 ```
 
-### 完整集成示例
+### Vue 完整集成示例
 
 ```vue
 <template>
@@ -299,16 +299,21 @@ const clearFormula = () => {
 ### 样式入口
 
 ```typescript
+// Vue 包
 import 'vue-mathjax-beautiful/style.css';
 // 兼容旧写法：import 'vue-mathjax-beautiful/dist/style.css'
+
+// React 包
+import 'react-mathjax-beautiful/style.css';
 ```
 
 ### 组件
 
-| 组件                  | 说明                                             |
-| --------------------- | ------------------------------------------------ |
-| `VueMathjaxBeautiful` | 公式编辑器，支持弹窗模式和内联模式               |
-| `VueMathjaxEditor`    | 富文本编辑器，内置公式插入、图片插入、格式工具栏 |
+| 框架  | 组件                  | 说明                                             |
+| ----- | --------------------- | ------------------------------------------------ |
+| Vue   | `VueMathjaxBeautiful` | 公式编辑器，支持弹窗模式和内联模式               |
+| Vue   | `VueMathjaxEditor`    | 富文本编辑器，内置公式插入、图片插入、格式工具栏 |
+| React | `MathjaxBeautiful`    | 公式编辑器，支持弹窗模式和内联模式               |
 
 ### VueMathjaxBeautiful Props
 
@@ -338,11 +343,43 @@ import 'vue-mathjax-beautiful/style.css';
 | `close`             | `()`               | 关闭或取消时触发    |
 | `theme-change`      | `(theme: string)`  | 主题切换时触发      |
 
+### React MathjaxBeautiful Props
+
+| 属性                                                             | 类型                  | 默认值                           | 说明                       |
+| ---------------------------------------------------------------- | --------------------- | -------------------------------- | -------------------------- |
+| `open` / `defaultOpen`                                           | `boolean`             | `false`                          | 控制弹窗显示/隐藏          |
+| `onOpenChange`                                                   | `(open) => void`      | -                                | 弹窗显示状态变化回调       |
+| `value` / `defaultValue` / `existingLatex`                       | `string`              | `''`                             | 受控/非受控 LaTeX 内容     |
+| `inline`                                                         | `boolean`             | `false`                          | 是否启用内联模式           |
+| `theme`                                                         | `'light' \| 'dark'`   | `'light'`                        | 初始主题                   |
+| `locale`                                                         | `'zh-CN' \| 'en-US'`  | `'zh-CN'`                        | 初始语言                   |
+| `readonly`                                                       | `boolean`             | `false`                          | 是否只读                   |
+| `showSymbols` / `showPreview`                                    | `boolean`             | `true`                           | 控制符号面板和实时预览     |
+| `showThemeToggle` / `showLanguageToggle` / `showClearButton`     | `boolean`             | `true`                           | 控制主题、语言和清空按钮   |
+| `showFormulaExamples`                                            | `boolean`             | `true`                           | 是否显示公式模板示例       |
+| `enabledCategories`                                              | `string[]`            | `['basic', 'greek', 'advanced']` | 启用的符号分类             |
+| `defaultCategory`                                                | `string`              | `'basic'`                        | 默认符号分类               |
+| `placeholder`, `maxLength`, `rows`                               | `string` / `number`   | 内置默认值                       | 输入区配置                 |
+| `title`, `subtitle`, `insertButtonText`, `cancelButtonText`      | `string`              | 内置文案                         | 标题和按钮文案             |
+| `clearButtonText`, `wrapFormula`, `className`, `dialogClassName` | 多类型                | 内置默认值                       | 清空文案、公式包裹和样式类 |
+
+### React MathjaxBeautiful Events
+
+| 回调名            | 参数                    | 说明                |
+| ----------------- | ----------------------- | ------------------- |
+| `onInsert`        | `(latex: string)`       | 插入/应用公式时触发 |
+| `onChange`        | `(latex: string)`       | 输入内容变化时触发  |
+| `onClear`         | `()`                    | 清空内容时触发      |
+| `onClose`         | `()`                    | 关闭或取消时触发    |
+| `onThemeChange`   | `(theme: 'light' \| 'dark')` | 主题切换时触发 |
+| `onLocaleChange`  | `(locale: 'zh-CN' \| 'en-US')` | 语言切换时触发 |
+
 ### 工具函数
 
-根路径导出 MathJax 加载、LaTeX 处理、安全清洗、缓存、主题、移动端和虚拟列表工具：
+Vue 包和 React 包都从根路径导出 MathJax 加载、LaTeX 处理和安全清洗工具。Vue 包额外包含缓存、主题、移动端和虚拟列表等组件内部工具：
 
 ```typescript
+// Vue 包
 import {
   initMathJax,
   loadMathJax,
@@ -355,6 +392,12 @@ import {
   sanitizeHtml,
   escapeHtml,
 } from 'vue-mathjax-beautiful';
+
+// React 包同样导出核心 MathJax / LaTeX / 安全工具
+import {
+  convertLatexToSvg as convertReactLatexToSvg,
+  sanitizeHtml as sanitizeReactHtml,
+} from 'react-mathjax-beautiful';
 ```
 
 组件内部写入 HTML/SVG 前会使用 DOMPurify 清洗；如果你在业务里手动使用 `v-html`，建议复用 `sanitizeHtml`。
@@ -371,6 +414,12 @@ import type {
   MathJaxConfig,
   MatchLatexResult,
 } from 'vue-mathjax-beautiful';
+
+import type {
+  MathjaxBeautifulProps,
+  MathjaxBeautifulTheme,
+  MathjaxBeautifulLocale,
+} from 'react-mathjax-beautiful';
 ```
 
 ## ⌨️ 快捷键
@@ -473,7 +522,9 @@ x - y = 1
 
 ## 🔧 高级配置
 
-### 自定义样式
+以下高级配置示例以 Vue 包为主；React 包可通过同名 props、`className`、`dialogClassName` 和 `onXxx` 回调实现对应能力。
+
+### Vue 自定义样式
 
 ```vue
 <template>
@@ -507,7 +558,7 @@ x - y = 1
 </style>
 ```
 
-### 事件处理和数据持久化
+### Vue 事件处理和数据持久化
 
 ```vue
 <script setup>
@@ -576,7 +627,7 @@ onMounted(() => {
 </script>
 ```
 
-### 与其他库集成
+### Vue 与其他库集成
 
 ```vue
 <script setup>
@@ -628,7 +679,7 @@ const showFormulaHelp = () => {
 
 A: 有多种方式：
 
-1. **使用公式编辑器**：使用 `VueMathjaxBeautiful` 组件，支持弹窗和内联模式
+1. **使用公式编辑器**：Vue 使用 `VueMathjaxBeautiful`，React 使用 `MathjaxBeautiful`，都支持弹窗和内联模式
 2. **直接输入 LaTeX**：在公式编辑器中直接输入 LaTeX 代码
 3. **使用符号面板**：公式编辑器提供 240+ 个符号和 38 个公式模板
 4. **复制粘贴**：从其他 LaTeX 编辑器复制公式代码
@@ -666,6 +717,7 @@ A: 可以通过以下方式自定义：
 1. **CSS 类名覆盖**：
 
 ```css
+/* Vue 包 */
 .vue-mathjax-beautiful .latex-input {
   font-family: 'Monaco', 'Consolas', monospace;
   font-size: 14px;
@@ -676,12 +728,27 @@ A: 可以通过以下方式自定义：
   border-radius: 8px;
   transition: all 0.3s ease;
 }
+
+/* React 包 */
+.rmb-editor .rmb-input {
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 14px;
+}
+
+.rmb-editor .rmb-symbol-button {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
 ```
 
-1. **Props 属性**：
+1. **Props 属性 / className**：
 
 ```vue
 <VueMathjaxBeautiful v-model="showDialog" class="custom-formula-editor" @insert="handleInsert" />
+```
+
+```tsx
+<MathjaxBeautiful open={open} onOpenChange={setOpen} className="custom-formula-editor" />
 ```
 
 1. **主题定制**：
@@ -769,35 +836,62 @@ const exportPDF = async () => {
 
 ### Q: 如何集成到现有项目中？
 
-A: 集成步骤：
+A: 根据项目框架安装对应包。
 
-1. **安装依赖**：
+1. **Vue 项目**：
 
 ```bash
 pnpm add vue-mathjax-beautiful
 ```
 
-1. **全局注册**（可选）：
+```vue
+<script setup>
+import { ref } from 'vue';
+import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful';
+import 'vue-mathjax-beautiful/style.css';
+
+const open = ref(false);
+const latex = ref('E = mc^2');
+</script>
+
+<template>
+  <VueMathjaxBeautiful v-model="open" :existing-latex="latex" @insert="latex = $event" />
+</template>
+```
+
+也可以全局注册：
 
 ```javascript
-// main.js
+// main.ts
 import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful';
 
 app.component('VueMathjaxBeautiful', VueMathjaxBeautiful);
 ```
 
-1. **按需引入**：
+1. **React 项目**：
 
-```vue
-<script setup>
-import { VueMathjaxBeautiful } from 'vue-mathjax-beautiful';
-</script>
+```bash
+pnpm add react-mathjax-beautiful
 ```
 
-1. **样式引入**：
+```tsx
+import { useState } from 'react';
+import { MathjaxBeautiful } from 'react-mathjax-beautiful';
+import 'react-mathjax-beautiful/style.css';
 
-```javascript
-import 'vue-mathjax-beautiful/style.css';
+export function FormulaEditor() {
+  const [open, setOpen] = useState(false);
+  const [latex, setLatex] = useState('E = mc^2');
+
+  return (
+    <MathjaxBeautiful
+      open={open}
+      onOpenChange={setOpen}
+      existingLatex={latex}
+      onInsert={setLatex}
+    />
+  );
+}
 ```
 
 ## 🛠️ 开发
@@ -817,10 +911,10 @@ pnpm install
 # 启动开发服务器
 pnpm dev
 
-# 启动 Vue 示例站
+# 启动示例站，顶部可切换 Vue / React
 pnpm dev:vue
 
-# 启动同一个示例站，在 /demo 中切换 React 面板
+# 启动同一个示例站并默认用于 React 演示
 pnpm dev:react
 
 # 构建组件库
@@ -870,7 +964,7 @@ vue-mathjax-beautiful/
 │       ├── package.json
 │       └── vite.config.ts
 ├── examples/
-│   └── playground/           # Vue 示例站，内置 Vue / React 切换演示
+│   └── playground/           # Vue 驱动的示例站，内置 Vue / React 切换演示
 │   │   ├── src/
 │   │   │   ├── components/   # 演示组件
 │   │   │   ├── react/        # React 公式组件 island
@@ -917,6 +1011,7 @@ vue-mathjax-beautiful/
 
 - [MathJax](https://www.mathjax.org/) - 强大的数学公式渲染引擎
 - [Vue.js](https://vuejs.org/) - 渐进式 JavaScript 框架
+- [React](https://react.dev/) - 用于构建用户界面的 JavaScript 库
 - [TypeScript](https://www.typescriptlang.org/) - JavaScript 的超集
 - [Vite](https://vitejs.dev/) - 现代化的构建工具
 
@@ -959,4 +1054,4 @@ vue-mathjax-beautiful/
 
 ---
 
-**Vue MathJax Beautiful** - 让数学公式编辑变得简单而美好！
+**MathJax Beautiful** - 让 Vue / React 数学公式编辑变得简单而美好！

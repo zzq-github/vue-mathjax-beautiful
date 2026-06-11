@@ -21,7 +21,7 @@
   <!-- Background decoration -->
   <rect width="600" height="120" fill="url(#titleGradient)" opacity="0.1" rx="10"/>
   
-  <!-- Vue logo inspired element -->
+  <!-- Framework mark -->
   <g transform="translate(20, 20)">
     <polygon points="20,10 35,40 5,40" fill="#4FC08D" opacity="0.8"/>
     <polygon points="20,10 30,30 10,30" fill="#41B883" opacity="0.9"/>
@@ -29,12 +29,12 @@
   
   <!-- Main title -->
   <text x="70" y="45" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="url(#titleGradient)">
-    Vue MathJax Beautiful
+    MathJax Beautiful
   </text>
-  
+
   <!-- Subtitle -->
   <text x="70" y="70" font-family="Arial, sans-serif" font-size="16" fill="#6B7280">
-    Professional Math Formula Editor for Vue 3
+    Formula Editor Components for Vue / React
   </text>
   
   <!-- Mathematical symbols decoration -->
@@ -61,4 +61,4 @@
   <circle cx="550" cy="25" r="3" fill="#F59E0B" opacity="0.6"/>
   <circle cx="560" cy="35" r="2" fill="#EF4444" opacity="0.6"/>
   <circle cx="570" cy="15" r="2.5" fill="#8B5CF6" opacity="0.6"/>
-</svg> 
+</svg>

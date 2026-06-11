@@ -12,6 +12,7 @@ export default {
     toggleTheme: '切换主题',
     openMenu: '打开菜单',
     language: '语言',
+    framework: '框架',
   },
 
   // 主题
@@ -30,17 +31,17 @@ export default {
 
   // 页面标题
   page: {
-    title: 'Vue MathJax Beautiful',
-    subtitle: '精美专业的数学公式编辑器',
+    title: 'MathJax Beautiful',
+    subtitle: 'Vue / React 数学公式编辑器',
   },
 
   // 英雄区域
   hero: {
-    badge: '专业数学公式编辑器',
-    title: 'Vue 数学公式',
+    badge: '跨框架数学公式编辑器',
+    title: 'Vue / React 数学公式',
     titleHighlight: '编辑器',
-    description: '专业的数学公式编辑器组件库，提供 240+ 符号面板、38 个公式模板，支持 LaTeX 语法',
-    technologies: ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX'],
+    description: '面向 Vue 和 React 的数学公式编辑器组件库，提供 240+ 符号面板、38 个公式模板，支持 LaTeX 语法',
+    technologies: ['Vue 3', 'React', 'TypeScript', 'MathJax', 'LaTeX'],
     getStarted: '开始使用',
     viewSource: '查看源码',
     scrollHint: '体验强大功能',
@@ -54,7 +55,7 @@ export default {
   // 首页内容
   home: {
     quickStart: {
-      description: '快速开始使用 Vue MathJax Beautiful，体验专业的数学公式编辑功能',
+      description: '快速开始使用 MathJax Beautiful，体验 Vue / React 的数学公式编辑能力',
       tryDemo: '在线演示',
       viewDocs: '查看文档',
       badge: '立即开始',
@@ -146,7 +147,7 @@ export default {
       },
       easyIntegration: {
         title: '易于集成',
-        description: '提供 Vue 3 组件，支持 TypeScript，易于集成到现有项目中',
+        description: '同时提供 Vue 3 与 React 组件，支持 TypeScript，易于集成到现有项目中',
       },
     },
   },
@@ -682,7 +683,7 @@ export default {
 
   // 页脚
   footer: {
-    description: '为 Vue 3 应用提供强大的数学公式编辑功能，支持 LaTeX 语法和实时预览。',
+    description: '为 Vue 3 与 React 应用提供强大的数学公式编辑功能，支持 LaTeX 语法和实时预览。',
     resources: '资源',
     community: '社区',
     documentation: '文档',
@@ -694,10 +695,10 @@ export default {
     issues: '问题反馈',
     discussions: '讨论区',
     contributing: '贡献指南',
-    copyright: '© 2025 Vue MathJax Beautiful. All rights reserved.',
+    copyright: '© 2025 MathJax Beautiful. All rights reserved.',
     author: '由 不讲道理的柯里昂 开发维护',
     madeWith: 'Made with',
-    forVueCommunity: 'for the Vue.js community',
+    forVueCommunity: 'for the Vue / React community',
     privacy: '隐私政策',
     terms: '使用条款',
   },
@@ -710,8 +711,8 @@ export default {
 
   // 示例内容
   sampleContent: {
-    welcome: '**欢迎使用 Vue MathJax Beautiful！**',
-    intro: '这是一个功能强大的数学公式编辑器，专为 Vue 3 设计。',
+    welcome: '**欢迎使用 MathJax Beautiful！**',
+    intro: '这是一个面向 Vue 3 与 React 的数学公式编辑器组件库。',
     mainFeatures: '## 主要特性',
     richText: '- **富文本编辑**：支持 *斜体*、**粗体**、__下划线__、~~删除线~~',
     mathFormulas: '- **数学公式**：完整支持 LaTeX 语法',
@@ -760,7 +761,7 @@ export default {
       overview: {
         title: '1. 概述',
         subtitle: '隐私保护承诺',
-        content: 'Vue MathJax Beautiful（以下简称"本产品"）致力于保护用户隐私。本隐私政策说明了我们如何收集、使用和保护您的个人信息。使用本产品即表示您同意本隐私政策中描述的数据处理方式。'
+        content: 'MathJax Beautiful（以下简称"本产品"）致力于保护用户隐私。本隐私政策说明了我们如何收集、使用和保护您的个人信息。使用本产品即表示您同意本隐私政策中描述的数据处理方式。'
       },
       dataCollection: {
         title: '2. 信息收集',
@@ -851,19 +852,19 @@ export default {
   // 使用条款页面
   terms: {
     title: '使用条款',
-    subtitle: '本条款规定了您使用 Vue MathJax Beautiful 的条件和规则，请仔细阅读',
+    subtitle: '本条款规定了您使用 MathJax Beautiful 的条件和规则，请仔细阅读',
     badge: '使用条款',
     lastUpdated: '最后更新时间：2025年1月',
     sections: {
       overview: {
         title: '1. 概述',
         subtitle: '条款说明',
-        content: '欢迎使用 Vue MathJax Beautiful（以下简称"本产品"）。本使用条款（以下简称"条款"）规定了您使用本产品的条件和规则。使用本产品即表示您同意遵守这些条款。如果您不同意这些条款，请不要使用本产品。'
+        content: '欢迎使用 MathJax Beautiful（以下简称"本产品"）。本使用条款（以下简称"条款"）规定了您使用本产品的条件和规则。使用本产品即表示您同意遵守这些条款。如果您不同意这些条款，请不要使用本产品。'
       },
       productDescription: {
         title: '2. 产品描述',
         subtitle: '功能特性',
-        description: 'Vue MathJax Beautiful 是一个基于 Vue 3 的数学公式编辑器组件库，提供以下功能：',
+        description: 'MathJax Beautiful 是一个面向 Vue 3 与 React 的数学公式编辑器组件库，提供以下功能：',
         features: [
           '专业的数学公式编辑功能',
           '240+ 数学符号面板',

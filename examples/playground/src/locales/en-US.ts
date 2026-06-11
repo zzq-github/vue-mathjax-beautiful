@@ -12,6 +12,7 @@ export default {
     toggleTheme: 'Toggle Theme',
     openMenu: 'Open Menu',
     language: 'Language',
+    framework: 'Framework',
   },
 
   // Theme
@@ -30,17 +31,17 @@ export default {
 
   // Page Title
   page: {
-    title: 'Vue MathJax Beautiful',
-    subtitle: 'Beautiful professional math formula editor',
+    title: 'MathJax Beautiful',
+    subtitle: 'Vue / React math formula editor',
   },
 
   // Hero Section
   hero: {
-    badge: 'Professional Math Formula Editor',
-    title: 'Vue Math Formula',
+    badge: 'Cross-framework Formula Editor',
+    title: 'Vue / React Math Formula',
     titleHighlight: 'Editor',
-    description: 'Professional math formula editor component library, provides 240+ symbol panels, 38 formula templates, supports LaTeX syntax',
-    technologies: ['Vue 3', 'TypeScript', 'MathJax', 'LaTeX'],
+    description: 'A math formula editor component library for Vue and React, with 240+ symbol panels, 38 formula templates, and LaTeX syntax support',
+    technologies: ['Vue 3', 'React', 'TypeScript', 'MathJax', 'LaTeX'],
     getStarted: 'Get Started',
     viewSource: 'View Source',
     scrollHint: 'Explore Powerful Features',
@@ -54,7 +55,7 @@ export default {
   // Home page content
   home: {
     quickStart: {
-      description: 'Get started with Vue MathJax Beautiful and experience professional mathematical formula editing',
+      description: 'Get started with MathJax Beautiful and experience Vue / React formula editing',
       tryDemo: 'Try Demo',
       viewDocs: 'View Documentation',
       badge: 'Get Started Now',
@@ -146,7 +147,7 @@ export default {
       },
       easyIntegration: {
         title: 'Easy Integration',
-        description: 'Provides Vue 3 components, supports TypeScript, easy to integrate into existing projects',
+        description: 'Provides Vue 3 and React components, supports TypeScript, and is easy to integrate into existing projects',
       },
     },
   },
@@ -683,7 +684,7 @@ export default {
 
   // Footer
   footer: {
-    description: 'Provides powerful mathematical formula editing capabilities for Vue 3 applications, supports LaTeX syntax and real-time preview.',
+    description: 'Provides powerful mathematical formula editing capabilities for Vue 3 and React applications, with LaTeX syntax and real-time preview.',
     resources: 'Resources',
     community: 'Community',
     documentation: 'Documentation',
@@ -695,10 +696,10 @@ export default {
     issues: 'Issue Tracker',
     discussions: 'Discussions',
     contributing: 'Contributing',
-    copyright: '© 2025 Vue MathJax Beautiful. All rights reserved.',
+    copyright: '© 2025 MathJax Beautiful. All rights reserved.',
     author: 'Developed and maintained by 不讲道理的柯里昂',
     madeWith: 'Made with',
-    forVueCommunity: 'for the Vue.js community',
+    forVueCommunity: 'for the Vue / React community',
     privacy: 'Privacy Policy',
     terms: 'Terms of Service',
   },
@@ -711,8 +712,8 @@ export default {
 
   // Sample Content
   sampleContent: {
-    welcome: '**Welcome to Vue MathJax Beautiful!**',
-    intro: 'This is a powerful mathematical formula editor designed specifically for Vue 3.',
+    welcome: '**Welcome to MathJax Beautiful!**',
+    intro: 'This is a powerful mathematical formula editor component library for Vue 3 and React.',
     mainFeatures: '## Main Features',
     richText: '- **Rich Text Editing**: Supports *italic*, **bold**, __underline__, ~~strikethrough~~',
     mathFormulas: '- **Mathematical Formulas**: Complete LaTeX syntax support',
@@ -761,7 +762,7 @@ export default {
       overview: {
         title: '1. Overview',
         subtitle: 'Privacy Protection Commitment',
-        content: 'Vue MathJax Beautiful (hereinafter referred to as "this product") is committed to protecting user privacy. This privacy policy explains how we collect, use, and protect your personal information. Using this product indicates your agreement to the data processing methods described in this privacy policy.'
+        content: 'MathJax Beautiful (hereinafter referred to as "this product") is committed to protecting user privacy. This privacy policy explains how we collect, use, and protect your personal information. Using this product indicates your agreement to the data processing methods described in this privacy policy.'
       },
       dataCollection: {
         title: '2. Information Collection',
@@ -852,19 +853,19 @@ export default {
   // Terms of Service Page
   terms: {
     title: 'Terms of Service',
-    subtitle: 'These terms govern your use of Vue MathJax Beautiful. Please read them carefully',
+    subtitle: 'These terms govern your use of MathJax Beautiful. Please read them carefully',
     badge: 'Terms of Service',
     lastUpdated: 'Last Updated: January 2025',
     sections: {
       overview: {
         title: '1. Overview',
         subtitle: 'Terms Description',
-        content: 'Welcome to Vue MathJax Beautiful (hereinafter referred to as "this product"). These Terms of Service (hereinafter referred to as "terms") set forth the conditions and rules for your use of this product. Using this product indicates your agreement to comply with these terms. If you do not agree to these terms, please do not use this product.'
+        content: 'Welcome to MathJax Beautiful (hereinafter referred to as "this product"). These Terms of Service (hereinafter referred to as "terms") set forth the conditions and rules for your use of this product. Using this product indicates your agreement to comply with these terms. If you do not agree to these terms, please do not use this product.'
       },
       productDescription: {
         title: '2. Product Description',
         subtitle: 'Features',
-        description: 'Vue MathJax Beautiful is a Vue 3-based mathematical formula editor component library that provides the following features:',
+        description: 'MathJax Beautiful is a mathematical formula editor component library for Vue 3 and React that provides the following features:',
         features: [
           'Professional mathematical formula editing functionality',
           '240+ mathematical symbol panels',
@@ -974,4 +975,4 @@ export default {
       }
     }
   },
-}; 
+};

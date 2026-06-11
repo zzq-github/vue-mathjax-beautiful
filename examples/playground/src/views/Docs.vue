@@ -46,7 +46,8 @@
 
     <!-- 文档内容 -->
     <div class="relative z-10 container mx-auto px-4 py-8">
-      <DocsSection />
+      <DocsSection v-if="activeFramework === 'vue'" />
+      <ReactDocsSection v-else />
     </div>
   </div>
 </template>
@@ -55,8 +56,11 @@
 import { computed } from 'vue'
 import { useI18n } from '../composables/useI18n'
 import DocsSection from '../components/DocsSection/index.vue'
+import ReactDocsSection from '../components/ReactDocsSection/index.vue'
+import { useFramework } from '../composables/useFramework'
 
 const i18n = useI18n()
+const { activeFramework } = useFramework()
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const docsTitle = computed(() => i18n.t('docs.title'))
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

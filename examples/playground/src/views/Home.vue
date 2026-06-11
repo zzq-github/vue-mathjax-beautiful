@@ -315,6 +315,7 @@ const activeExample = ref(3)
 // 快速开始技术栈
 const quickStartTechnologies = ref([
   'Vue 3 Composition API',
+  'React 18/19',
   'TypeScript',
   'MathJax 3.x',
   'LaTeX',
@@ -536,6 +537,7 @@ onMounted(async () => {
 .tech-delay-3 { animation-delay: 1.1s; }
 .tech-delay-4 { animation-delay: 1.2s; }
 .tech-delay-5 { animation-delay: 1.3s; }
+.tech-delay-6 { animation-delay: 1.4s; }
 
 /* 脉动效果 */
 @keyframes pulse {
