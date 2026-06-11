@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules", "src/Reference code"],
+  "compilerOptions": {
+    "composite": false,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "baseUrl": "../..",
+    "paths": {
+      "@vue-mathjax-beautiful/shared": ["packages/shared/src"],
+      "@vue-mathjax-beautiful/shared/*": ["packages/shared/src/*"],
+      "vue-mathjax-beautiful": ["packages/core/src"],
+      "vue-mathjax-beautiful/*": ["packages/core/src/*"],
+      "react-mathjax-beautiful": ["examples/playground/src/react/react-mathjax-beautiful.d.ts"]
+    },
+    "types": ["node", "react", "react-dom"]
+  }
+}

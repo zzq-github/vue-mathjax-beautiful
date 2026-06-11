@@ -16,8 +16,12 @@
     "composite": true,
     "baseUrl": ".",
     "paths": {
+      "@vue-mathjax-beautiful/shared": ["./packages/shared/src"],
+      "@vue-mathjax-beautiful/shared/*": ["./packages/shared/src/*"],
       "vue-mathjax-beautiful": ["./packages/core/src"],
-      "vue-mathjax-beautiful/*": ["./packages/core/src/*"]
+      "vue-mathjax-beautiful/*": ["./packages/core/src/*"],
+      "react-mathjax-beautiful": ["./packages/react/src"],
+      "react-mathjax-beautiful/*": ["./packages/react/src/*"]
     }
   }
 } 

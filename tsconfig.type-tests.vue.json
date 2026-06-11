@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["packages/core/src/**/*", "packages/shared/src/**/*", "tests/public-api-types.ts"],
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "types": ["node"]
+  }
+}

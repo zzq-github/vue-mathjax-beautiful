@@ -1,20 +1,20 @@
 {
-  "name": "vue-mathjax-beautiful",
-  "version": "1.4.0",
-  "description": "🚀 精简、高效的 Vue 3 数学公式编辑器组件库",
+  "name": "react-mathjax-beautiful",
+  "version": "1.0.0",
+  "description": "A React 18 MathJax formula editor component",
   "type": "module",
   "files": [
     "dist",
     "README.md",
     "CHANGELOG.md"
   ],
-  "main": "./dist/vue-mathjax-beautiful.umd",
-  "module": "./dist/vue-mathjax-beautiful.js",
+  "main": "./dist/react-mathjax-beautiful.umd",
+  "module": "./dist/react-mathjax-beautiful.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/vue-mathjax-beautiful.js",
-      "require": "./dist/vue-mathjax-beautiful.umd",
+      "import": "./dist/react-mathjax-beautiful.js",
+      "require": "./dist/react-mathjax-beautiful.umd",
       "types": "./dist/index.d.ts"
     },
     "./style.css": "./dist/style.css",
@@ -22,37 +22,34 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -p tsconfig.json && vite build",
-    "type-check": "vue-tsc -p tsconfig.json",
+    "build": "tsc --noEmit && vite build",
+    "type-check": "tsc --noEmit",
     "preview": "vite preview",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "vue",
-    "vue3",
+    "react",
     "math",
     "editor",
     "mathjax",
     "formula",
     "typescript",
-    "latex",
-    "mathematics",
-    "equation",
-    "component",
-    "ui"
+    "latex"
   ],
   "author": "不讲道理的柯里昂 <15096061897@163.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zzq-github/vue-mathjax-beautiful.git"
+    "url": "git+https://github.com/zzq-github/vue-mathjax-beautiful.git",
+    "directory": "packages/react"
   },
   "bugs": {
     "url": "https://github.com/zzq-github/vue-mathjax-beautiful/issues"
   },
-  "homepage": "https://github.com/zzq-github/vue-mathjax-beautiful#readme",
+  "homepage": "https://github.com/zzq-github/vue-mathjax-beautiful/tree/master/packages/react#readme",
   "peerDependencies": {
-    "vue": "^3.3.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
     "dompurify": "^3.4.8",
@@ -60,12 +57,12 @@
   },
   "devDependencies": {
     "@types/node": "^18.19.3",
-    "@vitejs/plugin-vue": "^4.5.2",
-    "sass-embedded": "^1.69.5",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
     "typescript": "~5.3.0",
     "vite": "^5.0.10",
     "vite-plugin-dts": "^3.6.4",
-    "vue": "^3.3.11",
-    "vue-tsc": "^1.8.25"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

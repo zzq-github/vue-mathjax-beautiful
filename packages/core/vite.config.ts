@@ -13,6 +13,7 @@ export default defineConfig({
       exclude: ['src/**/*.test.*', 'src/**/*.spec.*'],
       entryRoot: 'src',
       rollupTypes: true,
+      bundledPackages: ['@vue-mathjax-beautiful/shared'],
       copyDtsFiles: false
     })
   ],
@@ -34,7 +35,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src')
+      '@': resolve(__dirname, 'src'),
+      '@vue-mathjax-beautiful/shared': resolve(__dirname, '../shared/src')
     }
   },
   css: {

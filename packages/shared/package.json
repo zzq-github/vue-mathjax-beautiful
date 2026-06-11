@@ -1,0 +1,58 @@
+{
+  "name": "@vue-mathjax-beautiful/shared",
+  "version": "1.4.0",
+  "description": "Framework-agnostic MathJax and LaTeX utilities for MathJax Beautiful packages",
+  "type": "module",
+  "private": true,
+  "main": "./dist/shared.js",
+  "module": "./dist/shared.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/shared.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./latex": {
+      "import": "./dist/latex.js",
+      "types": "./dist/latex.d.ts"
+    },
+    "./lazyLoad": {
+      "import": "./dist/lazyLoad.js",
+      "types": "./dist/lazyLoad.d.ts"
+    },
+    "./logger": {
+      "import": "./dist/logger.js",
+      "types": "./dist/logger.d.ts"
+    },
+    "./cache": {
+      "import": "./dist/cache.js",
+      "types": "./dist/cache.d.ts"
+    },
+    "./sanitizeHtml": {
+      "import": "./dist/sanitizeHtml.js",
+      "types": "./dist/sanitizeHtml.d.ts"
+    },
+    "./data": {
+      "import": "./dist/data.js",
+      "types": "./dist/data/index.d.ts"
+    },
+    "./types": {
+      "types": "./dist/types/global.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "type-check": "tsc --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "dompurify": "^3.4.8",
+    "mathjax": "^3.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.3",
+    "typescript": "~5.3.0",
+    "vite": "^5.0.10",
+    "vite-plugin-dts": "^3.6.4"
+  }
+}

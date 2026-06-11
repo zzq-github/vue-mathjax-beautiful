@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "lucide-vue-next": "^0.522.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-mathjax-beautiful": "workspace:*",
     "vue": "^3.3.11",
     "vue-i18n": "^11.1.9",
     "vue-mathjax-beautiful": "workspace:*",
@@ -20,6 +23,9 @@
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^2.0.0",
     "@types/node": "^18.19.3",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
     "@vitejs/plugin-vue": "^4.5.2",
     "autoprefixer": "^10.4.16",
     "cross-env": "^7.0.3",

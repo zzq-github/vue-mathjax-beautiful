@@ -3,7 +3,7 @@ export type {
   MathJaxInstance,
   MathJaxRenderOptions,
   MathJaxStartup,
-} from './global';
+} from '@vue-mathjax-beautiful/shared';
 
 export interface RichTextEditorProps {
   modelValue?: string;
