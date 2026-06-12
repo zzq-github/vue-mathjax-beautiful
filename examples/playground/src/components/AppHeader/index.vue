@@ -16,12 +16,14 @@
             <span class="hidden sm:inline">MathJax Beautiful</span>
             <span class="sm:hidden">MathJax</span>
           </h1>
-          <p class="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-300 hidden sm:block">
+          <p
+            class="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-300 hidden sm:block"
+          >
             {{ t('page.subtitle') }}
           </p>
         </div>
       </div>
-      
+
       <!-- 桌面端导航 -->
       <nav class="hidden lg:flex items-center space-x-6">
         <router-link
@@ -67,30 +69,53 @@
 
         <!-- 框架切换器 -->
         <div
-          class="framework-switch !ml-4"
-          :class="`framework-switch--${activeFramework}`"
-          :aria-label="t('nav.framework')"
+          class="relative !ml-4"
+          data-framework-menu
         >
-          <span class="framework-switch__thumb" />
           <button
-            v-for="framework in frameworkOptions"
-            :key="framework.value"
             type="button"
-            class="framework-switch__button"
-            :class="{ 'framework-switch__button--active': activeFramework === framework.value }"
-            :aria-pressed="activeFramework === framework.value"
-            :title="framework.label"
-            @click="setFramework(framework.value)"
+            class="relative flex h-9 min-w-9 items-center justify-center rounded-lg bg-gray-100 px-3 text-sm font-bold text-gray-600 transition-all duration-300 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            :aria-label="t('nav.framework')"
+            :title="activeFrameworkOption.label"
+            @click="toggleFrameworkMenu"
           >
-            <span
-              class="framework-switch__badge"
-              :class="`framework-switch__badge--${framework.value}`"
-              aria-hidden="true"
-            >
-              {{ framework.shortLabel }}
-            </span>
-            <span>{{ framework.label }}</span>
+            {{ activeFrameworkOption.shortLabel }}
           </button>
+
+          <Transition name="language-menu">
+            <div
+              v-if="showFrameworkMenu"
+              class="absolute right-0 top-full z-50 mt-2 w-40 rounded-lg border border-gray-200 bg-white py-2 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+              @click.stop
+            >
+              <button
+                v-for="framework in frameworkOptions"
+                :key="framework.value"
+                type="button"
+                class="flex w-full items-center gap-3 px-4 py-2 text-left text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700"
+                :class="{
+                  'bg-blue-50 !text-blue-600 dark:bg-blue-900/20 dark:!text-blue-300':
+                    framework.value === activeFramework,
+                }"
+                @click="handleFrameworkChange(framework.value)"
+              >
+                <span class="w-5 text-sm font-bold">{{ framework.shortLabel }}</span>
+                <span class="text-sm font-medium">{{ framework.label }}</span>
+                <svg
+                  v-if="framework.value === activeFramework"
+                  class="ml-auto h-4 w-4 text-blue-600 dark:text-blue-300"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </Transition>
         </div>
 
         <!-- 语言切换器 -->
@@ -106,7 +131,7 @@
           >
             <GlobeIcon class="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
-          
+
           <!-- 语言下拉菜单 -->
           <Transition name="language-menu">
             <div
@@ -119,7 +144,8 @@
                 :key="locale.code"
                 class="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-3 text-gray-700 dark:text-gray-200"
                 :class="{
-                  'bg-blue-50 dark:bg-blue-900/20 !text-blue-600 dark:!text-blue-300': locale.code === currentLocale.code
+                  'bg-blue-50 dark:bg-blue-900/20 !text-blue-600 dark:!text-blue-300':
+                    locale.code === currentLocale.code,
                 }"
                 @click="handleLanguageChange(locale.code)"
               >
@@ -181,30 +207,53 @@
       <div class="flex lg:hidden items-center space-x-2">
         <!-- 框架切换器 -->
         <div
-          class="framework-switch framework-switch--compact"
-          :class="`framework-switch--${activeFramework}`"
-          :aria-label="t('nav.framework')"
+          class="relative"
+          data-framework-menu
         >
-          <span class="framework-switch__thumb" />
           <button
-            v-for="framework in frameworkOptions"
-            :key="framework.value"
             type="button"
-            class="framework-switch__button"
-            :class="{ 'framework-switch__button--active': activeFramework === framework.value }"
-            :aria-pressed="activeFramework === framework.value"
-            :title="framework.label"
-            @click="setFramework(framework.value)"
+            class="relative flex h-9 min-w-9 items-center justify-center rounded-lg bg-gray-100 px-3 text-sm font-bold text-gray-600 transition-all duration-300 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            :aria-label="t('nav.framework')"
+            :title="activeFrameworkOption.label"
+            @click="toggleFrameworkMenu"
           >
-            <span
-              class="framework-switch__badge"
-              :class="`framework-switch__badge--${framework.value}`"
-              aria-hidden="true"
-            >
-              {{ framework.shortLabel }}
-            </span>
-            <span>{{ framework.label }}</span>
+            {{ activeFrameworkOption.shortLabel }}
           </button>
+
+          <Transition name="language-menu">
+            <div
+              v-if="showFrameworkMenu"
+              class="absolute right-0 top-full z-50 mt-2 w-36 rounded-lg border border-gray-200 bg-white py-2 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+              @click.stop
+            >
+              <button
+                v-for="framework in frameworkOptions"
+                :key="framework.value"
+                type="button"
+                class="flex w-full items-center gap-2 px-3 py-2 text-left text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700"
+                :class="{
+                  'bg-blue-50 !text-blue-600 dark:bg-blue-900/20 dark:!text-blue-300':
+                    framework.value === activeFramework,
+                }"
+                @click="handleFrameworkChange(framework.value)"
+              >
+                <span class="w-4 text-sm font-bold">{{ framework.shortLabel }}</span>
+                <span class="text-sm font-medium">{{ framework.label }}</span>
+                <svg
+                  v-if="framework.value === activeFramework"
+                  class="ml-auto h-3 w-3 text-blue-600 dark:text-blue-300"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </Transition>
         </div>
 
         <!-- 语言切换器 -->
@@ -220,7 +269,7 @@
           >
             <GlobeIcon class="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
-          
+
           <!-- 移动端语言下拉菜单 -->
           <Transition name="language-menu">
             <div
@@ -233,7 +282,8 @@
                 :key="locale.code"
                 class="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-200"
                 :class="{
-                  'bg-blue-50 dark:bg-blue-900/20 !text-blue-600 dark:!text-blue-300': locale.code === currentLocale.code
+                  'bg-blue-50 dark:bg-blue-900/20 !text-blue-600 dark:!text-blue-300':
+                    locale.code === currentLocale.code,
                 }"
                 @click="handleLanguageChange(locale.code)"
               >
@@ -391,12 +441,20 @@
 
 <script setup lang="ts">
 import { Calculator as CalculatorIcon, Globe as GlobeIcon } from 'lucide-vue-next';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from '../../composables/useI18n';
 import { useFramework } from '../../composables/useFramework';
+import type { PlaygroundFramework } from '../../composables/useFramework';
 
 // 国际化功能
 const { t, currentLocale, availableLocales, changeLocale } = useI18n();
 const { activeFramework, frameworkOptions, setFramework } = useFramework();
+const showFrameworkMenu = ref(false);
+const activeFrameworkOption = computed(
+  () =>
+    frameworkOptions.find((framework) => framework.value === activeFramework.value) ||
+    frameworkOptions[0]
+);
 
 // Props
 defineProps<{
@@ -418,172 +476,34 @@ const handleLanguageChange = (newLocale: string) => {
   changeLocale(newLocale);
 };
 
-// 点击外部关闭菜单的逻辑在父组件中处理
+const toggleFrameworkMenu = () => {
+  showFrameworkMenu.value = !showFrameworkMenu.value;
+};
+
+const handleFrameworkChange = (framework: PlaygroundFramework) => {
+  setFramework(framework);
+  showFrameworkMenu.value = false;
+};
+
+const handleDocumentClick = (event: MouseEvent) => {
+  const target = event.target as HTMLElement | null;
+  if (showFrameworkMenu.value && !target?.closest('[data-framework-menu]')) {
+    showFrameworkMenu.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', handleDocumentClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleDocumentClick);
+});
+
+// 语言菜单的外部点击关闭逻辑在父组件中处理。
 </script>
 
 <style scoped>
-.framework-switch {
-  --switch-gradient: linear-gradient(135deg, #2563eb, #14b8a6);
-  --switch-shadow: 0 10px 22px rgba(37, 99, 235, 0.25);
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: center;
-  width: 176px;
-  min-width: 176px;
-  height: 44px;
-  padding: 4px;
-  border: 1px solid rgba(148, 163, 184, 0.32);
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.9));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 8px 22px rgba(15, 23, 42, 0.08);
-}
-
-.framework-switch--vue {
-  --switch-gradient: linear-gradient(135deg, #42b883, #2563eb);
-  --switch-shadow: 0 10px 22px rgba(66, 184, 131, 0.28);
-}
-
-.framework-switch--react {
-  --switch-gradient: linear-gradient(135deg, #06b6d4, #2563eb);
-  --switch-shadow: 0 10px 22px rgba(6, 182, 212, 0.28);
-}
-
-.framework-switch__thumb {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  z-index: 0;
-  width: calc(50% - 4px);
-  border-radius: 10px;
-  background: var(--switch-gradient);
-  box-shadow: var(--switch-shadow);
-  transition:
-    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    background 180ms ease,
-    box-shadow 180ms ease;
-}
-
-.framework-switch--react .framework-switch__thumb {
-  transform: translateX(100%);
-}
-
-.framework-switch__button {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 36px;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  color: #475569;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    color 180ms ease,
-    transform 180ms ease;
-}
-
-.framework-switch__button:hover {
-  color: #0f172a;
-}
-
-.framework-switch__button:focus-visible {
-  outline: 2px solid rgba(59, 130, 246, 0.65);
-  outline-offset: 3px;
-}
-
-.framework-switch__button--active {
-  color: #ffffff;
-  transform: translateY(-1px);
-}
-
-.framework-switch__badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.16);
-  color: #64748b;
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1;
-  transition:
-    background 180ms ease,
-    color 180ms ease,
-    transform 180ms ease;
-}
-
-.framework-switch__badge--vue {
-  color: #0f766e;
-}
-
-.framework-switch__badge--react {
-  color: #0284c7;
-}
-
-.framework-switch__button--active .framework-switch__badge {
-  background: rgba(255, 255, 255, 0.22);
-  color: #ffffff;
-  transform: scale(1.05);
-}
-
-.framework-switch--compact {
-  width: 96px;
-  min-width: 96px;
-  height: 38px;
-  border-radius: 12px;
-  padding: 3px;
-}
-
-.framework-switch--compact .framework-switch__thumb {
-  top: 3px;
-  bottom: 3px;
-  left: 3px;
-  width: calc(50% - 3px);
-  border-radius: 9px;
-}
-
-.framework-switch--compact .framework-switch__button {
-  height: 32px;
-  gap: 0;
-}
-
-.framework-switch--compact .framework-switch__button > span:last-child {
-  display: none;
-}
-
-:global(.dark) .framework-switch {
-  border-color: rgba(51, 65, 85, 0.9);
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.95));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 24px rgba(0, 0, 0, 0.22);
-}
-
-:global(.dark) .framework-switch__button {
-  color: #cbd5e1;
-}
-
-:global(.dark) .framework-switch__button:hover {
-  color: #f8fafc;
-}
-
-:global(.dark) .framework-switch__button--active,
-:global(.dark) .framework-switch__button--active:hover {
-  color: #ffffff;
-}
-
 /* 移动端菜单动画 */
 .mobile-menu-enter-active,
 .mobile-menu-leave-active {

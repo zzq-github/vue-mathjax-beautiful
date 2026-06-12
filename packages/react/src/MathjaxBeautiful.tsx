@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import {
   type Category,
   type Symbol as MathSymbol,
@@ -624,7 +625,7 @@ export function MathjaxBeautiful({
     return null;
   }
 
-  return (
+  const dialog = (
     <div className="rmb-overlay" onClick={handleOverlayClick}>
       <div className={joinClassNames('rmb-dialog', `rmb-theme-${internalTheme}`, dialogClassName)}>
         <div className="rmb-dialog-header">
@@ -645,4 +646,6 @@ export function MathjaxBeautiful({
       </div>
     </div>
   );
+
+  return typeof document === 'undefined' ? dialog : createPortal(dialog, document.body);
 }

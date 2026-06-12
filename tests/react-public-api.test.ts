@@ -55,4 +55,22 @@ describe('react package public API', () => {
     expect(reactPackage.exports['./style.css']).toBe('./dist/style.css');
     expect(reactPackage.exports['./dist/style.css']).toBe('./dist/style.css');
   });
+
+  it('keeps dialog mode mounted through a body portal', () => {
+    const source = readFileSync(
+      resolve(rootDir, 'packages/react/src/MathjaxBeautiful.tsx'),
+      'utf8'
+    );
+
+    expect(source).toContain("import { createPortal } from 'react-dom';");
+    expect(source).toContain('createPortal(dialog, document.body)');
+  });
+
+  it('defines theme variables for the light dialog shell', () => {
+    const css = readFileSync(resolve(rootDir, 'packages/react/src/styles.css'), 'utf8');
+
+    expect(css).toContain('.rmb-theme-light');
+    expect(css).toContain('--rmb-bg: #ffffff');
+    expect(css).toContain('--rmb-text: #172033');
+  });
 });

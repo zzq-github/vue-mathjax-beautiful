@@ -70,6 +70,7 @@
   background: var(--rmb-soft-hover);
 }
 
+.rmb-theme-light,
 .rmb-editor {
   --rmb-bg: #ffffff;
   --rmb-panel: #f8fafc;
@@ -81,6 +82,9 @@
   --rmb-primary: #2563eb;
   --rmb-primary-hover: #1d4ed8;
   --rmb-primary-text: #ffffff;
+}
+
+.rmb-editor {
   background: var(--rmb-bg);
   color: var(--rmb-text);
 }
