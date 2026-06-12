@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "build:gh-pages": "cross-env VITE_BASE_URL=/vue-mathjax-beautiful/ npm run build",
+    "build:gh-pages": "cross-env VITE_BASE_URL=/mathjax-beautiful/ npm run build",
     "preview": "vite preview",
     "deploy": "npm run build:gh-pages && gh-pages -d dist"
   },

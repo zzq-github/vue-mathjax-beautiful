@@ -45,12 +45,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zzq-github/vue-mathjax-beautiful.git"
+    "url": "git+https://github.com/zzq-github/mathjax-beautiful.git"
   },
   "bugs": {
-    "url": "https://github.com/zzq-github/vue-mathjax-beautiful/issues"
+    "url": "https://github.com/zzq-github/mathjax-beautiful/issues"
   },
-  "homepage": "https://github.com/zzq-github/vue-mathjax-beautiful#readme",
+  "homepage": "https://github.com/zzq-github/mathjax-beautiful#readme",
   "peerDependencies": {
     "vue": "^3.3.0"
   },

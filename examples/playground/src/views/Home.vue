@@ -160,7 +160,7 @@
             </router-link>
             
             <a 
-              href="https://github.com/zzq-github/vue-mathjax-beautiful" 
+              href="https://github.com/zzq-github/mathjax-beautiful" 
               target="_blank"
               class="group inline-flex items-center justify-center rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-10 py-5 text-lg font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-300 hover:scale-105 min-w-[200px]"
             >

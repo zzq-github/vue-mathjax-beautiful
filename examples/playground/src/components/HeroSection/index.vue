@@ -150,7 +150,7 @@ const heroTechnologies = computed(() => {
 });
 
 const handleViewSource = () => {
-  window.open('https://github.com/zzq-github/vue-mathjax-beautiful', '_blank');
+  window.open('https://github.com/zzq-github/mathjax-beautiful', '_blank');
 };
 </script>
 

@@ -416,7 +416,7 @@
               </h4>
               <div class="space-y-2">
                 <a
-                  href="https://github.com/zzq-github/vue-mathjax-beautiful/tree/master/packages/react"
+                  href="https://github.com/zzq-github/mathjax-beautiful/tree/master/packages/react"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-gray-50/50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700/30 dark:hover:text-gray-200"
@@ -481,7 +481,7 @@ const copy = computed(() => ({
     title: isZh.value ? '安装说明' : 'Installation',
     packageManagers: isZh.value ? '包管理器安装' : 'Package Managers',
     requirements: isZh.value ? '快速导入' : 'Quick Import',
-    quickImport: isZh.value ? '样式与组件' : 'Component and Styles',
+    quickImport: isZh.value ? '组件与样式' : 'Component and Styles',
     scope: isZh.value ? '包范围' : 'Package Scope',
     scopeNote: isZh.value
       ? 'react-mathjax-beautiful 是独立 React 包，样式从 react-mathjax-beautiful/style.css 引入。'
@@ -500,7 +500,7 @@ const copy = computed(() => ({
     title: isZh.value ? '核心能力' : 'Core Capabilities',
   },
   api: {
-    title: isZh.value ? 'MathjaxBeautiful API' : 'MathjaxBeautiful API',
+    title: 'MathjaxBeautiful API',
     props: isZh.value ? '属性' : 'Props',
     events: isZh.value ? '事件' : 'Events',
   },

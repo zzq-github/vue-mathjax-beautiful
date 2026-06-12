@@ -83,7 +83,7 @@
             </li>
             <li>
               <a
-                href="https://github.com/zzq-github/vue-mathjax-beautiful/releases" 
+                href="https://github.com/zzq-github/mathjax-beautiful/releases" 
                 target="_blank"
                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200"
               >
@@ -116,7 +116,7 @@
           <ul class="space-y-3">
             <li>
               <a
-                href="https://github.com/zzq-github/vue-mathjax-beautiful" 
+                href="https://github.com/zzq-github/mathjax-beautiful" 
                 target="_blank"
                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200"
               >
@@ -139,7 +139,7 @@
             </li>
             <li>
               <a
-                href="https://github.com/zzq-github/vue-mathjax-beautiful/issues" 
+                href="https://github.com/zzq-github/mathjax-beautiful/issues" 
                 target="_blank"
                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200"
               >
@@ -162,7 +162,7 @@
             </li>
             <li>
               <a
-                href="https://github.com/zzq-github/vue-mathjax-beautiful/discussions" 
+                href="https://github.com/zzq-github/mathjax-beautiful/discussions" 
                 target="_blank"
                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200"
               >
@@ -185,7 +185,7 @@
             </li>
             <li>
               <a
-                href="https://github.com/zzq-github/vue-mathjax-beautiful/blob/main/CONTRIBUTING.md" 
+                href="https://github.com/zzq-github/mathjax-beautiful/blob/main/CONTRIBUTING.md" 
                 target="_blank"
                 class="group flex items-center py-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200"
               >
@@ -263,7 +263,7 @@
           <!-- 社交媒体链接 -->
           <div class="flex space-x-3">
             <a
-              href="https://github.com/zzq-github/vue-mathjax-beautiful" 
+              href="https://github.com/zzq-github/mathjax-beautiful" 
               target="_blank"
               class="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 group"
               title="GitHub"

@@ -10,7 +10,7 @@
 
 </div>
 
-- 📖 演示地址: [在线地址](https://zzq-github.github.io/vue-mathjax-beautiful)
+- 📖 演示地址: [在线地址](https://zzq-github.github.io/mathjax-beautiful)
 
 ## 🧾 更新说明
 
@@ -900,10 +900,10 @@ export function FormulaEditor() {
 
 ```bash
 # 克隆项目
-git clone https://github.com/zzq-github/vue-mathjax-beautiful.git
+git clone https://github.com/zzq-github/mathjax-beautiful.git
 
 # 进入项目目录
-cd vue-mathjax-beautiful
+cd mathjax-beautiful
 
 # 安装依赖
 pnpm install
@@ -984,7 +984,7 @@ vue-mathjax-beautiful/
 
 #### 报告问题
 
-- 使用 [GitHub Issues](https://github.com/zzq-github/vue-mathjax-beautiful/issues) 报告 bug
+- 使用 [GitHub Issues](https://github.com/zzq-github/mathjax-beautiful/issues) 报告 bug
 - 提供详细的复现步骤和环境信息
 - 如果可能，请提供最小复现示例
 
@@ -1018,15 +1018,15 @@ vue-mathjax-beautiful/
 ## 📮 联系我们
 
 - 📧 Email: <your-email@example.com>
-- 🐛 Issues: [GitHub Issues](https://github.com/zzq-github/vue-mathjax-beautiful/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/zzq-github/vue-mathjax-beautiful/discussions)
-- 📖 文档: [在线文档](https://zzq-github.github.io/vue-mathjax-beautiful)
+- 🐛 Issues: [GitHub Issues](https://github.com/zzq-github/mathjax-beautiful/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/zzq-github/mathjax-beautiful/discussions)
+- 📖 文档: [在线文档](https://zzq-github.github.io/mathjax-beautiful)
 
 ## ⭐ Star History
 
 如果这个项目对您有帮助，请给我们一个 ⭐️！
 
-[!\[Star History Chart\](https://api.star-history.com/svg?repos=zzq-github/vue-mathjax-beautiful\&type=Date null)](https://star-history.com/#zzq-github/vue-mathjax-beautiful&Date)
+[!\[Star History Chart\](https://api.star-history.com/svg?repos=zzq-github/mathjax-beautiful\&type=Date null)](https://star-history.com/#zzq-github/mathjax-beautiful&Date)
 
 <!--
 ## 💖 赞赏支持

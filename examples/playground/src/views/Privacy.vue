@@ -355,15 +355,15 @@
                   <p class="text-gray-700 dark:text-gray-300">
                     <strong>{{ t('privacy.sections.contact.developer') }}：</strong>不讲道理的柯里昂<br>
                     <strong>{{ t('privacy.sections.contact.github') }}：</strong><a
-                      href="https://github.com/zzq-github/vue-mathjax-beautiful"
+                      href="https://github.com/zzq-github/mathjax-beautiful"
                       target="_blank"
                       class="text-teal-600 dark:text-teal-400 hover:underline"
-                    >https://github.com/zzq-github/vue-mathjax-beautiful</a><br>
+                    >https://github.com/zzq-github/mathjax-beautiful</a><br>
                     <strong>{{ t('privacy.sections.contact.issues') }}：</strong><a
-                      href="https://github.com/zzq-github/vue-mathjax-beautiful/issues"
+                      href="https://github.com/zzq-github/mathjax-beautiful/issues"
                       target="_blank"
                       class="text-teal-600 dark:text-teal-400 hover:underline"
-                    >https://github.com/zzq-github/vue-mathjax-beautiful/issues</a>
+                    >https://github.com/zzq-github/mathjax-beautiful/issues</a>
                   </p>
                 </div>
               </div>
